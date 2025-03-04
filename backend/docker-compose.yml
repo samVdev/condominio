@@ -1,0 +1,31 @@
+version: "3.9"
+services:
+  php_condominio_dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: condominio_dev_php
+    restart: unless-stopped
+    tty: true
+    working_dir: /var/www/html/
+    volumes:
+      - ./:/var/www/html/
+      - ./php/laravel.ini:/usr/local/etc/php/conf.d/laravel.ini
+    networks:
+      - condominio_dev-network
+  nginx_condominio_dev:
+    depends_on:
+      - php_condominio_dev
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: condominio_dev_nginx
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "8000:80"
+    networks:
+      - condominio_dev-network
+networks:
+  condominio_dev-network:
+    driver: bridge

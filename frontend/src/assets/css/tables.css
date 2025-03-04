@@ -1,0 +1,57 @@
+/*TABLAS ADMIN*/
+
+table {
+    width: 100%;
+    overflow: auto;
+}
+
+table{
+    background-color: white;
+    text-align: center;
+    border-collapse: collapse;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 20px;
+    margin: 0 auto;
+    text-transform: capitalize;
+    animation: slide-in-left 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940);
+}
+
+table .FadeTR{
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    font-weight: 400;
+    animation: fade 2.5s infinite alternate-reverse;
+}
+.Control{
+    width: 90%;
+}
+
+thead {
+    background-color: #e2384f;
+    color: white;
+}
+
+td, th {
+    padding: 20px;
+}
+
+tr:nth-child(even) {
+    background-color: #ececec;
+}
+
+.butons{
+    display: flex;
+    justify-content: center;
+} 
+
+.butons button{
+    border: none;
+    padding: 10px 12px;
+    color: white;
+    margin-left: 5px;
+    margin-right: 5px;
+    border-radius: 20px;
+    transition: .3s ease;
+}
