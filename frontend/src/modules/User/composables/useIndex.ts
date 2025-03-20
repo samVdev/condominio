@@ -79,7 +79,6 @@ export default () => {
     errors,
     data,
     router,
-
     deleteRow,
     setSearch,
     setSort

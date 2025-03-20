@@ -13,8 +13,6 @@ class getUserService
     {
         $user = User::where('uuid', $uuid)->get();
 
-        
-
         return response()->json(["message"=> $user], 200);      
     }
 }

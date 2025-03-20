@@ -4,7 +4,7 @@ import useIndex from "../composables/useIndex";
 import AppPaginationB from "@/components/AppPaginationB.vue";
 import tablesHeader from "@/components/tablesHeader.vue"
 import AppBtn from "@/components/AppBtn.vue"
-import AvatarIcon from "@/icons/AvatarIcon.vue"
+//import AvatarIcon from "@/icons/AvatarIcon.vue"
 import ActionsTable from "@/components/actionsTable.vue";
 
 const {
@@ -21,7 +21,8 @@ const {
 
 <template>
   <div>
-    <tablesHeader title="Usuarios" icon="users" :searchActive="true" @setSearch="({e}) => setSearch(e)" :btnCreate="true" @create="router.push('/users/create')"/>
+    <tablesHeader title="Usuarios" icon="users" :searchActive="true" 
+    @setSearch="({e}) => setSearch(e)" :btnCreate="true" @create="router.push('/users/create')"/>
     <div class="overflow-hidden panel mt-6">       
       <div  class="w-full mx-auto md:w-[90%]">
         <table class="table-data">
@@ -77,7 +78,9 @@ const {
                 {{ row.rol }}
               </td>
               <td class="">
-                <ActionsTable :deleteBtn="true" :editBtn="true" @edit="router.push({ path: '/users/edit/'+row.uuid })" @remove="deleteRow(row.uuid)" />
+                <ActionsTable :deleteBtn="true" :editBtn="true" 
+                @edit="router.push({ path: '/users/edit/'+row.uuid })" 
+                @remove="deleteRow(row.uuid)" />
               </td>
             </tr>
             <tr class="FadeTR" v-if="data.rows.length === 0">

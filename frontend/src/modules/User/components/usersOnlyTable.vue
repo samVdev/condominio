@@ -4,7 +4,7 @@ import useIndex from "../composables/useIndex";
 import AppPaginationB from "@/components/AppPaginationB.vue";
 import tablesHeader from "@/components/tablesHeader.vue"
 import AppBtn from "@/components/AppBtn.vue"
-import AvatarIcon from "@/icons/AvatarIcon.vue"
+//import AvatarIcon from "@/icons/AvatarIcon.vue"
 import ActionsTable from "@/components/actionsTable.vue";
 
 const {

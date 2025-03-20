@@ -4,11 +4,8 @@ namespace App\Http\Services\Statics;
 
 use Illuminate\Http\{
   Request,
-  JsonResponse
 };
 
-use App\Models\User;
-use App\Models\Personas;
 use App\Models\Condominium;
 use Illuminate\Support\Facades\DB;
 

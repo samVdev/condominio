@@ -12,7 +12,6 @@ use App\Http\Services\Statics\{
 };
 
 
-
 class StaticsController extends Controller
 {
 
