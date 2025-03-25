@@ -35,6 +35,14 @@ class MenuService
   {
       $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
       $items = $items instanceof Collection ? $items : Collection::make($items);
+
+     $items = $items->sortBy('id')->map(fn ($item) => [
+       'id' => $item->id,
+        'title' => $item->title,
+        'path' => $item->path,
+        'icon' => $item->icon,
+    ])->values(); 
+
       $response = new LengthAwarePaginator(
           $items->forPage($page, $perPage),
           $items->count(),

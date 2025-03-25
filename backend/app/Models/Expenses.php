@@ -12,8 +12,10 @@ class Expenses extends Model
     protected $fillable = [
         'service_id',
         'condominium_id',
+        'facture_id',
         'amount_dollars',
         'dollar_value',
+        'image',
         'porcent_first_five_days',
     ];
 
@@ -28,4 +30,10 @@ class Expenses extends Model
     {
         return $this->belongsTo(Condominium::class);
     }
+
+    public function facture()
+    {
+        return $this->belongsTo(Factures::class);
+    }
+    
 }

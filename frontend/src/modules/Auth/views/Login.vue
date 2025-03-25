@@ -8,7 +8,7 @@ const { login, sending } = useLogin()
 <template>
   <main id="cnt-Login" class="block md:grid relative h-screen py-10 overflow-auto z-[10] md:min-h-[100vh]">
     <article class="ContainerLogin block z-[12] w-[100%] h-auto grid-cols-2 md:grid md:w-[60vw] md:h-[80vh] md:m-[20px auto]">
-      <div class="ImageLogin h-[40vh] rounded-r-2xl shadow-4xl md:h-[100%]"></div>
+      <img src="/images/lan_benef.jfif" class="ImageLogin h-[40vh] rounded-r-[4rem] bolder-[1vh] shadow-4xl md:h-[100%]" alt="login image">
       <FormLogin class="pb-10 md:pb-0"
       @submit='login($event)' :sending='sending'/>
     </article>
@@ -41,9 +41,6 @@ const { login, sending } = useLogin()
 }
 
 .ImageLogin {
-    background-image: url("/images/lan_benef.jfif");
-    width: 100%;
-    background-size: cover;
     -webkit-animation: slide-in-left 0.45s ease-out both;
     animation: slide-in-left 0.45s ease-out both;
 }

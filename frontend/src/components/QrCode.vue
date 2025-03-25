@@ -16,7 +16,7 @@ const url = location.origin
 <template>
   <section
     v-if="survey_name"
-    class="fixed inset-0 grid place-items-center bg-[#0000009a] z-[1000] "
+    class="fixed inset-0 grid place-items-center bg-[#EA51650009a] z-[1000] "
   >
     <div class="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center cursor-default relative">
       <button @click="$emit('closeModal')" class="absolute top-5 right-5 font-semibold text-2xl cursor-pointer z-[2000]">x</button>
@@ -28,9 +28,9 @@ const url = location.origin
         <QRCodeVue3
           :value="`${url}/${survey_name}`"
           :backgroundOptions="{ color: '#ffffff' }"
-          :cornersSquareOptions="{ type: 'extra-rounded', color: '#000000' }"
-          :cornersDotOptions="{ type: 'extra-rounded', color: '#000000' }"
-          :dotsOptions="{type: 'rounded', color: '#000000'}"
+          :cornersSquareOptions="{ type: 'extra-rounded', color: '#EA5165000' }"
+          :cornersDotOptions="{ type: 'extra-rounded', color: '#EA5165000' }"
+          :dotsOptions="{type: 'rounded', color: '#EA5165000'}"
           downloadButton="bg-[#EA5165] block text-white mx-auto my-4 font-semibold py-2 px-4 rounded-md hover:bg-[#E65729] transition duration-200"
            fileExt="png"
           :download="true"

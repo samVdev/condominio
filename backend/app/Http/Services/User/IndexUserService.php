@@ -20,70 +20,104 @@ class IndexUserService
      */
     static public function execute(Request $request): JsonResponse
     {
-        // Initialize query 
-        $query = User::query()
-        ->join('personas', 'users.persona_id', '=', 'personas.id')
-        ->join('condominium', 'personas.condominium_id', '=', 'condominium.id')
-        ->join('roles', 'roles.id', '=', 'users.role_id')
-        ->leftJoin('expenses', 'expenses.condominium_id', '=', 'condominium.condominium_id')
-        ->leftJoin('receipts', function ($join) {
-            $join->on('receipts.persona_id', '=', 'personas.id')
-                 ->on('receipts.gasto_id', '=', 'expenses.id');
-        })
-        ->select(
-            'Nombre',
-            'fullName',
-            'phone',
-            'name',
-            'email',
-            'users.uuid',
-            \DB::raw('COUNT(DISTINCT expenses.id) - COUNT(DISTINCT receipts.gasto_id) AS expenses_no_pagados')
-        )
-        ->groupBy('Nombre', 'fullName', 'phone', 'name', 'email', 'users.uuid');
-    
 
-        // search 
+        $offset = $request->input("offset", 0);
+        $limit = $request->input("limit", 10); 
         $search = $request->input("search");
+        $sort = $request->input("sort");
+        $facture = $request->input("facture");
+        $direction = $request->input("direction") == "desc" ? "desc" : "asc";
+
+        $query = User::query()
+            ->join('personas', 'users.persona_id', '=', 'personas.id')
+            ->join('condominium', 'personas.condominium_id', '=', 'condominium.id')
+            ->join('condominium as tower', 'condominium.condominium_id', '=', 'tower.id')
+            ->join('roles', 'roles.id', '=', 'users.role_id')
+            ->leftJoin('factures', 'factures.condominium_id', '=', 'condominium.condominium_id')
+            ->leftJoin('receipts', function ($join) {
+                $join->on('receipts.persona_id', '=', 'personas.id')
+                     ->on('receipts.facture_id', '=', 'factures.id');
+            })
+            ->select(
+                'tower.Nombre as tower', 
+                'condominium.Nombre',
+                'fullName',
+                'phone',
+                'name',
+                'email',
+                'users.uuid',
+                \DB::raw('COUNT(DISTINCT factures.id) - COUNT(DISTINCT receipts.facture_id) AS expenses_no_pagados')
+            )
+            ->groupBy('tower.Nombre', 'condominium.Nombre', 'fullName', 'phone', 'name', 'email', 'users.uuid');
+    
         if ($search) {
             $query->where(function ($query) use ($search) {
                 $query
-                    ->where("personas.fullName", "like", "%$search%")
-                    ->orWhere("roles.name", "like", "%$search%")
-                    ->orWhere("users.email", "like", "%$search%")
-                    ->orWhere("personas.phone", "like", "%$search%");
+                    ->where("personas.fullName", "ilike", "%$search%")
+                    ->orWhere("roles.name", "ilike", "%$search%")
+                    ->orWhere("users.email", "ilike", "%$search%")
+                    ->orWhere("personas.phone", "ilike", "%$search%");
             });
         }
 
-        // sort 
-        $sort = $request->input("sort");
-        $direction = $request->input("direction") == "desc" ? "desc" : "asc";
+        if ($facture) {
+            $query->whereExists(function ($subquery) use ($facture) {
+                $subquery->select(DB::raw(1))
+                    ->from('factures')
+                    ->whereColumn('factures.condominium_id', 'condominium.condominium_id')
+                    ->where('factures.id', $facture);
+            })
+            ->whereRaw("
+                NOT EXISTS (
+                    SELECT 1 
+                    FROM receipts 
+                    WHERE receipts.persona_id = personas.id 
+                    AND receipts.facture_id = ?
+                )
+            ", [$facture]);
+        }
+        
+        
 
         if ($sort) {
-            $query->orderBy($sort, $direction);
+            $columnMap = [
+                'name' => 'fullName',
+                'email' => 'email',
+                'phone' => 'phone',
+                'apt' => 'condominium.Nombre',
+                'tower' => 'tower.Nombre',
+                'recibos' => 'expenses_no_pagados',
+                'rol' => 'name'
+            ];
+            if (isset($columnMap[$sort])) {
+                $query->orderBy($columnMap[$sort], $direction);
+            }
         }
-
-        // get paginated results 
-        $users = $query
-            ->paginate(10)
-            ->appends(request()->query());
-
-        $users->getCollection()->transform(function ($user) {
+    
+        $users = $query->skip($offset)->take($limit)->get();
+    
+        $users = $users->map(function ($user) {
             return [
                 'uuid' => $user->uuid,
                 'rol' => $user->name,
                 'email' => $user->email,
                 'phone' => $user->phone,
                 'nombre' => $user->fullName,
+                'tower' => $user->tower,
                 'apt' => $user->Nombre,
                 'pending_receipts' => $user->expenses_no_pagados,
             ];
         });
-
+    
+        // Retornar la respuesta con paginación
         return response()->json([
             "rows" => $users,
-            "sort" => $request->query("sort"),
-            "direction" => $request->query("direction"),
-            "search" => $request->query("search")
+            "offset" => $offset,
+            "limit" => $limit,
+            "sort" => $sort,
+            "direction" => $direction,
+            "search" => $search
         ]);
     }
+    
 }

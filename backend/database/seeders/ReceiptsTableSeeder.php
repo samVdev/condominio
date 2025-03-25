@@ -16,16 +16,14 @@ class ReceiptsTableSeeder extends Seeder
      */
     public function run()
     {
-        // Obtener todos los IDs de personas y gastos
-        $personas = Personas::all();
+        /*$personas = Personas::all();
         $gastos = Expenses::all();
 
-        // Crear algunos recibos de ejemplo
         $receipts = [
             [
-                'persona_id' => $personas->random()->id, // Selecciona una persona aleatoria
+                'persona_id' => $personas->random()->id,
                 'total_pagado' => 150.00,
-                'gasto_id' => $gastos->random()->id, // Selecciona un gasto aleatorio
+                'gasto_id' => $gastos->random()->id,
                 'porcentaje_alicuota' => 2.5,
                 'cedula' => '12345678',
                 'referencia' => '123456',
@@ -66,6 +64,6 @@ class ReceiptsTableSeeder extends Seeder
 
         foreach ($receipts as $receipt) {
             Receipt::create($receipt);
-        }
+        }*/
     }
 }

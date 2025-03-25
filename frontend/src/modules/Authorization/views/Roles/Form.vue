@@ -43,31 +43,25 @@ const selectAll = () => {
 </script>
 
 <template>
-  <form @submit.prevent="submit" class="p-4">    
+  <form @submit.prevent="submit" class="p-4 w-full mx-auto md:w-[80%]">    
     <div class="grid lg:grid-cols-2 gap-4">          
       <label class="block">
         <span>Nombre del rol</span>
-        <input v-model="form.name" type="text" class="" />
-        <div v-if="errors && errors.name" class="form-error">
-          {{ errors.name }}
-        </div>
+        <input v-model="form.name" type="text" class="mt-5" />
       </label>          
 
       <label class="block">
         <span>Descripción del rol</span>
-        <input v-model="form.description" type="text" class="" />
-        <div v-if="errors && errors.description" class="form-error">
-          {{ errors.description }}
-        </div>
+        <input v-model="form.description" type="text" class="mt-5"  />
       </label>
     </div>
  
     <br/>
 
-    <div class="table-data__wrapper">
-      <table class="table-data bg-base-200">
+    <div class="">
+      <table class="">
         <thead>
-          <tr class="bg-base-100"> 
+          <tr class=""> 
             <th class="">Opciones del Menú</th>                             
             <th><input type="checkbox"  v-model="allSelected" @click="selectAll" title="Seleccionar todos"></th>
           </tr>
@@ -76,10 +70,10 @@ const selectAll = () => {
           <tr
 	          v-for="menu in menus"
 	          :key="menu.id"
-	          :class="menu.path==='#'?'bg-base-100 uppercase text-gray-500 text-xs':'hover:bg-gray-500 focus-within:bg-gray-400'"
+	          class="focus-within:bg-gray-400"
 	        > 
             <td>
-	            {{ menu.alias }}
+	            {{ menu.title}}
 	          </td> 
             <td>              
               <div v-if="menu.path !== '#'" class="flex items-center space-x-1">                                

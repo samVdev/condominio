@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import TablesHeader from "@/components/tablesHeader.vue";
 import Form from "./Form.vue";
 import useRole from "./useRole";
 
@@ -16,19 +17,13 @@ const {
 
 <template>
   <div>
+  <TablesHeader :title="id && role ? `Editar el rol ${role.name}` : 'Crear nuevo rol'" icon="hand-holding-droplet" :searchActive="false" :btnCreate="false"/>
+
     <transition name="fade" mode="out-in">
       <div v-if="!loading && role" class="panel mt-6 p-4">           
-        <div  class="flex space-x-2">
-          <button
-            class="btn btn-primary mb-4"
-            @click="$router.push({ path: '/roles' })"
-          >
-            Ver todos
-          </button>
-        </div>
         <div class="panel mt-6">
           <Form
-            class="p-5 border rounded shadow"
+            class="p-5"
             @submit='submit'
             :id="props.id"            
             :sending='sending'

@@ -19,7 +19,7 @@ class CreateExpensesTable extends Migration
             $table->unsignedBigInteger('condominium_id');
             $table->decimal('amount_dollars', 10, 2); // Monto del gasto
             $table->decimal('dollar_value', 10, 2); // Precio del dólar al momento del gasto
-            $table->decimal('porcent_first_five_days', 10, 2);
+            $table->string('image')->nullable();
             $table->timestamps();
 
             // Definir las claves foráneas

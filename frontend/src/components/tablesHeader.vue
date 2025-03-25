@@ -1,10 +1,40 @@
 <script lang="ts" setup>
+import { Params } from '@/types/params';
+import { ref } from 'vue';
+import { useRoute } from 'vue-router'
+import { onBeforeRouteUpdate } from "vue-router"
+
 const props = defineProps<{
   title: string,
   icon: string,
   searchActive: boolean,
   btnCreate: boolean
 }>()
+
+const getSearch = (parameters: string) => {
+  if(parameters.includes("search=")) {
+    const searh = parameters.split('search=')[1].split('&')[0]
+    return searh || ''
+  }
+  return ''
+}
+
+const route = useRoute();
+const search = ref(getSearch(new URLSearchParams(route.query as Params).toString()))
+
+let fakeEvent : any = {
+  target: {
+    value: ''
+  }
+}
+
+
+onBeforeRouteUpdate(async (to, from) => {
+    if (to.query !== from.query) {
+      search.value = getSearch(new URLSearchParams(to.query as Params).toString())
+    }
+  })
+
 </script>
 
 <template>
@@ -16,14 +46,17 @@ const props = defineProps<{
       </h1>
     </div>
 
-  <div class="flex items-center justify-start w-full md:w-[80%]">
-    <div class="bg-white shadow rounded-3xl py-2 px-4 justify-self-start overflow-hidden w-full md:w-[30%]">
-      <input class="w-full block outline-none" type="text" @input="(e: any) => $emit('setSearch', { e: e })" placeholder="Buscar" />
+  <div class="flex items-center justify-start w-full md:w-[90%]" v-if="searchActive">
+    <div class="bg-white shadow rounded-3xl justify-self-start w-full md:w-[30%]">
+      <input class="w-full block outline-none" :value="search" type="text" @keyup.enter="(e: any) => $emit('setSearch', { e: e })" placeholder="Buscar" />
     </div>
+    <button title="Limpiar busqueda" v-if="search" class="ml-1 bg-[#e2384f83] text-white px-2 py-1 rounded-full scale-[.8] cursor-pointer" @click="() =>$emit('setSearch', { e: fakeEvent })">
+      <font-awesome-icon icon="xmark" />
+    </button>
   </div>
 
     <button v-if="btnCreate" @click="$emit('create')"
-      class="bg-blue-600 text-white font-bold w-[50vw] md:w-[90px] h-[50px] rounded-3xl block">
+      class="bg-blue-600 text-white font-bold w-[50vw] md:w-[10%] h-[50px] rounded-3xl block transition-all hover:bg-blue-500">
       Crear
     </button>
   </div>

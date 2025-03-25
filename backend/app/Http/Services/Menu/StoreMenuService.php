@@ -2,33 +2,24 @@
 namespace App\Http\Services\Menu;
 
 use Illuminate\Support\Facades\Redirect;
-use App\Http\Validator\Menu\StoreMenuValidator;
-use App\Http\Requests\Menu\StoreMenuRequest;
+use App\Http\Requests\Menu\FormMenuRequest;
 use App\Models\Menu;
 
 class StoreMenuService
 {
  
-  static public function execute(StoreMenuRequest $request): \Illuminate\Http\JsonResponse
+  static public function execute(FormMenuRequest $request): \Illuminate\Http\JsonResponse
   { 
 
-      $msg  = 'Invalid data.';      
-      
-      if ( !StoreMenuValidator::rule( $request )->fails() ) {
+      Menu::create([
+        "title" => $request->title,
+        "menu_id" => null,
+        "path" => $request->path,
+        "icon" => $request->icon,
+        "sort" => '0'
+    ]);        
 
-          Menu::create([
-              "title" => $request->title,
-              "menu_id" => $request->menu_id===0 ? null : $request->menu_id,
-              "path" => $request->path,
-              "icon" => $request->icon,
-              "sort" => $request->sort
-          ]);         
-
-          $msg  = 'Menu stored.';
-         
-      }
-
-      return response()->json(["message"=> $msg], 201);
+      return response()->json(["message"=> 'Se ha creado correctamente el menu.'], 201);
 
   }
     

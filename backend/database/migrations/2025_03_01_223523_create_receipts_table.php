@@ -17,7 +17,6 @@ class CreateReceiptsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('persona_id'); // Relación con la persona
             $table->decimal('total_pagado', 10, 2); // Total pagado
-            $table->unsignedBigInteger('gasto_id'); // Relación con el gasto
             $table->decimal('porcentaje_alicuota', 5, 2); // Porcentaje de alícuota
             $table->string('cedula'); // Cédula de la persona
             $table->string('referencia'); // Referencia de 6 dígitos
@@ -25,7 +24,6 @@ class CreateReceiptsTable extends Migration
 
             // Definir las claves foráneas
             $table->foreign('persona_id')->references('id')->on('personas')->onDelete('cascade');
-            $table->foreign('gasto_id')->references('id')->on('expenses')->onDelete('cascade');
         });
     }
 

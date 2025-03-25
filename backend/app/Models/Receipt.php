@@ -12,7 +12,7 @@ class Receipt extends Model
     protected $fillable = [
         'persona_id',
         'total_pagado',
-        'gasto_id',
+        'facture_id',
         'porcentaje_alicuota',
         'cedula',
         'referencia',
@@ -24,9 +24,8 @@ class Receipt extends Model
         return $this->belongsTo(Personas::class);
     }
 
-    // Relación con el gasto
-    public function gasto()
+    public function facture()
     {
-        return $this->belongsTo(Expenses::class);
+        return $this->belongsTo(Factures::class);
     }
 }

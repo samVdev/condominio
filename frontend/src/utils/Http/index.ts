@@ -39,15 +39,6 @@ export class Http {
     });
   }
 
-  
-  getBlob(path: string) {
-    return this.service.request({
-      method: "GET",
-      url: path,
-      responseType: "blob"
-    });
-  }
-
   patch(path: string, payload: Paiload) {
     return this.service.request({
       method: "PATCH",

@@ -1,96 +1,88 @@
 <script setup lang="ts">
-// @ts-nocheck
 import useIndex from "../composables/useIndex";
-import AppPaginationB from "@/components/AppPaginationB.vue";
 import tablesHeader from "@/components/tablesHeader.vue"
-import AppBtn from "@/components/AppBtn.vue"
-//import AvatarIcon from "@/icons/AvatarIcon.vue"
 import ActionsTable from "@/components/actionsTable.vue";
+import Loader from "@/components/Loader.vue";
 
 const {
-  errors,
   data,
   router,
-
+  loaded,
   deleteRow,
   setSearch,
-  setSort  
+  setSort,
+  loadScroll
 } = useIndex()
 
 </script>
 
 <template>
   <div>
-    <tablesHeader title="Usuarios" icon="users" :searchActive="true" 
-    @setSearch="({e}) => setSearch(e)" :btnCreate="true" @create="router.push('/users/create')"/>
-    <div class="overflow-hidden panel mt-6">       
-      <div  class="w-full mx-auto md:w-[90%]">
-        <table class="table-data">
-          <thead>
-            <tr class="">
-              <th class="">
-                Avatar
-              </th>
-              <th class="">
-                <a to="#" class="cursor-pointer" @click.prevent="setSort('name')">Nombre</a>
-              </th>
-              <th class="">
-                <a to="#" class="cursor-pointer" @click.prevent="setSort('email')">Correo</a>
-              </th>
-              <th class="">
-                <a to="#" class="cursor-pointer" @click.prevent="setSort('email')">Celular</a>
-              </th>
-              <th class="">
-                <a to="#" class="cursor-pointer" @click.prevent="setSort('Apartamento')">Apartamento</a>
-              </th>
-              <th class="">
-                <a to="#" class="cursor-pointer" @click.prevent="setSort('role')">Rol</a>
-              </th>
-              <th class="">Acción</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="row in data.rows" :key="row.uuid" class="">
-              <td>
-              <div class="inline-flex items-center space-x-2">
-            <img
+    <tablesHeader title="Usuarios" icon="users" :searchActive="true" @setSearch="({e}) => setSearch(e)" :btnCreate="true" @create="router.push('/users/create')"/>
+
+      <section className="relative mx-auto my-4 overflow-auto animate-fade-in">
+
+<div class="fakeTable md:w-[90%] mx-auto h-[70vh]" @scroll="loadScroll">
+    <article class="fakeTable-head grid-cols-8">
+        <p>Avatar</p>
+        
+                <a to="#" class="cursor-pointer" @click.prevent="setSort('name')">
+                  Nombre
+                  <font-awesome-icon icon="sort" class="ml-2"/>
+                </a>
+                <a to="#" class="cursor-pointer" @click.prevent="setSort('email')">
+                  Correo
+                  <font-awesome-icon icon="sort" class="ml-2"/>
+                </a>
+                <a to="#" class="cursor-pointer" @click.prevent="setSort('phone')">
+                  Celular
+                  <font-awesome-icon icon="sort" class="ml-2"/>
+                </a>
+                <a to="#" class="cursor-pointer" @click.prevent="setSort('tower')">
+                  Torre
+                  <font-awesome-icon icon="sort" class="ml-2"/>
+                </a>
+                <a to="#" class="cursor-pointer" @click.prevent="setSort('apt')">
+                  Apartamento
+                  <font-awesome-icon icon="sort" class="ml-2"/>
+                </a>
+                <a to="#" class="cursor-pointer" @click.prevent="setSort('rol')">
+                  Rol
+                  <font-awesome-icon icon="sort" class="ml-2"/>
+                </a>
+        <p>Acción</p>
+    </article>
+    
+    <section v-if="data.rows.length > 0">
+    <div v-for="row in data.rows" :key="row.uuid" class="grid-cols-8 fakeTable-body">
+      <div>
+        <img
               v-if="row.avatar"
               :src="row.avatar"
               class="w-10 h-10 rounded-full"
               alt=""
             />
-            <p v-else >Sin avatar</p>    
-          </div>
-              </td>
-              <td class="">
-                {{ row.nombre }}
-              </td>
-              <td class="">
-                {{ row.email }}
-              </td>
-              <td class="">
-                {{ row.phone }}
-              </td>
-              <td class="">
-                {{ row.apt }}
-              </td>
-              <td class="">
-                {{ row.rol }}
-              </td>
-              <td class="">
-                <ActionsTable :deleteBtn="true" :editBtn="true" 
-                @edit="router.push({ path: '/users/edit/'+row.uuid })" 
-                @remove="deleteRow(row.uuid)" />
-              </td>
-            </tr>
-            <tr class="FadeTR" v-if="data.rows.length === 0">
-              <td class="" colspan="8">Usuarios no encontrados.</td>
-            </tr>
-          </tbody>
-        </table>
+        <p v-else>Sin avatar</p>    
       </div>
-      <span v-if="Object.keys(errors).length > 0" class="text-red-500">{{ errors }}</span>
-      <AppPaginationB v-if="data.links" :links="data.links" />      
+      <p>{{ row.nombre }}</p>
+      <p>{{ row.email }}</p>
+      <p>{{ row.phone }}</p>
+      <p>{{ row.tower }}</p>
+      <p>{{ row.apt }}</p>
+      <p>{{ row.rol }}</p>
+      <p>
+        <ActionsTable :deleteBtn="true" :editBtn="true" @edit="router.push({ path: '/users/edit/'+row.uuid })" @remove="deleteRow(row.uuid)" />
+        </p>
     </div>
+  </section>
+
+  <div class="FadeTR" v-if="data.rows.length === 0">
+        <Loader v-if="loaded" />
+        <p v-else>Usuarios no encontrados.</p>
+      </div>
+  </div>
+
+  </section>
+
   </div>
 </template>

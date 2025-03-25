@@ -1,57 +1,47 @@
 <?php
 
 namespace App\Http\Services\Statics;
-
-use Illuminate\Http\{
-  Request,
-};
-
-use App\Models\Condominium;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\JsonResponse;
 
 class countendDashService
 {
+    static public function execute(Request $request): JsonResponse
+    {
+        $countApt = DB::table('condominium')->whereNotNull('condominium_id')->count();
 
-  static public function execute(Request $request): \Illuminate\Http\JsonResponse
-  {
-    $countApt = Condominium::whereNotNull('condominium_id')->count();
+        // Optimización: Obtener ambos sum() en una sola consulta
+        $totales = DB::table('receipts')
+            ->selectRaw('SUM(total_pagado) as totalPagado, (SELECT SUM(amount_dollars) FROM expenses) as totalGastos')
+            ->first();
 
-    // Sumar todos los pagos en la tabla 'receipts'
-    $totalPagado = DB::table('receipts')
-      ->sum('total_pagado');
+        $countTotal = ($totales->totalPagado ?? 0) - ($totales->totalGastos ?? 0);
 
-    $totalGastos = DB::table('expenses')
-      ->sum('amount_dollars');
+        // Optimización de fechas
+        $gastosMes = DB::table('expenses')
+            ->whereBetween('created_at', [now()->startOfMonth(), now()->endOfMonth()])
+            ->count();
 
-    $countTotal = $totalPagado - $totalGastos;
+        $gastosSemana = DB::table('expenses')
+            ->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
+            ->count();
 
-    $gastosMes = DB::table('expenses')
-    ->whereMonth('created_at', '=', now()->month) // Filtra por el mes actual
-    ->count();
+        $gastosDia = DB::table('expenses')
+            ->whereBetween('created_at', [now()->startOfDay(), now()->endOfDay()])
+            ->count();
 
-
-    $gastosSemana = DB::table('expenses')
-    ->whereBetween('created_at', [
-        now()->startOfWeek(), // Inicio de la semana (domingo o lunes dependiendo de la configuración)
-        now()->endOfWeek() // Fin de la semana
-    ])
-    ->count();
-
-    $gastosDia = DB::table('expenses')
-    ->whereDate('created_at', '=', now()->toDateString()) // Filtra por la fecha actual
-    ->count();
-
-
-    return response()->json([
-      "gastosDia" => $gastosDia,
-      "gastosSemana" => $gastosSemana,
-      "gastosMes" => $gastosMes,
-      "countTowerA" => 0,
-      "countTowerB" =>  0,
-      "countTowerC" => 0,
-      "countRecibes" => 0,
-      "countTotal" => $countTotal,
-      "countApt" => $countApt
-    ]);
-  }
+        return response()->json([
+            "gastosDia" => $gastosDia,
+            "gastosSemana" => $gastosSemana,
+            "gastosMes" => $gastosMes,
+            "countTowerA" => 0,
+            "countTowerB" => 0,
+            "countTowerC" => 0,
+            "countRecibes" => 0,
+            "countTotal" => $countTotal,
+            "countApt" => $countApt
+        ]);
+    }
 }
+

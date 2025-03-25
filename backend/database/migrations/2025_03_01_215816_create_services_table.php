@@ -16,6 +16,7 @@ class CreateServicesTable extends Migration
         Schema::create('services', function (Blueprint $table) {
             $table->id();
             $table->string('service_type'); // Tipo de servicio (mantenimiento, pago de servicios, etc.)
+            $table->boolean('is_for_elevators')->default(false);
             $table->timestamps();
         });
     }

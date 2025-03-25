@@ -13,7 +13,7 @@ class DestroyMenuRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return in_array(auth()->user()->role->id, [1, 2]);
     }
 
     /**

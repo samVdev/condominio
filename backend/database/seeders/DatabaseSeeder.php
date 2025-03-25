@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             PersonasTableSeeder::class,
             UserSeeder::class,
             ServicesTableSeeder::class,
+            FacturesSeeder::class,
             ExpensesTableSeeder::class,
             ReceiptsTableSeeder::class
         ]);

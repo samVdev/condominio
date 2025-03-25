@@ -1,6 +1,7 @@
 import { alertWithToast } from "@/utils/toast";
 import { ref } from "vue"
 import { getCountedDataService } from "../services/panel";
+import { useRouter } from 'vue-router'
 
 export default () => {
 
@@ -15,6 +16,11 @@ export default () => {
         countRecibes: 0,
     })
 
+    const modalStyle = ref({})
+
+    const router = useRouter()
+    const isExpensesView = ref(false);
+
     const getCountedData = async () => {
         try {
             const response = await getCountedDataService()
@@ -25,8 +31,21 @@ export default () => {
         }
     }
 
+    const redirectTo = (e: any, to: string, params?: string) => {
+        const rect = e.target.getBoundingClientRect();
+        modalStyle.value = {
+            "--modal-top": `${rect.top}px`,
+            "--modal-left": `${rect.left}px`,
+        };
+        router.push({ path: to, query: { date: params } });
+    };
+    
+
     return {
         totalValues,
-        getCountedData
+        isExpensesView,
+        modalStyle,
+        getCountedData,
+        redirectTo,
     }
 }

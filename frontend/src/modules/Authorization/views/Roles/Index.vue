@@ -1,18 +1,19 @@
 <script setup lang="ts">
 // @ts-nocheck
-import { onMounted, reactive } from "vue";
-import { onBeforeRouteUpdate } from 'vue-router' 
+import { onMounted, reactive, ref } from "vue";
+import { onBeforeRouteUpdate } from 'vue-router'
 import AppPaginationB from "@/components/AppPaginationB.vue";
 import tablesHeader from "@/components/tablesHeader.vue"
 import * as RoleService from "@/modules/Authorization/services/RoleService";
 import useTableGrid from "@/composables/useTableGrid";
 import useRole from "./useRole";
 import ActionsTable from "@/components/actionsTable.vue";
+import Loader from "@/components/Loader.vue";
 
 const {
   deleteRole,
   errors,
-  sending,     
+  sending,
 } = useRole()
 
 const data = reactive({
@@ -32,7 +33,7 @@ const load = (newParams: object) => {
   };
 
   router.push({
-    path:'/roles',
+    path: '/roles',
     query: {
       ...route.query,
       ...params
@@ -40,38 +41,37 @@ const load = (newParams: object) => {
   });
 };
 
-const { 
-    route,
-    router,
+const loaded = ref(true)
 
-    setSearch,
-    setSort,
+const {
+  route,
+  router,
+
+  setSearch,
+  setSort,
 } = useTableGrid(data, "/roles")
 
-const getRoles = (routeQuery: string) => {
-  return RoleService.getRoles(routeQuery)
-    .then((response) => {
-      data.rows = response.data.rows.data;
-      data.links = response.data.rows.links;
-      data.search = response.data.search;
-      data.sort = response.data.sort;
-      data.direction = response.data.direction;
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+const getRoles = async (routeQuery: string) => {
+  loaded.value = true
+  const response = await RoleService.getRoles(routeQuery)
+  data.rows = response.data.rows.data;
+  data.links = response.data.rows.links;
+  data.search = response.data.search;
+  data.sort = response.data.sort;
+  data.direction = response.data.direction;
+  loaded.value = false
 };
-    
-onBeforeRouteUpdate(async (to, from) => {      
-  if (to.query !== from.query) {     
+
+onBeforeRouteUpdate(async (to, from) => {
+  if (to.query !== from.query) {
     // @ts-ignore   
-    await getRoles(new URLSearchParams(to.query).toString());        
+    await getRoles(new URLSearchParams(to.query).toString());
   }
 });
 
 onMounted(() => {
   // @ts-ignore
-  getRoles(new URLSearchParams(route.query).toString());  
+  getRoles(new URLSearchParams(route.query).toString());
 });
 
 const deleteRow = (rowId?: string) => {
@@ -84,11 +84,12 @@ const deleteRow = (rowId?: string) => {
 
 <template>
   <div>
-    <tablesHeader title="Roles" icon="user-secret" :searchActive="true" :btnCreate="true" @setSearch="({e}) => setSearch(e)" @create="router.push('/roles/create')"/>
+    <tablesHeader title="Roles" icon="user-secret" :searchActive="true" :btnCreate="true"
+      @setSearch="({ e }) => setSearch(e)" @create="router.push('/roles/create')" />
     <div class="overflow-hidden panel mt-6">
 
       <div class="w-full mx-auto md:w-[90%]">
-        <table class="table-data">
+        <table class="table-animation">
           <thead>
             <tr class="">
               <th class="">
@@ -103,10 +104,8 @@ const deleteRow = (rowId?: string) => {
           <tbody>
             <tr v-for="role in data.rows" :key="role.id" class="">
               <td class="">
-                <a
-                  class="text-indigo-600 hover:text-indigo-800 underline"
-                  :to="{ name: 'roleEdit', params: { id: role.id }}"                  
-                >
+                <a class="text-indigo-600 hover:text-indigo-800 underline"
+                  :to="{ name: 'roleEdit', params: { id: role.id } }">
                   {{ role.name }}
                 </a>
               </td>
@@ -114,11 +113,15 @@ const deleteRow = (rowId?: string) => {
                 {{ role.description }}
               </td>
               <td class="">
-                <ActionsTable :deleteBtn="true" :editBtn="true" @edit="router.push({ path: '/roles/edit/'+role.id })" @remove="deleteRow(row.id)" />
+                <ActionsTable :deleteBtn="true" :editBtn="true" @edit="router.push({ path: '/roles/edit/' + role.id })"
+                  @remove="deleteRow(row.id)" />
               </td>
             </tr>
             <tr v-if="data.rows.length === 0">
-              <td class="" colspan="4">Roles no encontrados.</td>
+              <td class="" colspan="8">
+                <Loader v-if="loaded" />
+                <p v-else>Roles no encontrados.</p>
+              </td>
             </tr>
           </tbody>
         </table>

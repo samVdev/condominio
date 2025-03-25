@@ -1,68 +1,76 @@
-import { reactive, onMounted } from "vue"
+import { reactive, onMounted, ref } from "vue"
 import { onBeforeRouteUpdate } from "vue-router"
 import useTableGrid from "@/composables/useTableGrid"
 import useHttp from "@/composables/useHttp"
 import UserService from "../services"
+import { alertWithToast } from "@/utils/toast"
+import { questionSweet } from "@/utils/question"
 
-type Params =  string | string[][] | Record<string, string> | URLSearchParams | undefined
+type Params = string | string[][] | Record<string, string> | URLSearchParams | undefined
 
 export default () => {
+
   const data = reactive({
     rows: [],
     links: [],
     page: "1",
     search: "",
     sort: "",
-    direction: ""
+    direction: "",
+    offset: 0
   })
 
-  const {  
+  const loaded = ref(true)
+  const {
     errors,
-
-    getError     
   } = useHttp()
+
+
+  const getUSersScroll = () => UserService.getUsers(`offset=${data.offset}&${new URLSearchParams(route.query as Params).toString()}`)
 
   const {
     route,
     router,
-
     setSearch,
-    setSort, 
-  } = useTableGrid(data, "/users")
+    setSort,
+    loadScroll,
+  } = useTableGrid(data, getUSersScroll)
 
-  const getUsers = (routeQuery: string) => {  
-    return UserService.getUsers(routeQuery)
-      .then((response) => {
-        errors.value = {}
-        data.rows = response.data.rows.data
-        data.links = response.data.rows.links
-        data.search = response.data.search
-        data.sort = response.data.sort
-        data.direction = response.data.direction      
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+  const getUsers = async (routeQuery: string) => {
+    loaded.value = true
+    const response = await UserService.getUsers(`offset=0&${routeQuery}`)
+    errors.value = {}
+    data.rows = response.data.rows
+    data.search = response.data.search
+    data.sort = response.data.sort
+    data.direction = response.data.direction
+    data.offset = 10
+    loaded.value = false
+    
   }
 
-  const deleteRow = (rowId?: string) => {
-    if (rowId === undefined)
-      return
-    else if (confirm(`¿Estás seguro que desea eliminar el registro ${rowId}?`)) {    
-      return UserService.deleteUser(rowId)
-        .then((response) => {
-          errors.value = {}
-          router.push( { path: '/users' } )        
-        })
-        .catch((err) => {                
-          console.log( err.response.data )
-          errors.value = getError(err)
-        })
+  const deleteRow = async (rowId?: string) => {
+    if (rowId === undefined) return
+  
+    const persona = data.rows.find(e => e.uuid == rowId)
+
+    const confirm = await questionSweet('Info', `¿Estás seguro que desea eliminar a <strong>${persona.nombre}</strong>? Es un <strong>${persona.rol}</strong>`, 'question')
+
+    if(!confirm) return
+
+    try {
+      await UserService.deleteUser(rowId)
+      alertWithToast('Eliminado Correctamente', 'success')
+      getUsers(new URLSearchParams(route.query as Params).toString())
+    } catch (error) {
+      let message = error.response ? error.response.data.message : 'Ha ocurrido un error inesperado'
+      message = message.split('. (')[0]
+      alertWithToast(message, 'error')
     }
   }
 
-  onBeforeRouteUpdate(async (to, from) => {      
-    if (to.query !== from.query) {        
+  onBeforeRouteUpdate(async (to, from) => {
+    if (to.query !== from.query) {
       await getUsers(
         new URLSearchParams(to.query as Params).toString()
       )
@@ -71,7 +79,7 @@ export default () => {
 
   onMounted(() => {
     getUsers(
-      new URLSearchParams(route.query as Params).toString()
+      new URLSearchParams(route.query as Params).toString(),
     )
   })
 
@@ -79,9 +87,11 @@ export default () => {
     errors,
     data,
     router,
+    loaded,
     deleteRow,
     setSearch,
-    setSort
+    setSort,
+    loadScroll
   }
 }
 

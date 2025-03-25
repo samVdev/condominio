@@ -7,13 +7,17 @@ const { currentRoute } = useRouter()
 const layout = computed(
   () => `${currentRoute.value.meta.layout || defaultLayout}-layout`
 )
+
+//:key="$route.path.includes('/dashboard') ? '/dashboard' : $route.path"
+
 </script>
 
 <template>
   <component :is="layout">
     <router-view v-slot="{Component}">
-    <component :is="Component" :key="$route.path"></component>
-    </router-view>
+        <component :is="Component" ></component>
+      </router-view>
+
   </component>
 </template>
 

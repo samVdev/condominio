@@ -4,20 +4,29 @@ namespace App\Http\Services\User;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Models\User;
+use App\Models\Personas;
 
 class StoreUserService
 {
   
     static public function execute(StoreUserRequest $request): \Illuminate\Http\JsonResponse
-    {     
+    {
+        $persona = new Personas();
+        $persona->fullName = $request->name;
+        $persona->phone = $request->phone;
+        $persona->condominium_id = $request->apt_id;
+        $persona->save();
+
         $user = new User();
-        $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->role_id = $request->role_id;
-        $user->save();
+        $user->persona_id = $persona->id;
+        $user->suspend = $request->suspend;
 
-        return response()->json(["message"=> "Usuario creado"], 201);
+        $user->save();
+    
+        return response()->json(["message" => "Se ha creado con exito"], 201);
     }
 
 }
