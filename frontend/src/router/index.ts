@@ -8,13 +8,21 @@ import middlewarePipeline from "@/router/middlewarePipeline"
 import AuthRoutes from "@/modules/Auth/routes"
 import AuthorizationRoutes from "@/modules/Authorization/routes"
 import UserRoutes from "@/modules/User/routes"
+import ServicesRoutes from "@/modules/Services/routes"
+import ExpensesRoutes from "@/modules/Expenses/routes"
+import ReceiptsRoutes from "@/modules/Receipts/routes"
+import facturesRoutes from "@/modules/Factures/routes"
 
 const storeAuth = computed(() => useAuthStore())
 
 const routes: Array<RouteRecordRaw> = [
   ...AuthRoutes.map(route => route),
   ...AuthorizationRoutes.map(route => route),
-  ...UserRoutes.map(route => route)
+  ...UserRoutes.map(route => route),
+  ...ServicesRoutes.map(route => route),
+  ...ExpensesRoutes.map(route => route),
+  ...ReceiptsRoutes.map(route => route),
+  ...facturesRoutes.map(route => route),
 ]
 
 const router = createRouter({

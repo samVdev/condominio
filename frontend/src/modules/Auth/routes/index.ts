@@ -24,7 +24,23 @@ export default [
         path: "/dashboard",
         name: "dashboard",
         meta: { middleware: [auth, admin], layout: "default" },
-        component: () => import("@/modules/Auth/views/Dashboard.vue").then(m => m.default)
+        component: () => import("@/modules/Auth/views/Dashboard.vue").then(m => m.default),
+        children: [
+            {
+                path: "expenses/view/",
+                name: "expensesDash",
+                meta: { middleware: [auth, admin] },
+                props: true,
+                component: () => import("@/modules/Expenses/views/IndexView.vue").then(m => m.default),
+                children: [{
+                    path: "users/pendings",
+                    name: "usersPendingReceipts",
+                    meta: { middleware: [auth, admin]},
+                    props: true,
+                    component: () => import("@/modules/Receipts/views/usersPending.vue").then(m => m.default)
+                },]
+            },
+        ]
     },
     {
         path: "/:catchAll(.*)",

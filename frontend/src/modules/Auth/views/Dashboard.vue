@@ -1,38 +1,54 @@
 <script setup lang="ts">
 import CardDash from '@/modules/Auth/components/cardDash.vue';
-import TableUsersDash from '@/modules/Auth/components/tableUsersDash.vue';
 import useDashboard from '../composables/useDashboard';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import UsersOnlyTable from '@/modules/User/components/usersOnlyTable.vue';
 
 const {
   totalValues,
-  getCountedData
+  modalStyle,
+  getCountedData,
+  redirectTo,
 } = useDashboard()
 
 onMounted(() => {
   getCountedData()
 })
 
+
 </script>
 
 <template>
 
-  <main id="dashboard" class="mt-[-4vh]">
-
-    <section class="grid gap-5 px-2 md:px-5 parentGrid">
+  <main id="dashboard" class="mt-[-4vh] pb-10 md:pb-0 relative">
+    <router-view v-slot="{ Component }">
+      <Transition name="expandModal" :style="modalStyle">
+        <div v-if="$route.path.includes('/expenses/view')" class="overlay bg-[#fffffff2]" >
+          <h1 class="text-3xl font-semibold leading-loose text-gray-900 dark:text-white my-2 text-center" v-if="$route.query.date  == 'd'">Gastos en el Dia</h1>
+          <h1 class="text-3xl font-semibold leading-loose text-gray-900 dark:text-white my-2 text-center" v-else-if="$route.query.date  == 'w'">Gastos en la Semana</h1>
+          <h1 class="text-3xl font-semibold leading-loose text-gray-900 dark:text-white my-2 text-center" v-else-if="$route.query.date  == 'm'">Gastos en el Mes</h1>
+          <component :is="Component" :key="$route.path"/>
+        </div>
+      </Transition>
+    </router-view>
+    
+    <section class="grid gap-5 px-2 md:px-5 md:h-[80vh] parentGrid">
       <CardDash :redirect="false" icon="wallet" :value="`${totalValues.countTotal.toString()}$`" label="Cuenta" class="div1" />
-      <CardDash :redirect="true" icon="book-open" :value="totalValues.gastosDia.toString()" label="Gastos del dia" class="div2" />
-      <CardDash :redirect="true" icon="users" :value="totalValues.gastosSemana.toString()" label="Gastos de la semana" class="div3" />
-      <CardDash :redirect="true" icon="user-tie" :value="totalValues.gastosMes.toString()" label="Gastos del mes" class="div4" />
+      <CardDash :redirect="true" icon="book-open" @redirect="({e}) => redirectTo(e, '/dashboard/expenses/view/', 'd')"  :value="totalValues.gastosDia.toString()" label="Gastos del dia" class="div2" />
+      <CardDash :redirect="true" icon="users" @redirect="({e}) => redirectTo(e, '/dashboard/expenses/view/', 'w')"  :value="totalValues.gastosSemana.toString()" label="Gastos de la semana" class="div3" />
+      <CardDash :redirect="true" icon="user-tie" @redirect="({e}) => redirectTo(e, '/dashboard/expenses/view/', 'm')" :value="totalValues.gastosMes.toString()" label="Gastos del mes" class="div4" />
       <CardDash :redirect="true" icon="building" :value="totalValues.countTowerA.toString()" label="Torre A (Recibos)" class="div5" />
       <CardDash :redirect="true" icon="building" :value="totalValues.countTowerB.toString()" label="Torre B (Recibos)" class="div6" />
       <CardDash :redirect="true" icon="building" :value="totalValues.countTowerC.toString()" label="Torre C (Recibos)" class="div7" />
       <CardDash :redirect="true" icon="building" :value="totalValues.countRecibes.toString()" label="Torre D (Recibos)" class="div8" />
 
-      <article class="relative overflow-hidden div9">
+      <article class="relative overflow-hidden div9 border rounded-2xl bg-white shadow-md md:h-[100%] w-full">
         <div class="flex items-center justify-between py-5 mx-auto px-6">
-          <p class="text-title text-gray-600 mt-2">Inquilinos</p>
+          <p class="text-title text-gray-600">Inquilinos</p>
+          <router-link to="/users" class="bg-blue-600 text-white font-bold w-[50vw] md:w-[10%] gap-2 h-[50px] rounded-2xl px-4 flex place-items-center transition-all hover:bg-blue-500">
+            <p>Usuarios</p>
+            <font-awesome-icon icon="arrow-up-right-from-square" />
+          </router-link>
         </div>
         <UsersOnlyTable/>
       </article>
@@ -44,17 +60,13 @@ onMounted(() => {
 </template>
 
 <style>
-#dashboard article {
-  @apply border rounded-2xl  bg-white shadow-md h-[100%] w-full;
-}
-
 #dashboard .text-title {
   @apply text-2xl font-bold my-5 block;
 }
 
 .parentGrid {
 grid-template-columns: repeat(2, 1fr);
-grid-template-rows: repeat(5, 1fr);
+grid-template-rows: repeat(auto, 1fr);
 }
 
 .div1 { grid-area: 1 / 1 / 2 / 2; }
@@ -71,7 +83,7 @@ grid-template-rows: repeat(5, 1fr);
 @media (min-width: 768px) {
   .parentGrid {
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(5, 1fr);
+  grid-template-rows: repeat(4, 1fr);
 }
 
 .div1 {
@@ -110,8 +122,5 @@ grid-template-rows: repeat(5, 1fr);
   grid-area: 1 / 2 / 4 / 6;
 }
 }
-
-
-
 
 </style>

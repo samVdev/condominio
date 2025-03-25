@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\Menu\{
     ChildrenMenuRequest,
-    StoreMenuRequest,
-    UpdateMenuRequest,
+    FormMenuRequest,
     DestroyMenuRequest
 };
 use App\Http\Services\Menu\{
@@ -31,7 +30,7 @@ class MenuController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request): JsonResponse
-    {//dd($request->query());
+    {
         return MenuService::execute($request);
     }   
     
@@ -46,25 +45,12 @@ class MenuController extends Controller
         return ChildreMenuService::execute($request);        
     }
     
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\Menu\StoreMenuRequest $request     
-     * @return \Illuminate\Http\RedirectResponse     
-     */
-    public function store(StoreMenuRequest $request): JsonResponse
+    public function store(FormMenuRequest $request): JsonResponse
     {
         return StoreMenuService::execute($request);
     }
    
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\Menu\UpdateMenuRequest $request
-     * @param  \App\Models\Menu  $menu
-     * @return \Illuminate\Http\RedirectResponse
-     */ 
-    public function update(UpdateMenuRequest $request, Menu $menu): JsonResponse
+    public function update(FormMenuRequest $request, Menu $menu): JsonResponse
     {
         return UpdateMenuService::execute($request, $menu);
     }

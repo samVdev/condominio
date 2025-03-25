@@ -15,10 +15,10 @@ import Index from '@/layouts/landing/index.vue';
       <main class="pt-[10vh] 2xl:pt-[9vh]">
          <Index />
 
-         <section class="bg-[#ea5165] min-h-[30vh] px-2 py-10 pt-14 text-center">
+         <section class="bg-[#EA5165] min-h-[30vh] px-2 py-10 pt-14 text-center">
             <h3 class="font-extrabold text-3xl md:text-5xl text-white">Bienvenido a Condominio Yutaje</h3>
             <p class="mt-4 font-medium text-lg md:text-xl md:font-semibold text-white">Simplifica la administración del condominio con una plataforma que conecta residentes y administradores.</p>
-            <router-link to="/login" class="bg-white text-[#ea5165] mt-10 block w-[80%] font-bold py-4 px-6 rounded-2xl transition duration-200 mx-auto  md:hover:w-[25%] md:w-[30%]">Iniciar Sesión</router-link>
+            <router-link to="/login" class="bg-white text-[#EA5165] mt-10 block w-[80%] font-bold py-4 px-6 rounded-2xl transition duration-200 mx-auto  md:hover:w-[25%] md:w-[30%]">Iniciar Sesión</router-link>
          </section>
 
          <Characteristics/>

@@ -3,66 +3,69 @@
 import useIndex from "../composables/useIndex";
 import AppPaginationB from "@/components/AppPaginationB.vue";
 import tablesHeader from "@/components/tablesHeader.vue"
-import AppBtn from "@/components/AppBtn.vue"
-import AvatarIcon from "@/icons/AvatarIcon.vue"
 import ActionsTable from "@/components/actionsTable.vue";
+import Loader from "@/components/Loader.vue";
 
 const {
   errors,
   data,
   router,
-
+  loaded,
   deleteRow,
   setSearch,
-  setSort  
+  setSort,
+  loadScroll
 } = useIndex()
 
 </script>
 
 <template>
-      <div class="w-full">
-        <table class="rounded-none rounded-b-none">
-          <thead class="bg-[#EC6476] text-white border-b-[1px] border-gray-300">
-            <tr class="">
-              <th class="py-3">
-                <a to="#" class="cursor-pointer" @click.prevent="setSort('name')">Nombre</a>
-              </th>
-              <th class="py-3">
-                <a to="#" class="cursor-pointer" @click.prevent="setSort('email')">Correo</a>
-              </th>
-              <th class="py-3">
-                <a to="#" class="cursor-pointer" @click.prevent="setSort('email')">Celular</a>
-              </th>
-              <th class="py-3">
-                <a to="#" class="cursor-pointer" @click.prevent="setSort('Apartamento')">Apartamento</a>
-              </th>
-              <th class="py-3">
-                <a to="#" class="cursor-pointer" @click.prevent="setSort('recibos')">Recibos Pendientes</a>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="row in data.rows" :key="row.uuid" class="">
-              <td class="">
-                {{ row.nombre }}
-              </td>
-              <td class="">
-                {{ row.email }}
-              </td>
-              <td class="">
-                {{ row.phone }}
-              </td>
-              <td class="">
-                {{ row.apt }}
-              </td>
-              <td class="">
-                {{ row.pending_receipts }}
-              </td>
-            </tr>
-            <tr class="FadeTR" v-if="data.rows.length === 0">
-              <td class="" colspan="8">Usuarios no encontrados.</td>
-            </tr>
-          </tbody>
-        </table>
+<div class="relative overflow-auto md:h-[70%] md:px-4">
+  <div class="fakeTable mx-auto h-full" @scroll="loadScroll">
+    <article class="fakeTable-head h-[15%] grid-cols-6">
+                <a to="#" class="cursor-pointer" @click.prevent="setSort('name')">
+                  Nombre
+                  <font-awesome-icon icon="sort" class="ml-2"/>
+                </a>
+                <a to="#" class="cursor-pointer" @click.prevent="setSort('email')">
+                  Correo
+                  <font-awesome-icon icon="sort" class="ml-2"/>
+                </a>
+                <a to="#" class="cursor-pointer" @click.prevent="setSort('phone')">
+                  Celular
+                  <font-awesome-icon icon="sort" class="ml-2"/>
+                </a>
+                <a to="#" class="cursor-pointer" @click.prevent="setSort('tower')">
+                  Torre
+                  <font-awesome-icon icon="sort" class="ml-2"/>
+                </a>
+                <a to="#" class="cursor-pointer" @click.prevent="setSort('apt')">
+                  Apartamento
+                  <font-awesome-icon icon="sort" class="ml-2"/>
+                </a>
+                <a to="#" class="cursor-pointer" @click.prevent="setSort('recibos')">
+                  Recibos pendientes
+                  <font-awesome-icon icon="sort" class="ml-2"/>
+                </a>
+    </article>
+
+        
+    <section v-if="data.rows.length > 0">
+    <div v-for="row in data.rows" :key="row.uuid" class="grid-cols-6 fakeTable-body">
+      <p>{{ row.nombre }}</p>
+      <p>{{ row.email }}</p>
+      <p>{{ row.phone }}</p>
+      <p>{{ row.tower }}</p>
+      <p>{{ row.apt }}</p>
+      <p>{{ row.pending_receipts }}</p>
+    </div>
+  </section>
+
+  <div class="FadeTR" v-if="data.rows.length === 0">
+        <Loader v-if="loaded" />
+        <p v-else>Usuarios no encontrados.</p>
       </div>
+  </div>
+
+</div>
 </template>

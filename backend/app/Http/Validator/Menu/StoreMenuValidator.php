@@ -11,11 +11,9 @@ class StoreMenuValidator
   static public function rule(StoreMenuRequest $request) {  
   
         $validator = Validator::make($request->all(), [
-            'menu_id' => 'required',
             'title' => 'required',             
             'path' => 'required',
-            //'icon' => 'required',
-            'sort' => 'required'            
+            'icon' => 'required',
         ]);
         
         return $validator;  

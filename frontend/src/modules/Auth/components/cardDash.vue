@@ -12,7 +12,9 @@ const props = defineProps<{
 
 <template>
     <div class="ThisDiv grid border border-stroke bg-white px-7.5 px-5 py-6 rounded-xl shadow-xl relative" :class="class">
-        <font-awesome-icon icon="arrow-up-right-from-square" class="absolute top-5 right-5 cursor-pointer" v-if="redirect"/>
+        <button class="absolute top-5 right-5 cursor-pointer" @click="(e) => $emit('redirect', {e: e})" v-if="redirect">
+        <font-awesome-icon icon="arrow-up-right-from-square"/>
+        </button>
         <font-awesome-icon :icon="icon" class="p-3 rounded-full bg-[#EA5165e3] text-white"/>
         <h4 class="text-2xl font-bold text-black my-5">{{ value }}</h4>
         <p class="text-xl font-medium capitalize text-gray-700">{{ label }}</p>

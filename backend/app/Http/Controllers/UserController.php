@@ -67,10 +67,10 @@ class UserController extends Controller
      * @param  \App\Models\User $user
      * @return \Illuminate\Http\JsonResponse
      */     
-    public function update(UpdateUserRequest $request, User $user): JsonResponse
+    public function update(UpdateUserRequest $request, String $uuid): JsonResponse
     {
         if (Auth::user()->isAdmin()) {
-            return UpdateUserService::execute($request, $user);
+            return UpdateUserService::execute($request, $uuid);
         }
         return  response()->json(["message" => "Forbidden"], 403);
     }
@@ -84,9 +84,11 @@ class UserController extends Controller
     public function destroy(Request $request): JsonResponse
     {      
         if (Auth::user()->isAdmin()) {
-            User::destroy($request->id);
+            $user = User::where('uuid', $request->uuid)->first();
+            if(!$user) return response()->json(['error' => 'Usuario no encontrado'], 404);
+            $user->delete();
             return response()->json(204);            
         }
-        return  response()->json(["message" => "Forbidden"], 403);
+        return  response()->json(["message" => "Ocurrio un error al eliminarlo"], 403);
     }
 }

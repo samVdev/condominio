@@ -1,22 +1,17 @@
 <script lang="ts" setup>
 import { useSidebar } from '@/composables/useSidebar';
-import { useAuthStore } from "@/modules/Auth/stores/index"
-import { getAuthMenu } from "@/modules/Auth/services"
-import { ref, onMounted } from "vue"
-
-const menus = ref<any[]>([])
-const loading = ref(false)
-const store = useAuthStore()
+import { Menu } from '@/types/Menu';
+import { computed } from 'vue';
 const { isClose } = useSidebar()
 
-onMounted(async () => {
-  if (store.authUser) {
-    loading.value = true
-    const response = await getAuthMenu()
-    menus.value = response.data
-    loading.value = false
-  }
-})
+const props = defineProps<{
+  menus: any
+}>()
+
+const activeClass = computed(() => {
+  return isClose ? 'activeOpen' : 'activeClose';
+});
+
 </script>
 
 
@@ -28,7 +23,7 @@ onMounted(async () => {
       <ul 
       class="mt-16">
         <li v-for="item in menus" :key="item.name" 
-        :class="isClose ? `justify-center bg-white rounded-full border-1 shadow-md overflow-hidden hover:text-white hover:bg-[#EA5165]` : 'hover:bg-white hover:text-[#EA5165]'"
+        :class="isClose ? `justify-center bg-white rounded-full border-1 shadow-md overflow-hidden hover:text-white hover:bg-[#EA5165] activeOpen` : 'hover:bg-white hover:text-[#EA5165] activeClose'"
         class="my-4 mx-4 rounded-xl transition ease-in duration-[.1s]">
           <router-link
             :to="`/${item.path}`"
@@ -47,3 +42,13 @@ onMounted(async () => {
       </ul>
     </nav>
 </template>
+
+<style>
+.activeClose > .router-link-active {
+  @apply rounded-xl bg-white text-[#EA5165]
+}
+
+.activeOpen > .router-link-active{
+  @apply rounded-xl bg-[#EA5165] text-white
+}
+</style>

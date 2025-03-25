@@ -18,14 +18,43 @@ class PersonasTableSeeder extends Seeder
         Personas::create([
             'fullName' => 'Juan Pérez',
             'phone' => '123456789',
-            'condominium_id' => 1, 
+            'condominium_id' => 2, 
         ]);
 
         Personas::create([
             'fullName' => 'María Gómez',
             'phone' => '987654321',
-            'condominium_id' => 1,
+            'condominium_id' => 2,
         ]);
+
+        Personas::create([
+            'fullName' => 'Pablo Gómez',
+            'phone' => '987654321',
+            'condominium_id' => 14,
+        ]);
+
+
+        Personas::create([
+            'fullName' => 'JUan Gómez',
+            'phone' => '987654321',
+            'condominium_id' => 28,
+        ]);
+
+
+
+        Personas::create([
+            'fullName' => 'Valeria Gómez',
+            'phone' => '987654321',
+            'condominium_id' => 4,
+        ]);
+
+
+        Personas::create([
+            'fullName' => 'Jenifer Gómez',
+            'phone' => '987654321',
+            'condominium_id' => 5,
+        ]);
+
 
     }
 }

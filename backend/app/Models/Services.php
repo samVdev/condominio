@@ -11,6 +11,7 @@ class Services extends Model
 
     protected $fillable = [
         'service_type',
+        'is_for_elevators'
     ];
 
     // Relación con gastos

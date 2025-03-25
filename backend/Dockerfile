@@ -1,5 +1,7 @@
 FROM php:8.2.4-fpm
 
+ENV TZ=America/Caracas
+
 # Copy composer.lock and composer.json into the working directory
 COPY composer.lock composer.json /var/www/html/
 
@@ -46,5 +48,5 @@ RUN chown -R www-data:www-data \
 
 # Expose port 9000 and start php-fpm server (for FastCGI Process Manager)
 EXPOSE 9000
-CMD ["php-fpm"]
+CMD php artisan schedule:work &  php artisan dolar:check & php-fpm
 

@@ -8,27 +8,23 @@ import Create from './Create.vue';
 import Edit from './Edit.vue';
 import ActionsTable from '@/components/actionsTable.vue';
 import { questionSweet } from '@/utils/question';
+import Loader from '@/components/Loader.vue';
+import FormMenus from "../Menus/FormMenus.vue"
 
-const isOpenCreate = ref(false);
+const isOpenModal = ref(false);
 const isOpen = ref(false);
 const menu = ref({});
 const menus = ref([]);
-
-const openModalCreate = () => {
-  isOpenCreate.value = true;
-};
+const loaded = ref(true);
 
 const openModal = () => {
-  isOpen.value = true;
-};
-
-const closeModalCreate = () => {
-  isOpenCreate.value = false;
+  isOpenModal.value = true;
 };
 
 const closeModal = () => {
-  isOpen.value = false;
-};
+  menu.value = {};
+  isOpenModal.value = false;
+}
 
 const edit = (data: any) => {
   menu.value = data;
@@ -36,14 +32,20 @@ const edit = (data: any) => {
 };
 
 const get = async () => {
+  loaded.value = true
   menus.value = [];
+try {
   const response = await MenuService.getMenus();
   menus.value = response.data.data;
+} catch (error) {
+  
+} finally {
+  loaded.value = false
+}
 };
 
 const saved = async () => {
-  closeModalCreate();
-  closeModal();
+  closeModal()
   await get();
 };
 
@@ -62,10 +64,10 @@ onMounted(async () => {
 
 <template>
   <div>
-    <tablesHeader icon="list" title="Menús" :searchActive="false" :btnCreate="true" @create="openModalCreate()" />
+    <tablesHeader icon="list" title="Menús" :searchActive="false" :btnCreate="true" @create="openModal()" />
 
     <div class="overflow-hidden mt-6 mx-auto md:w-[90%]">
-      <table class="table-data">
+      <table class="table-animation">
         <thead>
           <tr class="">
             <th class="">Menu</th>
@@ -85,16 +87,19 @@ onMounted(async () => {
               <ActionsTable :deleteBtn="true" :editBtn="true" @edit="edit(menu)" @remove="remove(menu.id)" />
             </td>
           </tr>
+          
+          <tr v-if="menus.length == 0">
+            <td class="" colspan="8" >
+                <Loader v-if="loaded"/>
+                <p v-else>Menus no encontrados.</p>
+              </td>
+          </tr>
         </tbody>
       </table>
 
-      <div class="fixed z-[1000] inset-0 overflow-y-auto ease-out duration-400" v-if="isOpenCreate">
-        <Create @closeModal0="closeModalCreate" @saved="saved" />
+      <div class="fixed z-[1000] inset-0 grid place-items-center transition-all bg-black/80" v-if="isOpenModal">
+        <FormMenus @closeModal="closeModal" @saved="saved" :menuToEdit="menu"/>
       </div>
-      <div class="fixed z-[1000] inset-0 overflow-y-auto ease-out duration-400" v-if="isOpen">
-        <Edit :menu="menu" @closeModal1="closeModal" @updated="saved"/>
-      </div>
-
     </div>
   </div>
 </template>
