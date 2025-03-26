@@ -33,7 +33,9 @@ class IndexUserService
             ->join('condominium', 'personas.condominium_id', '=', 'condominium.id')
             ->join('condominium as tower', 'condominium.condominium_id', '=', 'tower.id')
             ->join('roles', 'roles.id', '=', 'users.role_id')
-            ->leftJoin('factures', 'factures.condominium_id', '=', 'condominium.condominium_id')
+            ->leftJoin('factures', function ($join) {
+                $join->on('factures.id', '>', \DB::raw('0'));
+            })
             ->leftJoin('receipts', function ($join) {
                 $join->on('receipts.persona_id', '=', 'personas.id')
                      ->on('receipts.facture_id', '=', 'factures.id');
@@ -64,7 +66,6 @@ class IndexUserService
             $query->whereExists(function ($subquery) use ($facture) {
                 $subquery->select(DB::raw(1))
                     ->from('factures')
-                    ->whereColumn('factures.condominium_id', 'condominium.condominium_id')
                     ->where('factures.id', $facture);
             })
             ->whereRaw("

@@ -22,7 +22,7 @@ class FormFactureRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tower' => 'required|integer|exists:condominium,id',
+            'month' => 'required|numeric|min:1|max:12',
             'porcent' => 'required|numeric|min:0|max:10',
         ];
     }
@@ -35,9 +35,10 @@ class FormFactureRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'tower.required' => 'La torre es obligatoria.',
-            'tower.integer' => 'La torre debe ser un número entero.',
-            'tower.exists' => 'La torre seleccionada no existe.',
+            'month.required' => 'El mes es obligatorio.',
+            'porcent.numeric' => 'El mes debe ser un valor numérico.',
+            'month.min' => 'El mes debe de ser valido.',
+            'month.max' => 'El mes debe de ser valido.',
 
             'porcent.required' => 'El porcentaje es obligatorio.',
             'porcent.numeric' => 'El porcentaje debe ser un valor numérico.',

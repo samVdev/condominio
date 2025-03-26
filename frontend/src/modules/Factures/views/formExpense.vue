@@ -1,26 +1,13 @@
 <script lang="ts" setup>
 import Loader from '@/components/Loader.vue';
 import useFormExpense from '../composables/useFormFactures';
-import useIndex from "@/modules/Apartaments/composables/useIndex"
-import indexService from "@/modules/Services/composables/useIndex"
-import { onMounted } from 'vue';
+import { meses } from '@/utils/constantes/months';
 
 const {
     data,
     sending,
     submit,
 } = useFormExpense()
-
-const {
-    getTowers,
-    towers
-  } = useIndex()
-
-
-
-onMounted(() => {
-    getTowers()
-})
 
 </script>
 
@@ -41,11 +28,11 @@ onMounted(() => {
                 </div>
 
                 <div class="mb-4">
-                    <label for="tower" class="block text-sm font-medium text-gray-700">Torre:</label>
-                    <select id="tower" required name="tower" v-model="data.tower" v-if="towers.length > 0"
+                    <label for="month" class="block text-sm font-medium text-gray-700">Mes:</label>
+                    <select id="month" required name="month" v-model="data.month"
                         class="mt-2 p-3 w-full">
-                        <option value="" disabled selected>Selecciona una torre</option>
-                        <option :value="tower.id" v-for="tower in towers">{{tower.Nombre}}</option>
+                        <option value="" disabled selected>Selecciona un mes</option>
+                        <option :value="index + 1" v-for="(mes, index) in meses">{{mes}}</option>
                     </select>
                 </div>
 

@@ -18,15 +18,16 @@ export default () => {
   const sending = ref(false)
   const data = ref<factureType>({
     id: '',
-    tower: '',
+    month: '',
     total: 0,
-    dollarBefore: 0,
     porcent: 0,
-    created: getDate()
+    created: getDate(),
+    mount_dollars: 0,
+    mount_bs: 0,
+    dollar_bcv: 0,
   })
 
   const router = useRouter()
-  const route = useRoute()
 
   const insertFacture = async () => {
     try {

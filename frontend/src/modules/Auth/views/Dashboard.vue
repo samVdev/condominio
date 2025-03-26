@@ -37,10 +37,10 @@ onMounted(() => {
       <CardDash :redirect="true" icon="book-open" @redirect="({e}) => redirectTo(e, '/dashboard/expenses/view/', 'd')"  :value="totalValues.gastosDia.toString()" label="Gastos del dia" class="div2" />
       <CardDash :redirect="true" icon="users" @redirect="({e}) => redirectTo(e, '/dashboard/expenses/view/', 'w')"  :value="totalValues.gastosSemana.toString()" label="Gastos de la semana" class="div3" />
       <CardDash :redirect="true" icon="user-tie" @redirect="({e}) => redirectTo(e, '/dashboard/expenses/view/', 'm')" :value="totalValues.gastosMes.toString()" label="Gastos del mes" class="div4" />
-      <CardDash :redirect="true" icon="building" :value="totalValues.countTowerA.toString()" label="Torre A (Recibos)" class="div5" />
-      <CardDash :redirect="true" icon="building" :value="totalValues.countTowerB.toString()" label="Torre B (Recibos)" class="div6" />
-      <CardDash :redirect="true" icon="building" :value="totalValues.countTowerC.toString()" label="Torre C (Recibos)" class="div7" />
-      <CardDash :redirect="true" icon="building" :value="totalValues.countRecibes.toString()" label="Torre D (Recibos)" class="div8" />
+      <CardDash :redirect="true" icon="building" :value="totalValues.countTowerA.toString()" label="Torre A (Recibos Pendientes)" class="div5" />
+      <CardDash :redirect="true" icon="building" :value="totalValues.countTowerB.toString()" label="Torre B (Recibos Pendientes)" class="div6" />
+      <CardDash :redirect="true" icon="building" :value="totalValues.countTowerC.toString()" label="Torre C (Recibos Pendientes)" class="div7" />
+      <CardDash :redirect="true" icon="building" :value="totalValues.countRecibes.toString()" label="Torre D (Recibos Pendientes)" class="div8" />
 
       <article class="relative overflow-hidden div9 border rounded-2xl bg-white shadow-md md:h-[100%] w-full">
         <div class="flex items-center justify-between py-5 mx-auto px-6">

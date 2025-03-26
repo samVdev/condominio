@@ -14,7 +14,7 @@ class Factures extends Model
         'porcent_first_five_days',
         'total_dollars',
         'dollar_bcv',
-        'condominium_id'
+        'number_month'
     ];
 
     public function expenses()
@@ -25,10 +25,5 @@ class Factures extends Model
     public function recibes()
     {
         return $this->hasMany(Receipt::class);
-    }
-
-    public function condominium()
-    {
-        return $this->belongsTo(Condominium::class);
     }
 }

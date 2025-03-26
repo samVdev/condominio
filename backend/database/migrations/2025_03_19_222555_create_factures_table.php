@@ -14,13 +14,11 @@ return new class extends Migration
         Schema::create('factures', function (Blueprint $table) {
             $table->id();
             $table->date('fecha');
-            $table->unsignedBigInteger('condominium_id');
+            $table->string('number_month', 2)->unique();
             $table->decimal('porcent_first_five_days', 10, 2);
             $table->decimal('total_dollars', 10, 2); 
             $table->decimal('dollar_bcv', 10, 2); 
             $table->timestamps();
-
-            $table->foreign('condominium_id')->references('id')->on('condominium')->onDelete('cascade');
         });
 
 
