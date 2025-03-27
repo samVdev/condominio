@@ -2,13 +2,13 @@
 
 namespace App\Http\Services\Services;
 
-use App\Http\Requests\Services\ServiceRequest;
+use App\Http\Requests\Services\ServiceEditRequest;
 use Illuminate\Http\JsonResponse;
 use App\Models\Services;
 
 class editService
 {
-    static public function index(ServiceRequest $request, string $id): JsonResponse
+    static public function index(ServiceEditRequest $request, string $id): JsonResponse
     {
         $service = Services::where('id', $id)->first();
 

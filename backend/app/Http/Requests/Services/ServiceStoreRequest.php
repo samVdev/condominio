@@ -4,7 +4,7 @@ namespace App\Http\Requests\Services;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ServiceRequest extends FormRequest
+class ServiceStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,6 @@ class ServiceRequest extends FormRequest
             'name.max' => 'El nombre del servicio no puede tener más de 255 caracteres.',
 
             'is_elevator.boolean' => 'El valor del ascensor debe ser verdadero o falso.',
-
-            'id.exists' => 'El servicio no existe.',
         ];
     }
 
@@ -38,7 +36,6 @@ class ServiceRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'is_elevator' => ['boolean'],
-            'id' => ['exists:services,id']
         ];
     }
 }
