@@ -25,7 +25,7 @@ class storeService
         if ($existingFacture) return response()->json(["message" => 'Ya existe una factura para este mes'], 400);
 
         $expenses = Expenses::whereNull('facture_id')
-            ->whereMonth('created_at', $createdAt->month)
+            ->whereMonth('created_at', $request->month)
             ->whereYear('created_at', $createdAt->year)
             ->get();
 

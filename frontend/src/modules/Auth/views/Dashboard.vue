@@ -44,7 +44,7 @@ onMounted(() => {
 
       <article class="relative overflow-hidden div9 border rounded-2xl bg-white shadow-md md:h-[100%] w-full">
         <div class="flex items-center justify-between py-5 mx-auto px-6">
-          <p class="text-title text-gray-600">Inquilinos</p>
+          <p class="text-title text-gray-600">Propietarios</p>
           <router-link to="/users" class="bg-blue-600 text-white font-bold w-[50vw] md:w-[10%] gap-2 h-[50px] rounded-2xl px-4 flex place-items-center transition-all hover:bg-blue-500">
             <p>Usuarios</p>
             <font-awesome-icon icon="arrow-up-right-from-square" />
