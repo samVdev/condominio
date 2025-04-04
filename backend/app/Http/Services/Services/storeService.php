@@ -2,14 +2,14 @@
 
 namespace App\Http\Services\Services;
 
-use App\Http\Requests\Services\ServiceRequest;
+use App\Http\Requests\Services\ServiceStoreRequest;
 use Illuminate\Http\JsonResponse;
 use App\Models\Services;
 
 
 class storeService
 {
-    static public function index(ServiceRequest $request): JsonResponse
+    static public function index(ServiceStoreRequest $request): JsonResponse
     {
         $service = new Services;
 

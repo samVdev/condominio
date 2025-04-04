@@ -17,17 +17,15 @@ class storeService
 
         $createdAt = Carbon::now();
 
-        $existingFacture = Factures::where('condominium_id', $request->tower)
-            ->whereMonth('fecha', $createdAt->month)
+        $existingFacture = Factures::whereMonth('fecha', $createdAt->month)
+            ->where('number_month', $request->month)
             ->whereYear('fecha', $createdAt->year)
             ->first();
 
-
         if ($existingFacture) return response()->json(["message" => 'Ya existe una factura para este mes'], 400);
 
-        $expenses = Expenses::where('condominium_id', $request->tower)
-            ->whereNull('facture_id')
-            ->whereMonth('created_at', $createdAt->month)
+        $expenses = Expenses::whereNull('facture_id')
+            ->whereMonth('created_at', $request->month)
             ->whereYear('created_at', $createdAt->year)
             ->get();
 
@@ -40,8 +38,8 @@ class storeService
             'fecha' => $createdAt->format('Y-m-d'),
             'porcent_first_five_days' => $request->porcent,
             'total_dollars' => $totalAmount,
+            'number_month' =>  $request->month,
             'dollar_bcv' => $dolar,
-            'condominium_id' => $request->tower,
         ]);
 
         foreach ($expenses as $expense) {

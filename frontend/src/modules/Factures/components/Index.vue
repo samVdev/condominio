@@ -6,6 +6,7 @@ import { onMounted } from "vue";
 import type { Params } from "@/types/params";
 import ActionsTable from "@/components/actionsTable.vue";
 import { parsePrices } from "@/utils/parsePrices";
+import { meses } from "@/utils/constantes/months";
 
 const props = defineProps<{
   activeCreate?: boolean,
@@ -41,8 +42,8 @@ onMounted(() => getFactures(`?offset=${factures.offset}&${new URLSearchParams(ro
                 Fecha
                 <font-awesome-icon icon="sort" class="ml-2" />
               </a>
-              <a to="#" class="cursor-pointer" @click.prevent="setSort('tower')">
-                Torre
+              <a to="#" class="cursor-pointer" @click.prevent="setSort('mes')">
+                Mes
                 <font-awesome-icon icon="sort" class="ml-2" />
               </a>
               <a to="#" class="cursor-pointer" @click.prevent="setSort('mount')">
@@ -61,9 +62,9 @@ onMounted(() => getFactures(`?offset=${factures.offset}&${new URLSearchParams(ro
           </article>
 
           <section v-if="factures.rows.length > 0">
-          <div v-for="row in factures.rows" :key="row.id" class="fakeTable-body" :class="toUserExpenses ? 'grid-cols-5' : 'grid-cols-6'">
+          <div v-for="row in factures.rows" :key="row.id" class="fakeTable-body capitalize" :class="toUserExpenses ? 'grid-cols-5' : 'grid-cols-6'">
             <p>{{ row.created }}</p>
-            <p>{{ row.tower }}</p>
+            <p>{{ meses[row.month - 1] }}</p>
             <p>{{ parsePrices(row.mount_dollars).dol }}</p>
             <p>{{ parsePrices(row.mount_bs).bs }}</p>
             <p>{{ row.dollar_bcv }} bs.</p>

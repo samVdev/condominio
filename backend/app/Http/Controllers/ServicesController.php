@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Services\ServiceRequest;
+use App\Http\Requests\Services\ServiceEditRequest;
+use App\Http\Requests\Services\ServiceStoreRequest;
 use App\Http\Services\Services\deleteService;
 use App\Http\Services\Services\editService;
 use App\Http\Services\Services\getMiniumService;
@@ -29,12 +30,12 @@ class ServicesController extends Controller
         return showService::index($id);
     }
 
-    public function store(ServiceRequest $request): JsonResponse
+    public function store(ServiceStoreRequest $request): JsonResponse
     {
          return storeService::index($request);
      } 
 
-    public function edit(ServiceRequest $request, string $id): JsonResponse
+    public function edit(ServiceEditRequest $request, string $id): JsonResponse
    {
         return editService::index($request, $id);
     } 

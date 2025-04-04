@@ -22,12 +22,10 @@ class indexService
         $offset = $request->input("offset");
         $user = $request->input("user");
 
-        $facturesDB = Factures::
-        join('condominium', 'factures.condominium_id', 'condominium.id')
-        ->select(
-        'factures.id', 'factures.condominium_id', 
-        'factures.created_at', 'condominium.Nombre',
-        'factures.total_dollars', 'factures.dollar_bcv'
+        $facturesDB = Factures::select(
+        'factures.id',
+        'factures.created_at',
+        'factures.total_dollars', 'factures.dollar_bcv', 'factures.number_month'
     );
 
 
@@ -57,7 +55,6 @@ class indexService
     if ($sort) {
         $reallySort = '';
         if($sort == 'created') $reallySort = 'factures.created_at';
-        else if($sort == 'tower') $reallySort = 'condominium.Nombre';
         else if($sort == 'mount') $reallySort = 'factures.total_dollars';
         
         $facturesDB->orderBy($reallySort, $direction);
@@ -71,7 +68,7 @@ class indexService
 
             return [
                 'id' => $expense->id,               
-                'tower' => $expense->Nombre,
+                'month' => $expense->number_month,
                 'mount_dollars' => $price,
                 'mount_bs' => $price * $bcv,
                 'dollar_bcv' => $bcv,
