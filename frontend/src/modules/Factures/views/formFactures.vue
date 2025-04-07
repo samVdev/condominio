@@ -9,6 +9,8 @@ const {
     submit,
 } = useFormExpense()
 
+const month = new Date().getMonth()
+
 </script>
 
 
@@ -16,7 +18,6 @@ const {
     <section class="relative h-full w-full grid place-items-center">
         <form @submit.prevent="submit" class="relative bg-white p-20 rounded-xl w-full md:w-[40%]">
             <label class="absolute top-3 right-5 cursor-pointer text-3xl" @click="$router.push('/factures')">x</label>
-
             <h3 class="text-2xl font-bold text-gray-600 mb-10">Nueva Factura</h3>
 
             <div class="grid lg:grid-cols-2 gap-4">
@@ -30,9 +31,9 @@ const {
                 <div class="mb-4">
                     <label for="month" class="block text-sm font-medium text-gray-700">Mes:</label>
                     <select id="month" required name="month" v-model="data.month"
-                        class="mt-2 p-3 w-full">
+                        class="mt-2 p-3 w-full capitalize">
                         <option value="" disabled selected>Selecciona un mes</option>
-                        <option :value="index + 1" v-for="(mes, index) in meses">{{mes}}</option>
+                        <option :value="index + 1" v-for="(mes, index) in meses.filter((e, i) => i <= month)">{{mes}}</option>
                     </select>
                 </div>
 

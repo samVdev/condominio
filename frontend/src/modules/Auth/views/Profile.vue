@@ -6,14 +6,14 @@ import InputPassword from "@/components/inputPassword.vue";
 const { 
   userInfo,
   passwords,
-  updateUser,
+  getUser,
   submitInfoUser,
   submitPasswordUser
 } = useEditProfile()
 
 
 onMounted(() => {
-  updateUser()
+  getUser()
 })
 
 </script>
@@ -44,6 +44,15 @@ onMounted(() => {
                   <input type="tel" v-model="userInfo.tel" name="tel" id="tel" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" 
                   placeholder="Ingresa tu teléfono" required>
               </div>
+
+              <div class="w-full">
+                  <label for="brand" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Torre</label>
+                  <input type="text" v-model="userInfo.tower" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" disabled>
+              </div>
+              <div class="w-full">
+                  <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Apartamento</label>
+                  <input type="tel" v-model="userInfo.apt" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" disabled>
+              </div>
           </div>
             <button type="submit" class="text-white block bg-[#EA5165] hover:bg-[#f3455c] focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
                   Actualizar información
@@ -55,15 +64,15 @@ onMounted(() => {
           <div class="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
               <div class="sm:col-span-2">
                   <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contraseña actual</label>
-                  <InputPassword v-model="passwords.current" name="current" placeholder="Ingresa tu contraseña actual" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"/>
+                  <InputPassword v-model="passwords.current_password" name="current_password" placeholder="Ingresa tu contraseña actual" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"/>
               </div>
               <div class="w-full">
                   <label for="brand" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nueva Contraseña</label>
-                  <InputPassword v-model="passwords.newPassword" name="newPassword" placeholder="Ingresa tu nueva contraseña" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"/>
+                  <InputPassword v-model="passwords.password" name="password" placeholder="Ingresa tu nueva contraseña" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"/>
               </div>
               <div class="w-full">
                   <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Confirmar nueva Contraseña</label>
-                  <InputPassword v-model="passwords.confirmNewPassword" name="confirmNewPassword" placeholder="Ingresa tu nueva contraseña nuevamente" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"/>
+                  <InputPassword v-model="passwords.password_confirmation" name="password_confirmation" placeholder="Ingresa tu nueva contraseña nuevamente" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"/>
               </div>
           </div>
             <button type="submit" class="text-white block bg-[#EA5165] hover:bg-[#f3455c] focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">

@@ -25,7 +25,7 @@ class editExpensesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'mount_bs' => 'required|numeric|min:100',
+            'mount_dollars' => 'required|numeric|min:100',
             'porcent' => 'numeric|min:0',
             'id' => 'nullable|string',
             'service' => 'required|integer|exists:services,id',
@@ -42,9 +42,9 @@ class editExpensesRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'mount_bs.required' => 'El Gasto es obligatorio.',
-            'mount_bs.numeric' => 'El Gasto debe ser un número.',
-            'mount_bs.min' => 'El Gasto debe ser minimo 100 bs.',
+            'mount_dollars.required' => 'El Gasto es obligatorio.',
+            'mount_dollars.numeric' => 'El Gasto debe ser un número.',
+            'mount_dollars.min' => 'El Gasto debe ser minimo 1$.',
 
             'porcent.numeric' => 'El porcentaje debe ser un número.',
             'porcent.min' => 'El porcentaje debe ser mayor o igual a 0.',

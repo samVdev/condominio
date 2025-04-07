@@ -1,50 +1,55 @@
 <?php
 namespace App\Http\Services;
-
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
-use App\Models\Settings;
+use App\Models\Config;
 
-class getDolar
+class GetDolar
 {
+    private const CACHE_KEY = 'dolar';
+    private const CACHE_TIME = 5;
+    private const CONFIG_ID = 1;
+    private const API_URL = 'https://pydolarve.org/api/v1/dollar';
+
     public static function getDollarRate()
     {
-        $dolar = Cache::get('dolar');
-        
-        if (!$dolar) {
-            //$dolar = Settings::where('key', 'dolar_rate')->value('value'); // Suponiendo que tienes una tabla 'Settings'
-        }
+        $dolar = Cache::get(self::CACHE_KEY);
 
         if (!$dolar) {
-            $dolar = self::fetchAndSaveDollarRate();
+            $config = Config::find(self::CONFIG_ID);
+            $dolar = $config ? $config->dolar : null;
+
+            if ($dolar) {
+                Cache::put(self::CACHE_KEY, $dolar, now()->addHours(self::CACHE_TIME));
+            }
         }
 
         return $dolar;
     }
 
-    // Función para consultar la API y guardar el valor si es diferente
-    private static function fetchAndSaveDollarRate()
+    // La funcion de aca abajo se usa para cuando se va actualizar el dolar, es decir. Cada 5h el sistema pedira
+    // a la api el dolar, si este ha cambiado lo colocara en la cache y la db
+
+    public static function updateDollarRate()
     {
-        $response = Http::get('https://pydolarve.org/api/v1/dollar');
+        try {
+            $response = Http::get(self::API_URL);
 
-        if ($response->failed()) {
-            throw new \Exception("Error al obtener el valor del dólar");
+            if ($response->failed()) {
+                throw new \Exception("Error al obtener el valor del dólar desde la API.");
+            }
+
+            $nuevoValor = $response->json()['monitors']['bcv']['price'];
+            $config = Config::find(self::CONFIG_ID);
+
+            if ($config && $nuevoValor != $config->dolar) {
+                $config->update(['dolar' => $nuevoValor]);
+                Cache::put(self::CACHE_KEY, $nuevoValor, now()->addHours(self::CACHE_TIME));
+            }
+
+            return $nuevoValor;
+        } catch (\Exception $e) {
+            return null;
         }
-
-        $nuevoValor = $response->json()['monitors']['bcv']['price'];
-
-        $valorGuardado = Cache::get('dolar');
-        //$valorEnDB = Settings::where('key', 'dolar_rate')->value('value'); // Valor guardado en la base de datos
-
-        if ($nuevoValor != $valorGuardado /*&& $nuevoValor != $valorEnDB*/) {
-            Cache::put('dolar', $nuevoValor, now()->addHours(5));
-
-           // Settings::updateOrCreate(
-            //    ['key' => 'dolar_rate'],
-           //     ['value' => $nuevoValor]
-            //);
-        }
-
-        return $nuevoValor;
     }
 }

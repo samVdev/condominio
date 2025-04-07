@@ -9,13 +9,11 @@ const props = defineProps<{
 
 const store = useAuthStore()
 
-
-
 </script>
 
 <template>
 
-    <article class="bg-white relative border rounded-2xl overflow-hidden shadow-lg w-[100%] md:w-[360px]">
+    <article class="bg-white relative border rounded-2xl overflow-hidden h-[580px] shadow-lg w-[100%] md:w-[360px]">
 
         <div class="absolute h-[20%] bg-[#e2384f] rounded-b-[40%] z-[1] w-full">
         </div>
@@ -47,6 +45,12 @@ const store = useAuthStore()
                     <p>% Primeros dias:</p>
                     <p>{{ facture.porcent }}%</p>
                 </div>
+
+                <div class="text-red-700 mb-2 flex justify-between items-center" v-if="facture.isForMora">
+                    <p>% Mora:</p>
+                    <p>+5%</p>
+                </div>
+
                 <div class="text-gray-700 mb-2 flex justify-between items-center">
                     <p>% Alicuota:</p>
                     <p>{{ facture.alicuot }}%</p>

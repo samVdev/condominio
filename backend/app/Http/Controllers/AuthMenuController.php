@@ -13,7 +13,9 @@ class AuthMenuController extends Controller
 {
     public function __invoke()
     {
-        if (!Auth::user()) return  response()->json(["message" => "Forbidden"], 403);          
+        if (!Auth::user()) return  response()->json(["message" => "Forbidden"], 403);   
+        
+        if(!Auth::user()->isAdmin()) return response()->json([]);  
 
         $user = Auth::user();
         $role = Role::select('menu_ids')->find($user->role_id);   

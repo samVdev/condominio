@@ -7,7 +7,6 @@ export default [{
     meta: { middleware: [auth, admin]},
     props: true,
     component: () => import("@/modules/Receipts/views/usersPending.vue").then(m => m.default),
-
     children: [
         {
             path: "expenses-user",
@@ -18,5 +17,13 @@ export default [{
         }
     ]
 },
+
+{
+    path: "/payments",
+    name: "payments",
+    meta: { middleware: [auth, admin], layout: "default" },
+    props: true,
+    component: () => import("@/modules/Receipts/views/index.vue").then(m => m.default),
+}
 
 ]

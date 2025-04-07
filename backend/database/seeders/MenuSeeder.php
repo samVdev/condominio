@@ -28,5 +28,7 @@ class MenuSeeder extends Seeder
         Menu::create(["title" => "Gastos", "menu_id" => null, "path" => "expenses", "icon" => "money-bill-transfer", "sort" => 6]);
 
         Menu::create(["title" => "Facturas", "menu_id" => null, "path" => "factures", "icon" => "receipt", "sort" => 7]);
+        
+        Menu::create(["title" => "Receipts", "menu_id" => null, "path" => "payments", "icon" => "file-invoice-dollar", "sort" => 8]);
     }
 }

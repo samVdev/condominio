@@ -64,15 +64,16 @@ class FactureUserPending
                 $mountDollars += $aumentAmount;
             }
 
+            $mountDollars = round($mountDollars, 2);
+
             $info = [
                 'id' => $expense->code,
                 'tower' => $expense->Nombre,
-                'mount_dollars' => (float) $expense->total_dollars,
-                'dollar_bcv' => (float) $mountDollars * $dolar,
+                'mount_dollars' => round((float) $expense->total_dollars, 2),
+                'dollar_bcv' => round((float) $mountDollars * $dolar, 2),
                 'created' => $expense->created_at->format('d/m/Y'),
                 'alicuot' => floatval($apt->porcent_alicuota),
                 'total' => $mountDollars,
-                'poaoao' => $currentDate->diffInDays($createdAt) < 5
             ];
 
             if ($isWithinFirstFiveDays) {
@@ -80,7 +81,7 @@ class FactureUserPending
             }
 
             if ($isForMora) {
-                $info['isForMora'] = 5;
+                $info['isForMora'] = true;
             }
 
             return $info;

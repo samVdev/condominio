@@ -15,13 +15,22 @@ class Receipt extends Model
         'facture_id',
         'cedula',
         'referencia',
-        'accepted'
+        'accepted',
+        'withMora',
+        'withDays',
+        'user_id',
+        'dollarBCV'
     ];
 
     // Relación con la persona
     public function persona()
     {
         return $this->belongsTo(Personas::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function facture()

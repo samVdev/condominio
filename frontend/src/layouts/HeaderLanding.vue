@@ -10,9 +10,9 @@ const toggleMenu = () => {
 </script>
 
 <template>
-    <header class="fixed top-0 w-full bg-white gap-3 flex items-center justify-between h-[10vh] border-b border-gray-200 px-4 md:px-10 lg:px-20 2xl:h-[9vh]">
+    <header class="fixed top-0 w-full bg-white gap-3 z-[2000] flex items-center justify-between h-[10vh] border-b border-gray-200 px-4 md:px-10 lg:px-20 2xl:h-[9vh]">
         <a href="#Inicio" class="text-[#EA5165] hover:text-[#D54A5C] transition-all block duration-200 font-bold text-2xl py-2">
-            Logo
+            YUTAJE
         </a>
 
         <nav class="hidden md:flex items-center justify-end w-[80%] gap-12">

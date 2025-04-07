@@ -32,9 +32,11 @@ export default () => {
         created: "",
         alicuot: 0,
         payment: false,
+        isForMora: false,
         total: 0
     })
 
+    const seeAllFactures = ref(false)
     const loaded = ref(false)
 
     const getInfo = () => facturesUser.getFacturesCompleted(`offset=${factures.offset}&${new URLSearchParams(route.query as Params).toString()}`)
@@ -80,6 +82,7 @@ export default () => {
             created: "",
             alicuot: 0,
             payment: false,
+            isForMora: false,
             total: 0
         }
     }
@@ -101,7 +104,6 @@ export default () => {
         }
     }
 
-
     return {
         factures,
         route,
@@ -109,6 +111,7 @@ export default () => {
         counted,
         factureToPay,
         facturesPending,
+        seeAllFactures,
         setSearch,
         setSort,
         loadScroll,
@@ -116,6 +119,6 @@ export default () => {
         getFacturesCompleted,
         getCounted,
         cleanFacture,
-        submitPay
+        submitPay,
     }
 }

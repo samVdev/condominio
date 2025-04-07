@@ -35,8 +35,8 @@ class UpdateUserRequest extends FormRequest
             "role_id.exists" => "El rol seleccionado no es válido.",
             
             "phone.required" => "El número de teléfono es obligatorio.",
-            "phone.regex" => "El número de teléfono no es válido.",
-    
+            'phone.regex' => 'El número de teléfono no es válido. Por favor ingrese un número entre 8 y 15 dígitos.',
+
             "apt_id.required" => "El apartamento es obligatorio.",
             "apt_id.integer" => "El apartamento debe ser un número entero.",
             "apt_id.exists" => "El apartamento seleccionado no existe."
@@ -63,7 +63,7 @@ class UpdateUserRequest extends FormRequest
             ],
             "password" => ["nullable"],
             'role_id' => ['required', 'integer', 'exists:roles,id'],
-            'phone' => ['required', 'regex:/^(0412|0426|0424|0212|0416)\d{7}$/'],
+            'phone' => ['required',  'regex:/^\+?[1-9][0-9]{7,14}$/'],
             'apt_id' => ['required', 'integer', 'exists:condominium,id'],
             'suspend' => ['nullable', 'boolean']
         ];

@@ -15,14 +15,19 @@ class CreateReceiptsTable extends Migration
     {
         Schema::create('receipts', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('persona_id'); // Relación con la persona
-            $table->decimal('total_pagado', 10, 2); // Total pagado
-            $table->string('cedula'); // Cédula de la persona
-            $table->string('referencia'); // Referencia de 6 dígitos
-            $table->boolean('accepted')->default(false); // Referencia de 6 dígitos
+            $table->unsignedBigInteger('persona_id'); 
+            $table->unsignedBigInteger('user_id')->nullable(); 
+            $table->decimal('dolarBCV', 10, 2); 
+            $table->decimal('total_pagado', 10, 2); 
+            $table->string('cedula'); 
+            $table->string('referencia');
+            $table->boolean('accepted')->default(false);
+            $table->boolean('withMora')->default(false); 
+            $table->boolean('withDays')->default(false); 
             $table->timestamps();
 
             // Definir las claves foráneas
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->foreign('persona_id')->references('id')->on('personas')->onDelete('cascade');
         });
     }

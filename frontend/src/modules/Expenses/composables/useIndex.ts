@@ -16,7 +16,11 @@ export default () => {
     search: "",
     sort: "",
     direction: "",
-    offset: 0
+    offset: 0,
+    Facture: {
+      USD: 0,
+      BS: 0
+    }
   })
 
   const viewImage = ref('')
@@ -40,6 +44,7 @@ export default () => {
       expenses.search = response.data.search
       expenses.sort = response.data.sort
       expenses.direction = response.data.direction
+      expenses.Facture = response.data.Facture
       expenses.offset = 10
     } catch (error) {
 

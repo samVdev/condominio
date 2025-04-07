@@ -23,7 +23,7 @@ class ExpensesFacture
         $expensesDB = Expenses::
         join('services', 'service_id', 'services.id')
         ->select('expenses.created_at', 'services.service_type',
-        'expenses.amount_dollars', 'expenses.dollar_value'
+        'expenses.amount_dollars', 'expenses.dollar_value', 'image'
     )->where('expenses.facture_id', $factureDB->id);
     
         $expensesDB = $expensesDB->skip($offset)->take($limit)->get();
@@ -38,6 +38,7 @@ class ExpensesFacture
                 'mount_dollars' => $price,
                 'mount_bs' => $price * $bcv,
                 'dollarBefore' => $expense->dollar_value,
+                'image' => $expense->image,
                 'created' => $expense->created_at->format('d/m/Y'),               
             ];
         });

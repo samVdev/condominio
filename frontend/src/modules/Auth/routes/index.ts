@@ -18,9 +18,16 @@ export default [
     {
         path: "/profile",
         name: "profile",
-        meta: { middleware: [auth, admin], layout: "default" },
+        meta: { middleware: [auth], layout: "default" },
         component: () => import("@/modules/Auth/views/Profile.vue").then(m => m.default),
-    }, {
+    }, 
+    {
+        path: "/config",
+        name: "config",
+        meta: { middleware: [auth, admin], layout: "default" },
+        component: () => import("@/modules/Auth/views/config.vue").then(m => m.default),
+    },
+    {
         path: "/dashboard",
         name: "dashboard",
         meta: { middleware: [auth, admin], layout: "default" },

@@ -18,7 +18,7 @@ class editService
 
         $expense->service_id = $request->service;
         $expense->condominium_id = $request->tower;
-        $expense->amount_dollars = $request->mount_bs / $dolar;
+        $expense->amount_dollars = $request->mount_dollars;
         $expense->dollar_value = $dolar;
         
         if ($request->hasFile('file')) {

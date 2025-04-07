@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\guest\AccountService;
 use App\Http\Services\guest\DashboardCount;
 use App\Http\Services\guest\ExpensesFacture;
 use App\Http\Services\guest\FactureUserCompletedService;
@@ -29,5 +30,10 @@ class GuestController extends Controller
     public function DashboardCount(): JsonResponse
     {
          return DashboardCount::index();
+    } 
+
+    public function Account(): JsonResponse
+    {
+         return AccountService::index();
     } 
 }

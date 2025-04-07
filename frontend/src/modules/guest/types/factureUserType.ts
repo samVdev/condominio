@@ -8,5 +8,6 @@ export interface factureUserType {
     created: string,
     alicuot: number,
     payment: any,
+    isForMora: boolean,
     total: number
 }

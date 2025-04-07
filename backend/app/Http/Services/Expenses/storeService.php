@@ -16,8 +16,8 @@ class storeService
         $dolar = getDolar::getDollarRate();
 
         $expense->service_id = $request->service;
-        $expense->condominium_id = $request->tower;
-        $expense->amount_dollars = $request->mount_bs / $dolar;
+        $expense->condominium_id = $request->tower == 0 ? null : $request->tower;
+        $expense->amount_dollars = $request->mount_dollars;
         $expense->dollar_value = $dolar;
 
         if ($request->hasFile('file'))  {

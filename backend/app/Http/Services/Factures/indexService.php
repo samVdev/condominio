@@ -26,7 +26,7 @@ class indexService
         $facturesDB = Factures::select(
         'factures.id', 'factures.created_at',
         'factures.total_dollars', 'factures.dollar_bcv', 
-        'factures.number_month', 'factures.code'
+        'factures.number_month', 'factures.code', 'factures.porcent_first_five_days'
     );
 
     if (!empty($user)) {
@@ -45,7 +45,10 @@ class indexService
         $reallySort = '';
         if($sort == 'created') $reallySort = 'factures.created_at';
         else if($sort == 'tower') $reallySort = 'condominium.Nombre';
+        else if($sort == 'month') $reallySort = 'factures.number_month';
         else if($sort == 'mount') $reallySort = 'factures.total_dollars';
+        else if($sort == 'dollarBefore') $reallySort = 'factures.dollar_bcv';
+        else if($sort == 'porcent') $reallySort = 'factures.porcent_first_five_days';
         
         $facturesDB->orderBy($reallySort, $direction);
     }
@@ -60,6 +63,7 @@ class indexService
                 'id' => $expense->id,               
                 'month' => $expense->number_month,
                 'code' => $expense->code,
+                'porcent' => $expense->porcent_first_five_days,
                 'mount_dollars' => $price,
                 'mount_bs' => $price * $bcv,
                 'dollar_bcv' => $bcv,

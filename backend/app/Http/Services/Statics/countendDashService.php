@@ -36,7 +36,7 @@ class countendDashService
         $countTowers = User::query()
             ->join('personas', 'users.persona_id', '=', 'personas.id')
             ->join('condominium', 'personas.condominium_id', '=', 'condominium.id')
-            ->leftJoin('factures', function ($join) {
+            ->join('factures', function ($join) {
                 $join->on('factures.id', '>', \DB::raw('0'));
             })
             ->leftJoin('receipts', function ($join) {

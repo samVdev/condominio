@@ -23,13 +23,13 @@ const submit = async () => {
     <div class="mb-6">
       <label class="block ">Correo Electrónico</label>
       <input type="email" name="email" v-model="email" autocomplete="email" placeholder="email@domain.ext"
-        class="mb-2 h-[6vh] border-b-[1px] border-[#5759D4] w-full" />
+        class="!mb-2 !h-[6vh] !border-[0px] !rounded-none !border-b-[1px] !border-[#5759D4] !w-full" />
 
     </div>
     <div class="my-6">
       <label class="block">Contraseña</label>
         <InputPassword v-model="password" name="password" placeholder="Ingresa la contraseña" 
-        class="mt-0 h-[6vh] border-b-[1px] border-[#5759D4] w-full"/>
+        class="!mt-0 !border-[0px] !rounded-none !h-[6vh] !border-b-[1px] !border-[#5759D4] !w-full"/>
     </div>
 
     <div class="block my-6">

@@ -38,6 +38,10 @@ const store = computed(() => useAuthStore())
     </div>
 
     <div class="flex items-center">
+      <router-link  v-if="store.authUser && store.isAdmin" class="self-center mx-4 grid place-items-center h-full transition-all hover:scale-[1.2]" to="/config">
+        <font-awesome-icon icon="gear" />
+      </router-link>
+      
       <div class="relative">
         <button
           @click="dropdownOpen = !dropdownOpen"
