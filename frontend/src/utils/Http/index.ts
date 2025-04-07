@@ -5,20 +5,43 @@ import type { Init } from "./Http";
 import init from "./init";
 
 export class Http {
-  private service:AxiosInstance;
-  constructor( init: Init ) {    
-    this.defaultInit()    
+  private service: AxiosInstance;
+  constructor(init: Init) {
+    this.defaultInit()
     let service = axios.create({
       headers: init.customHeaders,
       params: init.customParams,
-      baseURL: init.baseURL,  
+      baseURL: init.baseURL,
       withCredentials: init.withCredentials,
-    });    
+    });
     service.interceptors.response.use(init.handleSuccess, init.handleError);
-    this.service = service;    
+
+    service.interceptors.request.use(async (req) => {
+      if(req.method === 'get') return req
+
+      let xsrfToken = this.getXsrfToken();
+      
+      if (!xsrfToken) {
+        await this.get('/sanctum/csrf-cookie')
+        xsrfToken = this.getXsrfToken();
+      } 
+
+      req.headers['X-XSRF-TOKEN'] = xsrfToken;
+      return req; 
+    });
+
+    this.service = service;
   }
-  
-  defaultInit () {    
+
+  private getXsrfToken(): string | null {
+    const xsrfCookie = document.cookie
+      .split(';')
+      .find(cookie => cookie.trim().startsWith('XSRF-TOKEN='));
+
+    return xsrfCookie ? decodeURIComponent(xsrfCookie.split('=')[1]) : null;
+  }
+
+  defaultInit() {
     init.customHeaders = init.customHeaders !== undefined ? init.customHeaders : {}
     init.customParams = init.customParams !== undefined ? init.customParams : {}
     init.baseURL = init.baseURL !== undefined ? init.baseURL : "http://localhost"
@@ -26,9 +49,9 @@ export class Http {
     init.handleSuccess = init.handleSuccess !== undefined ? init.handleSuccess : this.defaultHandleSuccess
     init.handleError = init.handleError !== undefined ? init.handleError : this.defaultHandleError
   }
-  
+
   defaultHandleSuccess(response: AxiosResponse) { return Promise.resolve(response); }
-  
+
   defaultHandleError(error: AxiosError) { return Promise.reject(error); }
 
   get(path: string) {
@@ -57,7 +80,7 @@ export class Http {
     });
   }
 
-  put(path: string, payload : Paiload) {
+  put(path: string, payload: Paiload) {
     return this.service.request({
       method: "PUT",
       url: path,
@@ -75,4 +98,4 @@ export class Http {
   }
 }
 
-export default new Http( init );
+export default new Http(init);

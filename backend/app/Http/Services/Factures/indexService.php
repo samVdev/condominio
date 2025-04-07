@@ -4,6 +4,7 @@ namespace App\Http\Services\Factures;
 
 use App\Http\Services\getDolar;
 use App\Models\Factures;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -23,31 +24,19 @@ class indexService
         $user = $request->input("user");
 
         $facturesDB = Factures::select(
-        'factures.id',
-        'factures.created_at',
-        'factures.total_dollars', 'factures.dollar_bcv', 'factures.number_month'
+        'factures.id', 'factures.created_at',
+        'factures.total_dollars', 'factures.dollar_bcv', 
+        'factures.number_month', 'factures.code', 'factures.porcent_first_five_days'
     );
 
-
-
     if (!empty($user)) {
-        $userCondominium = \DB::table('users')
-            ->join('personas', 'users.persona_id', '=', 'personas.id')
-            ->join('condominium', 'condominium.id', '=', 'personas.condominium_id')
-            ->where('users.uuid', $user)
-            ->value('condominium.condominium_id');
-    
-        if ($userCondominium) {
-            $facturesDB->where('factures.condominium_id', $userCondominium);
-        }
-
         $facturesDB->whereNotExists(function ($subquery) use ($user) {
             $subquery->select(DB::raw(1))
                 ->from('receipts')
                 ->leftJoin('personas', 'receipts.persona_id', '=', 'personas.id')
                 ->join('users', 'users.persona_id', '=', 'personas.id')
                 ->where('users.uuid', $user)
-                ->whereColumn('receipts.facture_id', 'factures.facture_id');
+                ->whereColumn('receipts.facture_id', 'factures.id');
         });
     }
     
@@ -55,7 +44,11 @@ class indexService
     if ($sort) {
         $reallySort = '';
         if($sort == 'created') $reallySort = 'factures.created_at';
+        else if($sort == 'tower') $reallySort = 'condominium.Nombre';
+        else if($sort == 'month') $reallySort = 'factures.number_month';
         else if($sort == 'mount') $reallySort = 'factures.total_dollars';
+        else if($sort == 'dollarBefore') $reallySort = 'factures.dollar_bcv';
+        else if($sort == 'porcent') $reallySort = 'factures.porcent_first_five_days';
         
         $facturesDB->orderBy($reallySort, $direction);
     }
@@ -69,6 +62,8 @@ class indexService
             return [
                 'id' => $expense->id,               
                 'month' => $expense->number_month,
+                'code' => $expense->code,
+                'porcent' => $expense->porcent_first_five_days,
                 'mount_dollars' => $price,
                 'mount_bs' => $price * $bcv,
                 'dollar_bcv' => $bcv,

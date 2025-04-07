@@ -29,18 +29,27 @@ onMounted(() => {
           <h1 class="text-3xl font-semibold leading-loose text-gray-900 dark:text-white my-2 text-center" v-else-if="$route.query.date  == 'm'">Gastos en el Mes</h1>
           <component :is="Component" :key="$route.path"/>
         </div>
+
+        <div v-else-if="$route.path.includes('/users/pendings')" class="overlay bg-[#fffffff2]" >
+          <component :is="Component" :key="$route.path"/>
+        </div>
+
+        <div v-else-if="$route.path.includes('/factures/pendings')" class="overlay bg-[#fffffff2]" >
+          <component :is="Component" :key="$route.path"/>
+        </div>
       </Transition>
     </router-view>
     
     <section class="grid gap-5 px-2 md:px-5 md:h-[80vh] parentGrid">
       <CardDash :redirect="false" icon="wallet" :value="`${totalValues.countTotal.toString()}$`" label="Cuenta" class="div1" />
-      <CardDash :redirect="true" icon="book-open" @redirect="({e}) => redirectTo(e, '/dashboard/expenses/view/', 'd')"  :value="totalValues.gastosDia.toString()" label="Gastos del dia" class="div2" />
-      <CardDash :redirect="true" icon="users" @redirect="({e}) => redirectTo(e, '/dashboard/expenses/view/', 'w')"  :value="totalValues.gastosSemana.toString()" label="Gastos de la semana" class="div3" />
-      <CardDash :redirect="true" icon="user-tie" @redirect="({e}) => redirectTo(e, '/dashboard/expenses/view/', 'm')" :value="totalValues.gastosMes.toString()" label="Gastos del mes" class="div4" />
-      <CardDash :redirect="true" icon="building" :value="totalValues.countTowerA.toString()" label="Torre A (Recibos Pendientes)" class="div5" />
-      <CardDash :redirect="true" icon="building" :value="totalValues.countTowerB.toString()" label="Torre B (Recibos Pendientes)" class="div6" />
-      <CardDash :redirect="true" icon="building" :value="totalValues.countTowerC.toString()" label="Torre C (Recibos Pendientes)" class="div7" />
-      <CardDash :redirect="true" icon="building" :value="totalValues.countRecibes.toString()" label="Torre D (Recibos Pendientes)" class="div8" />
+      <CardDash :redirect="true" icon="book-open" @redirect="({e}) => redirectTo(e, '/dashboard/expenses/view/', {date: 'd'})"  :value="totalValues.gastosDia.toString()" label="Gastos del dia" class="div2" />
+      <CardDash :redirect="true" icon="users" @redirect="({e}) => redirectTo(e, '/dashboard/expenses/view/', {date: 'w'})"  :value="totalValues.gastosSemana.toString()" label="Gastos de la semana" class="div3" />
+      <CardDash :redirect="true" icon="user-tie" @redirect="({e}) => redirectTo(e, '/dashboard/expenses/view/', {date: 'm'})" :value="totalValues.gastosMes.toString()" label="Gastos del mes" class="div4" />
+      
+        <CardDash :redirect="true" icon="building" @redirect="({e}) => redirectTo(e, '/dashboard/users/pendings/', {tower: 'A'})" :value="totalValues.countTowerA.toString()" label="Torre A (Recibos Pendientes)" class="div5" />
+      <CardDash :redirect="true" icon="building" @redirect="({e}) => redirectTo(e, '/dashboard/users/pendings/', {tower: 'B'})" :value="totalValues.countTowerB.toString()" label="Torre B (Recibos Pendientes)" class="div6" />
+      <CardDash :redirect="true" icon="building" @redirect="({e}) => redirectTo(e, '/dashboard/users/pendings/', {tower: 'C'})" :value="totalValues.countTowerC.toString()" label="Torre C (Recibos Pendientes)" class="div7" />
+      <CardDash :redirect="true" icon="building" @redirect="({e}) => redirectTo(e, '/dashboard/users/pendings/', {tower: 'D'})" :value="totalValues.countTowerD.toString()" label="Torre D (Recibos Pendientes)" class="div8" />
 
       <article class="relative overflow-hidden div9 border rounded-2xl bg-white shadow-md md:h-[100%] w-full">
         <div class="flex items-center justify-between py-5 mx-auto px-6">
@@ -50,7 +59,7 @@ onMounted(() => {
             <font-awesome-icon icon="arrow-up-right-from-square" />
           </router-link>
         </div>
-        <UsersOnlyTable/>
+        <UsersOnlyTable  @recibesPending="({uuid}) => $router.push({ path: '/dashboard/factures/pendings', query: {user: uuid} })"/>
       </article>
     </section>
 

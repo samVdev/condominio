@@ -6,12 +6,12 @@ import MiniTitle from '@/components/miniTitle.vue';
 </script>
 
 <template>
-    <section id="benefits" class="bg-[#FFF] 2xl:h-[80vh] py-20 w-full md:flex justify-center p-10">
+    <section id="benefits" class="bg-[#FFF] py-20 w-full justify-center items-center p-10 md:flex md:h-screen">
 
-        <img src="/images/lan_benef.jfif" class="h-[100%] md:w-[50%] 2xl:w-[30%] rounded-3xl"
+        <img src="/images/lan_benef.jfif" data-aos="fade-right" class="h-[100%] md:w-[50%] 2xl:w-[30%] rounded-3xl"
             alt="image of habi">
 
-        <div class="my-2 mt-4 md:px-10 w-full md:w-[50%] 2xl:w-[40%]">
+        <div class="my-2 mt-4 md:px-10 w-full md:w-[50%] 2xl:w-[40%]" data-aos="fade-left">
             <MiniTitle text="Beneficios para todos" class="text-center mx-auto md:mx-0 md:px-4 md:min-w-[40%]" />
             <h2 class="font-extrabold w-[100%] text-[#333C4A] mx-auto mt-5 text-2xl md:font-bold md:text-4xl 2xl:text-5xl">Mejorando
                 la experiencia de vida en comunidad</h2>

@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Cache;
+use App\Http\Services\getDolar;
+
 
 class CheckDolar extends Command
 {
@@ -18,17 +18,12 @@ class CheckDolar extends Command
 
     public function handle()
     {
-        $response = Http::get('https://pydolarve.org/api/v1/dollar'); 
-        $nuevoValor = $response->json()['monitors']['bcv']['price'];
-        $valorGuardado = Cache::get('dolar', 50);
-
-        if ($nuevoValor != $valorGuardado) {
-
-            Cache::put('dolar', $nuevoValor, now()->addHours(5));
-
-            $this->info("Dólar actualizado: $nuevoValor");
+        $nuevoValor = getDolar::updateDollarRate();
+        
+        if ($nuevoValor) {
+            $this->info("Dólar actualizado a: $nuevoValor");
         } else {
-            $this->info("El valor del dólar no ha cambiado.");
+            $this->error("No se pudo actualizar el valor del dólar.");
         }
     }
 }

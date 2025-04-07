@@ -3,6 +3,7 @@ import type { expenseType } from "../types/ExpenseType"
 import expensesServices from '../services'
 import { alertWithToast } from "@/utils/toast"
 import { useRouter } from "vue-router"
+import { getDolar } from "@/modules/Auth/services/configService"
 
 export default () => {
   const expenses = ref({
@@ -13,6 +14,8 @@ export default () => {
     sort: "",
     direction: ""
   })
+
+  const dolar = ref(0)
 
   const url = import.meta.env.VITE_APP_API_URL
 
@@ -38,6 +41,17 @@ export default () => {
         image: `${url}/${response.data.image}`
       }
       data.value.id = id
+    } catch (error) {
+      let message = error.response ? error.response.data.message : 'Ha ocurrido un error inesperado'
+      message = message.split('. (')[0]
+      router.push('/expenses').then(() => alertWithToast(message, 'error'))
+    }
+  }
+
+  const getDollarBcv = async () => {
+    try {
+      const response = await getDolar()
+      dolar.value = response.data.dolar
     } catch (error) {
       let message = error.response ? error.response.data.message : 'Ha ocurrido un error inesperado'
       message = message.split('. (')[0]
@@ -86,11 +100,13 @@ export default () => {
   }
 
   return {
+    dolar,
     expenses,
     data,
     sending,
     showExpense,
     submit,
+    getDollarBcv,
   }
 }
 

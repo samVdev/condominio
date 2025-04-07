@@ -18,7 +18,7 @@ class FacturesSeeder extends Seeder
             'porcent_first_five_days' => rand(5, 10), // Porcentaje aleatorio entre 5% y 10%
             'total_dollars' => 300, // Total en dólares aleatorio entre 100 y 200
             'dollar_bcv' => 66.7, // Tasa aleatoria de dólar BCV
-            'condominium_id' => 1, // Asume que tienes condominios con id entre 1 y 5
+            'number_month' => 1, // Tasa aleatoria de dólar BCV
         ]);
     }
 }

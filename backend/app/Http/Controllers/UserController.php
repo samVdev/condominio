@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\{Request, JsonResponse};
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use App\Http\Resources\UserResource;
 use App\Http\Requests\User\{
     StoreUserRequest,
     UpdateUserRequest
@@ -17,8 +15,6 @@ use App\Http\Services\User\{
     UpdateUserService,
 };
 
-
-
 class UserController extends Controller
 {
     /**
@@ -29,10 +25,7 @@ class UserController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        if (Auth::user()->isAdmin()) {
-            return IndexUserService::execute($request);            
-        }
-        return  response()->json(["message" => "Forbidden"], 403);
+        return IndexUserService::execute($request);            
     }
 
     /**
@@ -43,10 +36,7 @@ class UserController extends Controller
      */ 
     public function store(StoreUserRequest $request): JsonResponse
     {
-        if (Auth::user()->isAdmin()) {
-            return StoreUserService::execute($request);
-        }
-        return  response()->json(["message" => "Forbidden"], 403);
+        return StoreUserService::execute($request);
     }
 
     /**
@@ -69,10 +59,7 @@ class UserController extends Controller
      */     
     public function update(UpdateUserRequest $request, String $uuid): JsonResponse
     {
-        if (Auth::user()->isAdmin()) {
-            return UpdateUserService::execute($request, $uuid);
-        }
-        return  response()->json(["message" => "Forbidden"], 403);
+        return UpdateUserService::execute($request, $uuid);
     }
 
     /**
@@ -83,12 +70,9 @@ class UserController extends Controller
      */
     public function destroy(Request $request): JsonResponse
     {      
-        if (Auth::user()->isAdmin()) {
-            $user = User::where('uuid', $request->uuid)->first();
-            if(!$user) return response()->json(['error' => 'Usuario no encontrado'], 404);
-            $user->delete();
-            return response()->json(204);            
-        }
-        return  response()->json(["message" => "Ocurrio un error al eliminarlo"], 403);
+        $user = User::where('uuid', $request->uuid)->first();
+        if(!$user) return response()->json(['error' => 'Usuario no encontrado'], 404);
+        $user->delete();
+        return response()->json(204);
     }
 }

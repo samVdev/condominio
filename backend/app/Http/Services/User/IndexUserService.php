@@ -29,29 +29,30 @@ class IndexUserService
         $direction = $request->input("direction") == "desc" ? "desc" : "asc";
 
         $query = User::query()
-            ->join('personas', 'users.persona_id', '=', 'personas.id')
-            ->join('condominium', 'personas.condominium_id', '=', 'condominium.id')
-            ->join('condominium as tower', 'condominium.condominium_id', '=', 'tower.id')
-            ->join('roles', 'roles.id', '=', 'users.role_id')
-            ->leftJoin('factures', function ($join) {
-                $join->on('factures.id', '>', \DB::raw('0'));
-            })
-            ->leftJoin('receipts', function ($join) {
-                $join->on('receipts.persona_id', '=', 'personas.id')
-                     ->on('receipts.facture_id', '=', 'factures.id');
-            })
-            ->select(
-                'tower.Nombre as tower', 
-                'condominium.Nombre',
-                'fullName',
-                'phone',
-                'name',
-                'email',
-                'users.uuid',
-                \DB::raw('COUNT(DISTINCT factures.id) - COUNT(DISTINCT receipts.facture_id) AS expenses_no_pagados')
-            )
-            ->groupBy('tower.Nombre', 'condominium.Nombre', 'fullName', 'phone', 'name', 'email', 'users.uuid');
-    
+        ->join('personas', 'users.persona_id', '=', 'personas.id')
+        ->join('condominium', 'personas.condominium_id', '=', 'condominium.id')
+        ->join('condominium as tower', 'condominium.condominium_id', '=', 'tower.id')
+        ->join('roles', 'roles.id', '=', 'users.role_id')
+        ->leftJoin('factures', function ($join) {
+            $join->on('factures.id', '>', \DB::raw('0'));
+        })
+        ->leftJoin('receipts', function ($join) {
+            $join->on('receipts.persona_id', '=', 'personas.id')
+                 ->on('receipts.facture_id', '=', 'factures.id')
+                 ->where('receipts.accepted', true);
+        })
+        ->select(
+            'tower.Nombre as tower', 
+            'condominium.Nombre',
+            'fullName',
+            'phone',
+            'name',
+            'email',
+            'users.uuid',
+            \DB::raw('COUNT(DISTINCT factures.id) - COUNT(DISTINCT receipts.facture_id) AS expenses_no_pagados')
+        )
+        ->groupBy('tower.Nombre', 'condominium.Nombre', 'fullName', 'phone', 'name', 'email', 'users.uuid');
+
         if ($search) {
             $query->where(function ($query) use ($search) {
                 $query

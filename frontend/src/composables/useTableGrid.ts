@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import type { AxiosResponse } from 'axios';
 import { ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router'
 import type { RouteLocationNormalizedLoaded, Router } from 'vue-router'
@@ -44,7 +44,7 @@ export default (data: Data, getItemsScroll: () => Promise<AxiosResponse<any, any
       search: data.search || "",
       sort: data.sort || "",
       direction: data.direction || "",
-      //offset: "0",
+      //offset: data.offset || "0",
       ...newParams,
     }
 

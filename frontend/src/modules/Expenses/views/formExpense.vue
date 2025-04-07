@@ -8,10 +8,12 @@ import { useRoute } from 'vue-router';
 import UploadImg from '@/components/uploadImg.vue';
 
 const {
+    dolar,
     data,
     sending,
     submit,
-    showExpense
+    showExpense,
+    getDollarBcv
 } = useFormExpense()
 
 const {
@@ -38,8 +40,24 @@ const loadInfo = async () => {
 
     await getTowers()
     await getServicesToSelect()
+    await getDollarBcv()
 }
 
+
+const calcValue = (e: InputEvent) => {
+    const inputValue = (e.target as HTMLInputElement);
+    const name = inputValue.getAttribute('name')
+    const value = parseFloat(inputValue.value)
+
+    if (name == 'mount_bs') {
+        if (!value) return data.value.mount_dollars = 0
+        data.value.mount_dollars = parseFloat((value / dolar.value).toFixed(2))
+    } else if (name == 'mount_dollars') {
+        if (!value) return data.value.mount_bs = 0
+        data.value.mount_bs = parseFloat((value * dolar.value).toFixed(2))
+    }
+
+};
 
 onMounted(() => {
     loadInfo()
@@ -53,8 +71,8 @@ onMounted(() => {
         <form @submit.prevent="submit" class="relative bg-white p-20 rounded-xl w-full md:w-[40%]">
             <label class="absolute top-3 right-5 cursor-pointer text-3xl" @click="$router.push('/expenses')">x</label>
 
-            <h3 class="text-2xl font-bold text-gray-600 mb-10">{{ data.id ? 'Modificar' : 'Registrar' }} un Gasto</h3>
-
+            <h3 class="text-2xl font-bold text-gray-600">{{ data.id ? 'Modificar' : 'Registrar' }} un Gasto</h3>
+            <p class="my-5 mx-auto text-center font-bold">Dolar BCV: {{ dolar }}</p>
             <div class="grid lg:grid-cols-2 gap-4">
                 <div class="mb-4">
                     <label for="service" class="block text-sm font-medium text-gray-700">Servicio:</label>
@@ -72,24 +90,25 @@ onMounted(() => {
                         class="mt-2 p-3 w-full">
                         <option value="" disabled selected>Selecciona una torre</option>
                         <option :value="tower.id" v-for="tower in towers">{{ tower.Nombre }}</option>
+                        <option value="0">Todas las torres</option>
                     </select>
                 </div>
 
                 <div class="mb-4">
                     <label for="nombre" class="block text-sm font-medium text-gray-700">Precio en Bs:</label>
-                    <input type="text" id="nombre" required name="nombre" v-model="data.mount_bs"
+                    <input type="text" id="mount_bs" required name="mount_bs" v-model="data.mount_bs" @input="calcValue"
                         class="mt-2 p-3 w-full">
                 </div>
 
 
                 <div class="mb-4">
                     <label for="mount_bs" class="block text-sm font-medium text-gray-700">Precio en divisas:</label>
-                    <input type="text" id="mount_bs" disabled name="mount_bs" :value="data.mount_bs * 68"
-                        class="mt-2 p-3 w-full">
+                    <input type="text" id="mount_dollars" name="mount_dollars" v-model="data.mount_dollars"
+                        @input="calcValue" class="mt-2 p-3 w-full">
                 </div>
 
                 <div class="mb-4 col-span-2">
-                    <UploadImg :img="data.image" @setImg="({imgURL}) => data.image = imgURL"/>
+                    <UploadImg :img="data.image" @setImg="({ imgURL }) => data.image = imgURL" />
                 </div>
 
             </div>

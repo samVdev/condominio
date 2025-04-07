@@ -41,8 +41,8 @@ class UserSeeder extends Seeder
             'suspend' => false,
             'persona_id' => 3,
             'email_verified_at' => null,
-            'is_admin' => true,
-            'role_id' => 1       
+            'is_admin' => false,
+            'role_id' => 3       
           ]
         );
 
@@ -51,8 +51,8 @@ class UserSeeder extends Seeder
             'suspend' => false,
             'persona_id' => 4,
             'email_verified_at' => null,
-            'is_admin' => true,
-            'role_id' => 1       
+            'is_admin' => false,
+            'role_id' => 3     
           ]
         );
 
@@ -61,18 +61,18 @@ class UserSeeder extends Seeder
             'suspend' => false,
             'persona_id' => 5,
             'email_verified_at' => null,
-            'is_admin' => true,
-            'role_id' => 1       
+            'is_admin' => false,
+            'role_id' => 3       
           ]
         );
 
         \App\Models\User::factory(1)->create([
-            'email' => '324aaa2@example.com',
+            'email' => 'propietario@example.com',
             'suspend' => false,
             'persona_id' => 6,
             'email_verified_at' => null,
-            'is_admin' => true,
-            'role_id' => 1       
+            'is_admin' => false,
+            'role_id' => 3       
           ]
         );
     }

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import useIndex from "../composables/useIndex";
 import tablesHeader from "@/components/tablesHeader.vue"
-import ActionsTable from "@/components/actionsTable.vue";
 import Loader from "@/components/Loader.vue";
+import ActionsTable from "@/components/actionsTable.vue";
 
 const {
   data,
@@ -20,19 +20,6 @@ const {
 
     <h1 class="text-3xl font-semibold leading-loose text-gray-900 dark:text-white my-5 text-center">Usuarios pendientes de pago</h1>
 
-    <!--router-view v-slot="{ Component }">
-      <Transition name="expandModal" :style="{ '--modal-top': `50%`, '--modal-left': `50%` }">
-        <div v-if="$route.path.includes('/receipts/expenses-user')" class="overlay !z-[1000] bg-[#fffffff2]">
-
-          <h1 class="text-3xl font-semibold leading-loose text-gray-900 dark:text-white my-5 text-center">Gastos
-            pendientes de {{$route.query.nameUser || ''}}</h1>
-
-          <component :is="Component" :key="$route.path" />
-        </div>
-      </Transition>
-    </router-view-->
-
-    
     <label class="fixed top-3 right-5 cursor-pointer text-black text-3xl"
       @click="$router.push(route.query.back as string || '/dashboard')">x</label>
 
@@ -42,7 +29,7 @@ const {
     <section className="relative mx-auto my-4 overflow-auto animate-fade-in">
 
       <div class="fakeTable md:w-[90%] mx-auto h-[80vh]" @scroll="loadScroll">
-        <article class="fakeTable-head grid-cols-6">
+        <article class="fakeTable-head grid-cols-7">
           <a to="#" class="cursor-pointer" @click.prevent="setSort('name')">
             Nombre
             <font-awesome-icon icon="sort" class="ml-2" />
@@ -67,19 +54,20 @@ const {
             Recibos pendientes
             <font-awesome-icon icon="sort" class="ml-2" />
           </a>
+          <p>Ver</p>
         </article>
         <section v-if="data.rows.length > 0">
-          <div v-for="row in data.rows" :key="row.uuid" class="grid-cols-6 fakeTable-body">
+          <div v-for="row in data.rows" :key="row.uuid" class="grid-cols-7 fakeTable-body">
             <p>{{ row.nombre }}</p>
             <p>{{ row.email }}</p>
             <p>{{ row.phone }}</p>
             <p>{{ row.tower }}</p>
             <p>{{ row.apt }}</p>
             <p>{{ row.pending_receipts }}</p>
-            <!--p>
+            <p>
               <ActionsTable :deleteBtn="false" :editBtn="false" :recibesBtn="true"
-                @recives="() => $router.push({ path: '/receipts/expenses-user', query: { user: row.uuid, nameUser: row.nombre, back: '/expenses'} })" />
-            </p-->
+                @recives="() => $router.push({ path: '/dashboard/factures/pendings', query: { user: row.uuid} })" />
+            </p>
           </div>
         </section>
         <div class="FadeTR" v-if="data.rows.length === 0">

@@ -13,15 +13,24 @@ class Receipt extends Model
         'persona_id',
         'total_pagado',
         'facture_id',
-        'porcentaje_alicuota',
         'cedula',
         'referencia',
+        'accepted',
+        'withMora',
+        'withDays',
+        'user_id',
+        'dollarBCV'
     ];
 
     // Relación con la persona
     public function persona()
     {
         return $this->belongsTo(Personas::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function facture()

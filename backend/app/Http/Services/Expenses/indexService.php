@@ -4,6 +4,7 @@ namespace App\Http\Services\Expenses;
 
 use App\Http\Services\getDolar;
 use App\Models\Expenses;
+use App\Models\Factures;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -24,9 +25,11 @@ class indexService
         $offset = $request->input("offset");
         $user = $request->input("user");
 
+        $dolarBCV = getDolar::getDollarRate();
+
         $expensesDB = Expenses::
         join('services', 'service_id', 'services.id')
-        ->join('condominium', 'expenses.condominium_id', 'condominium.id')
+        ->leftjoin('condominium', 'expenses.condominium_id', 'condominium.id')
         ->select(
         'expenses.id', 'service_id', 'expenses.condominium_id', 
         'expenses.created_at', 'services.service_type', 'condominium.Nombre',
@@ -40,16 +43,34 @@ class indexService
         });
     }
 
+    $factureTotalUsd = [
+        "USD" => 0,
+        "BS" => 0
+    ];
+
     if (!empty($facture)) {
-        $expensesDB->where('expenses.facture_id', $facture);
+        $factureDB = Factures::select('id')->where('code', $facture)->first();
+
+        if($factureDB){
+            $totalUSD = (float) $expensesDB->where('expenses.facture_id', $factureDB->id)->sum('amount_dollars');
+            $factureTotalUsd = [
+                "USD" => $totalUSD,
+                "BS" => $totalUSD * $dolarBCV
+            ];
+        }
+
+        if($factureDB) $expensesDB->where('expenses.facture_id', $factureDB->id);
     }
 
-
-    if(!empty($date)) {
+    if (!empty($date) && in_array($date, ['m', 'w', 'd'])) {
         $expensesDB->where(function ($query) use ($date) {
-            if($date == 'm') $query->whereBetween('expenses.created_at', [now()->startOfMonth(), now()->endOfMonth()]);
-            else if($date == 'w') $query->whereBetween('expenses.created_at', [now()->startOfWeek(), now()->endOfWeek()]);
-            else if($date == 'd') $query->whereBetween('expenses.created_at', [now()->startOfDay(), now()->endOfDay()]);
+            $dateRanges = [
+                'm' => [now()->startOfMonth(), now()->endOfMonth()],
+                'w' => [now()->startOfWeek(), now()->endOfWeek()],
+                'd' => [now()->startOfDay(), now()->endOfDay()]
+            ];
+            
+            $query->whereBetween('expenses.created_at', $dateRanges[$date]);
         });
     }
 
@@ -88,14 +109,14 @@ class indexService
 
         $expensesDB = $expensesDB->skip($offset)->take($limit)->get();
         
-        $expenses = $expensesDB->map(function ($expense) {
+        $expenses = $expensesDB->map(function ($expense){
             $price = (float)$expense->amount_dollars;
             $bcv = (float)$expense->dollar_value;
 
             return [
                 'id' => $expense->id,               
                 'name' => $expense->service_type,           
-                'tower' => $expense->Nombre,
+                'tower' => $expense->Nombre ? $expense->Nombre : 'Todas las torres',
                 'mount_dollars' => $price,
                 'mount_bs' => $price * $bcv,
                 'dollarBefore' => $expense->dollar_value,
@@ -109,6 +130,7 @@ class indexService
             "sort" => $request->query("sort"),
             "direction" => $request->query("direction"),
             "search" => $request->query("search"),
+            'Facture' => $factureTotalUsd['USD'] ? $factureTotalUsd : null
         ], 200);
     }
 }

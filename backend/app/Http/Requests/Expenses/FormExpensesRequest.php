@@ -26,7 +26,16 @@ class FormExpensesRequest extends FormRequest
             'porcent' => 'numeric|min:0',
             'id' => 'nullable|string',
             'service' => 'required|integer|exists:services,id',
-            'tower' => 'required|integer|exists:condominium,id',
+            'tower' => [
+                'required',
+                'integer',
+                function ($attribute, $value, $fail) {
+                    if ($value != 0 && !\DB::table('condominium')->where('id', $value)->exists()) {
+                        $fail('El valor de la torre debe ser un ID válido o 0.');
+                    }
+                },
+            ],
+
             'file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
     }
@@ -51,6 +60,7 @@ class FormExpensesRequest extends FormRequest
 
             'tower.required' => 'La torre es obligatorio.',
             'tower.integer' => 'La torre debe ser un número entero.',
+            'tower.exists' => 'El valor de la torre debe ser valido.',
 
             'file.image' => 'El archivo debe ser una imagen.',
             'file.mimes' => 'Solo se permiten imágenes en formato JPEG, PNG, JPG o GIF.',
