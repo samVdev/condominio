@@ -56,7 +56,7 @@ onMounted(() => {
                     <div class="w-full">
                         <label for="price"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Celular</label>
-                        <input type="tel" v-model="account.cel" name="cel" id="cel" maxlength="14" minlength="8"
+                        <input type="tel" v-model="account.cel" name="cel" id="cel" maxlength="15" minlength="8"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                             placeholder="Ingresa el número de celular" required>
                     </div>

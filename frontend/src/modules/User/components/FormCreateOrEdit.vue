@@ -58,7 +58,7 @@ onMounted(() => {
 
       <div class="mb-4">
         <label for="celular" class="block text-sm font-medium text-gray-700">Celular:</label>
-        <input type="tel" id="celular" required name="celular" v-model="form.phone" maxlength="11"
+        <input type="tel" id="celular" required name="celular" v-model="form.phone" maxlength="15"
           placeholder="Ej: 0412000000"
           class="mt-2 p-3 w-full border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
       </div>
