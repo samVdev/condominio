@@ -24,6 +24,8 @@ class indexService
         $offset = $request->input("offset");
         $user = $request->input("user");
 
+        $dolarBCV = getDolar::getDollarRate();
+
         $expensesDB = Expenses::
         join('services', 'service_id', 'services.id')
         ->join('condominium', 'expenses.condominium_id', 'condominium.id')
@@ -44,12 +46,15 @@ class indexService
         $expensesDB->where('expenses.facture_id', $facture);
     }
 
-
-    if(!empty($date)) {
+    if (!empty($date) && in_array($date, ['m', 'w', 'd'])) {
         $expensesDB->where(function ($query) use ($date) {
-            if($date == 'm') $query->whereBetween('expenses.created_at', [now()->startOfMonth(), now()->endOfMonth()]);
-            else if($date == 'w') $query->whereBetween('expenses.created_at', [now()->startOfWeek(), now()->endOfWeek()]);
-            else if($date == 'd') $query->whereBetween('expenses.created_at', [now()->startOfDay(), now()->endOfDay()]);
+            $dateRanges = [
+                'm' => [now()->startOfMonth(), now()->endOfMonth()],
+                'w' => [now()->startOfWeek(), now()->endOfWeek()],
+                'd' => [now()->startOfDay(), now()->endOfDay()]
+            ];
+            
+            $query->whereBetween('expenses.created_at', $dateRanges[$date]);
         });
     }
 
@@ -88,7 +93,7 @@ class indexService
 
         $expensesDB = $expensesDB->skip($offset)->take($limit)->get();
         
-        $expenses = $expensesDB->map(function ($expense) {
+        $expenses = $expensesDB->map(function ($expense){
             $price = (float)$expense->amount_dollars;
             $bcv = (float)$expense->dollar_value;
 
@@ -97,7 +102,7 @@ class indexService
                 'name' => $expense->service_type,           
                 'tower' => $expense->Nombre,
                 'mount_dollars' => $price,
-                'mount_bs' => $price * $bcv,
+                'mount_bs' => ceil($price * $bcv),
                 'dollarBefore' => $expense->dollar_value,
                 'image' => $expense->image,
                 'created' => $expense->created_at->format('d/m/Y'),               

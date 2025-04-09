@@ -13,7 +13,7 @@ export default () => {
         countTowerA: 0,
         countTowerB: 0,
         countTowerC: 0,
-        countRecibes: 0,
+        countTowerD: 0,
     })
 
     const modalStyle = ref({})
@@ -31,13 +31,13 @@ export default () => {
         }
     }
 
-    const redirectTo = (e: any, to: string, params?: string) => {
+    const redirectTo = (e: any, to: string, params?: any) => {
         const rect = e.target.getBoundingClientRect();
         modalStyle.value = {
             "--modal-top": `${rect.top}px`,
             "--modal-left": `${rect.left}px`,
         };
-        router.push({ path: to, query: { date: params } });
+        router.push({ path: to, query: {...params} });
     };
     
 

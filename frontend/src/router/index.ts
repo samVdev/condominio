@@ -12,6 +12,7 @@ import ServicesRoutes from "@/modules/Services/routes"
 import ExpensesRoutes from "@/modules/Expenses/routes"
 import ReceiptsRoutes from "@/modules/Receipts/routes"
 import facturesRoutes from "@/modules/Factures/routes"
+import guestRoutes from "@/modules/guest/routes"
 
 const storeAuth = computed(() => useAuthStore())
 
@@ -23,6 +24,7 @@ const routes: Array<RouteRecordRaw> = [
   ...ExpensesRoutes.map(route => route),
   ...ReceiptsRoutes.map(route => route),
   ...facturesRoutes.map(route => route),
+  ...guestRoutes.map(route => route),
 ]
 
 const router = createRouter({

@@ -14,6 +14,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\StaticsController;
 use App\Http\Controllers\FacturesController;
+use App\Http\Controllers\GuestController;
 use App\Http\Controllers\ReceiptsController;
 
 
@@ -41,7 +42,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/children/{menuId}', [MenuController::class, 'children']);
         Route::post('/', [MenuController::class, 'store']);  
         Route::put('/{menu}', [MenuController::class, 'update']);
-        Route::delete('/{id}', [MenuController::class,'destroy']);
+        //Route::delete('/{id}', [MenuController::class,'destroy']);
     });
 
     Route::prefix('roles')->group(function () {
@@ -94,7 +95,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/', [CondominiumController::class, 'store']);
         Route::put('/{id}', [CondominiumController::class, 'edit']);
         Route::delete('/{id}', [CondominiumController::class, 'destroy']);
-    });  
+    }); 
+    
+    Route::prefix('guest')->group(function () {
+        Route::get('factures/user/pending', [GuestController::class, 'FactureUserPending']);
+        Route::get('factures/user/completed', [GuestController::class, 'FactureUserCompleted']);
+        Route::get('expenses/facture', [GuestController::class, 'ExpensesFacture']);
+        Route::get('count', [GuestController::class, 'DashboardCount']);
+        Route::post('pay/facture/{id}', [ReceiptsController::class, 'storeReceipt']);
+    }); 
     
 });
 

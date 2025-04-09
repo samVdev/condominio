@@ -6,6 +6,7 @@ import { onMounted } from "vue";
 import type { Params } from "@/types/params";
 import ActionsTable from "@/components/actionsTable.vue";
 import { parsePrices } from "@/utils/parsePrices";
+import NotRecords from "@/components/notRecords.vue";
 
 const url = import.meta.env.VITE_APP_API_URL
 
@@ -93,7 +94,7 @@ onMounted(() => getExpenses(`?offset=${expenses.offset}&${new URLSearchParams(ro
 
         <div class="FadeTR" v-else>
           <Loader v-if="!loaded" class="mx-auto mt-5" />
-          <p v-else>No se encontraron resultados</p>
+          <NotRecords v-else/>
         </div>
       </div>
 

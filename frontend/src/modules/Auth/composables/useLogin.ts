@@ -22,7 +22,7 @@ export function useLogin() {
       if (authUser) {
         auth.setGuest({ value: "isNotGuest" });
         if(authUser.isAdmin) await router.push("/dashboard");
-        else await router.push("/users");
+        else await router.push("/home");
       }
     } catch (err) {
       const message = err.response.data.errors.msg || 'Error inesperado';

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import useIndex from "../composables/useIndex";
 import tablesHeader from "@/components/tablesHeader.vue"
-import ActionsTable from "@/components/actionsTable.vue";
 import Loader from "@/components/Loader.vue";
 
 const {
@@ -20,19 +19,6 @@ const {
 
     <h1 class="text-3xl font-semibold leading-loose text-gray-900 dark:text-white my-5 text-center">Usuarios pendientes de pago</h1>
 
-    <!--router-view v-slot="{ Component }">
-      <Transition name="expandModal" :style="{ '--modal-top': `50%`, '--modal-left': `50%` }">
-        <div v-if="$route.path.includes('/receipts/expenses-user')" class="overlay !z-[1000] bg-[#fffffff2]">
-
-          <h1 class="text-3xl font-semibold leading-loose text-gray-900 dark:text-white my-5 text-center">Gastos
-            pendientes de {{$route.query.nameUser || ''}}</h1>
-
-          <component :is="Component" :key="$route.path" />
-        </div>
-      </Transition>
-    </router-view-->
-
-    
     <label class="fixed top-3 right-5 cursor-pointer text-black text-3xl"
       @click="$router.push(route.query.back as string || '/dashboard')">x</label>
 

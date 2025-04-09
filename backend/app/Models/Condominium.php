@@ -28,11 +28,5 @@ class Condominium extends Model
     public function Apartaments()
     {
         return $this->hasMany(Condominium::class)->with('Apartaments');
-    }
-
-    public function factures()
-    {
-        return $this->hasMany(Factures::class);
-    }
-    
+    }    
 }

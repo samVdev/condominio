@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             ServicesTableSeeder::class,
             //FacturesSeeder::class,
-            ExpensesTableSeeder::class,
+            //ExpensesTableSeeder::class,
             //ReceiptsTableSeeder::class
         ]);
     }

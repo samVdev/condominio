@@ -75,10 +75,10 @@ onMounted(() => {
 });
 
 const deleteRow = (rowId?: string) => {
-  if (rowId === undefined) return;
+ /* if (rowId === undefined) return;
   if (confirm(`¿Estás seguro de que quieres eliminar el registro ${rowId}?`)) {
     deleteRole(rowId)
-  }
+  }*/
 };
 </script>
 
@@ -113,8 +113,7 @@ const deleteRow = (rowId?: string) => {
                 {{ role.description }}
               </td>
               <td class="">
-                <ActionsTable :deleteBtn="true" :editBtn="true" @edit="router.push({ path: '/roles/edit/' + role.id })"
-                  @remove="deleteRow(row.id)" />
+                <ActionsTable :deleteBtn="false" :editBtn="true" @edit="router.push({ path: '/roles/edit/' + role.id })"/>
               </td>
             </tr>
             <tr v-if="data.rows.length === 0">

@@ -19,9 +19,14 @@ const checkID = (e) => {
       </Transition>
     </router-view>
 
+    <label v-if="$route.name != 'factures'" class="fixed top-3 right-5 cursor-pointer text-black text-3xl"
+    @click="$router.push('/dashboard')">x</label>
+
     <section class="mx-auto md:w-[90%]">
-      <IndexFactures to="/factures" :activeCreate="true" @form="(e: any) => $router.push(`/factures/form/${checkID(e)}`) "/>
+      <IndexFactures to="/factures" :toUserExpenses="$route.name != 'factures'" :activeCreate="$route.name == 'factures'" @form="(e: any) => $router.push(`/factures/form/${checkID(e)}`) "/>
     </section>
+
+    
 
 </main>
 </template>

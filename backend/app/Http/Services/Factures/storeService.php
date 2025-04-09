@@ -39,6 +39,7 @@ class storeService
             'porcent_first_five_days' => $request->porcent,
             'total_dollars' => $totalAmount,
             'number_month' =>  $request->month,
+            'code' => Factures::getCode(),
             'dollar_bcv' => $dolar,
         ]);
 
@@ -51,3 +52,4 @@ class storeService
         return response()->json(["message" => 'Se ha creado correctamente'], 200);
     }
 }
+

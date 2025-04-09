@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Factures\FormFactureRequest;
 use App\Http\Services\Factures\deleteService;
+use App\Http\Services\Factures\facturesPendingService;
 use App\Http\Services\Factures\indexService;
 use App\Http\Services\Factures\storeService;
 use Illuminate\Http\JsonResponse;
@@ -19,11 +20,16 @@ class FacturesController extends Controller
     public function store(FormFactureRequest $request): JsonResponse
     {
          return storeService::index($request);
-     } 
+    } 
+
+    /*public function FactureUserPending(Request $request): JsonResponse
+    {
+         return facturesPendingService::index($request);
+    } */
 
     
     public function destroy(string $id): JsonResponse
     {
          return deleteService::destroy($id);
-     } 
+    } 
 }

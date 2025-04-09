@@ -32,16 +32,25 @@ export default [
                 meta: { middleware: [auth, admin] },
                 props: true,
                 component: () => import("@/modules/Expenses/views/IndexView.vue").then(m => m.default),
-                children: [{
-                    path: "users/pendings",
-                    name: "usersPendingReceipts",
-                    meta: { middleware: [auth, admin]},
-                    props: true,
-                    component: () => import("@/modules/Receipts/views/usersPending.vue").then(m => m.default)
-                },]
+            },
+            {
+                path: "users/pendings",
+                name: "usersPendingReceipts",
+                meta: { middleware: [auth, admin]},
+                props: true,
+                component: () => import("@/modules/Receipts/views/usersPending.vue").then(m => m.default)
+            },
+
+            {
+                path: "factures/pendings",
+                name: "facturesPending",
+                meta: { middleware: [auth, admin]},
+                props: true,
+                component: () => import("@/modules/Factures/views/Index.vue").then(m => m.default)
             },
         ]
     },
+
     {
         path: "/:catchAll(.*)",
         name: "NotFound",

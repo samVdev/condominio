@@ -13,9 +13,9 @@ class Receipt extends Model
         'persona_id',
         'total_pagado',
         'facture_id',
-        'porcentaje_alicuota',
         'cedula',
         'referencia',
+        'accepted'
     ];
 
     // Relación con la persona

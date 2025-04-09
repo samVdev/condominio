@@ -70,7 +70,7 @@ export default () => {
   }
 
   onBeforeRouteUpdate(async (to, from) => {
-    if (to.query !== from.query) {
+    if (to.query !== from.query && (from.path == '/dashboard' && to.path == '/dashboard') ) {
       await getUsers(
         new URLSearchParams(to.query as Params).toString()
       )

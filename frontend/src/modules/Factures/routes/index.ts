@@ -11,7 +11,7 @@ export default [{
         path: "form",
         name: "facturesForm",
         meta: { middleware: [auth, admin] },
-        component: () => import("@/modules/Factures/views/formExpense.vue").then(m => m.default),
+        component: () => import("@/modules/Factures/views/formFactures.vue").then(m => m.default),
     }]
 },
 ]

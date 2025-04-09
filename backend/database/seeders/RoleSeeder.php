@@ -25,6 +25,12 @@ class RoleSeeder extends Seeder
             "description" => "Administrator",
             "menu_ids" => [ 1, 4, 5, 6, 7, 8, 9],
         ]);
+
+        Role::create([
+            "name" => "Propietario",
+            "description" => "propietario",
+            "menu_ids" => [],
+        ]);
         
         /*Role::create([
             "name" => "user",
