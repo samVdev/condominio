@@ -97,7 +97,7 @@ onMounted(() => getExpenses(`?offset=${expenses.offset}&${new URLSearchParams(ro
               </p>
             </div>
           </section>
-          <div class="fakeTable-body" v-if="expenses.Facture.USD > 0" :class="toUserExpenses ? 'grid-cols-7' : 'grid-cols-8'">
+          <div class="fakeTable-body" v-if="expenses.Facture && expenses.Facture.USD > 0" :class="toUserExpenses ? 'grid-cols-7' : 'grid-cols-8'">
             <p></p>
             <p></p>
             <p></p>
