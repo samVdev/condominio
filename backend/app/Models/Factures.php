@@ -16,6 +16,8 @@ class Factures extends Model
         'total_dollars',
         'dollar_bcv',
         'number_month',
+        'mount_prov',
+        'mount_exp',
         'code'
     ];
 

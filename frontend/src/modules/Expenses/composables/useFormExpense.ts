@@ -1,6 +1,7 @@
 import { ref } from "vue"
 import type { expenseType } from "../types/ExpenseType"
 import expensesServices from '../services'
+import provisionsServices from '@/modules/Provisions/services'
 import { alertWithToast } from "@/utils/toast"
 import { useRouter } from "vue-router"
 import { getDolar } from "@/modules/Auth/services/configService"
@@ -27,7 +28,13 @@ export default () => {
     mount_dollars: 0,
     mount_bs: 0,
     dollarBefore: 0,
+    facture: false,
     image: ''
+  })
+
+  const provision = ref<any>({
+    checked: false,
+    total: 0
   })
 
   const router = useRouter()
@@ -77,6 +84,21 @@ export default () => {
     }
   }
 
+  
+  const checkProvision = async () => {
+    try {
+      const response = await provisionsServices.checkProvision(data.value.service, data.value.id || '0')
+      provision.value = {
+        checked: true,
+        total: response.data.total ? response.data.total : 0
+      }
+      if(response.data.total)  alertWithToast(`Se a encontrado una provisión de ${response.data.total}$`, 'info')
+    } catch (error) {
+      console.log(error)
+    }
+  } 
+
+
 
   const submit = async (e) => {
     try {
@@ -87,6 +109,9 @@ export default () => {
         const key = keys[index];
         form.append(key, data.value[key])
       }
+
+      if(data.value.id) form.append('_method', 'PUT');
+
       sending.value = true
       const response = !data.value.id ? await insertExpense(form) : await updateExpense(form)
       router.push('/expenses').then(() => alertWithToast(response, 'success'))
@@ -104,9 +129,11 @@ export default () => {
     expenses,
     data,
     sending,
+    provision,
     showExpense,
     submit,
     getDollarBcv,
+    checkProvision,
   }
 }
 

@@ -16,7 +16,8 @@ class Expenses extends Model
         'amount_dollars',
         'dollar_value',
         'image',
-        'porcent_first_five_days',
+        'mount_fund',
+        'mount_prov'
     ];
 
     // Relación con servicios
@@ -34,6 +35,11 @@ class Expenses extends Model
     public function facture()
     {
         return $this->belongsTo(Factures::class);
+    }
+
+    public function provisions()
+    {
+        return $this->hasMany(Provisions::class, 'expense_id');
     }
     
 }

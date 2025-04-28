@@ -9,7 +9,7 @@ const {
     submit,
 } = useFormExpense()
 
-const month = new Date().getMonth()
+const month = new Date().getMonth() + 1
 
 </script>
 
@@ -33,7 +33,7 @@ const month = new Date().getMonth()
                     <select id="month" required name="month" v-model="data.month"
                         class="mt-2 p-3 w-full capitalize">
                         <option value="" disabled selected>Selecciona un mes</option>
-                        <option :value="index + 1" v-for="(mes, index) in meses.filter((e, i) => i <= month)">{{mes}}</option>
+                        <option :value="mes.number" v-for="mes in meses.filter(e => e.number <= month)">{{mes.name}}</option>
                     </select>
                 </div>
 

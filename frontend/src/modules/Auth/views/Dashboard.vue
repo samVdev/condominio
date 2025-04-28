@@ -41,7 +41,7 @@ onMounted(() => {
     </router-view>
     
     <section class="grid gap-5 px-2 md:px-5 md:h-[80vh] parentGrid">
-      <CardDash :redirect="false" icon="wallet" :value="`${totalValues.countTotal.toString()}$`" label="Cuenta" class="div1" />
+      <CardDash :redirect="false" icon="wallet" :value="`${totalValues.countTotal}$`" label="Fondo de reserva" class="div1" />
       <CardDash :redirect="true" icon="book-open" @redirect="({e}) => redirectTo(e, '/dashboard/expenses/view/', {date: 'd'})"  :value="totalValues.gastosDia.toString()" label="Gastos del dia" class="div2" />
       <CardDash :redirect="true" icon="users" @redirect="({e}) => redirectTo(e, '/dashboard/expenses/view/', {date: 'w'})"  :value="totalValues.gastosSemana.toString()" label="Gastos de la semana" class="div3" />
       <CardDash :redirect="true" icon="user-tie" @redirect="({e}) => redirectTo(e, '/dashboard/expenses/view/', {date: 'm'})" :value="totalValues.gastosMes.toString()" label="Gastos del mes" class="div4" />

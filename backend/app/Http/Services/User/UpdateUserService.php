@@ -12,36 +12,43 @@ class UpdateUserService
 {
     static public function execute(UpdateUserRequest $request, String $uuid) : JsonResponse
     {
-        $data = $request->all();
-    
-        $user = User::where('uuid', $uuid)->first();
-    
-        if (!$user) return response()->json(['error' => 'Usuario no encontrado'], 404);
+        try {
+            $data = $request->all();
         
-        if (isset($data["password"]) && $data["password"]) {
-            $data["password"] = Hash::make($data["password"]);
-        } else {
-            unset($data["password"]);
+            $user = User::where('uuid', $uuid)->first();
+        
+            if (!$user) return response()->json(['message' => 'Usuario no encontrado'], 404);
+            
+            if (isset($data["password"]) && $data["password"]) {
+                $data["password"] = Hash::make($data["password"]);
+            } else {
+                unset($data["password"]);
+            }
+        
+            $persona = $user->persona;
+            if ($persona) {
+                $persona->fullName = $request->name;
+                $persona->phone = $request->phone;
+                $persona->condominium_id = $request->apt_id;
+                $persona->save();
+            }
+        
+            $user->email = $request->email;
+            if (isset($data["password"])) {
+                $user->password = $data["password"];
+            }
+            $user->role_id = $request->role_id;
+            $user->suspend = $request->suspend;
+            $user->save();
+        
+            return response()->json(["message" => "Usuario actualizado con exito"], 200);
+        
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ocurrió un error al actualizar el usuario'
+            ], 500);
         }
-    
-        // Actualizar la persona asociada
-        $persona = $user->persona;
-        if ($persona) {
-            $persona->fullName = $request->name;
-            $persona->phone = $request->phone;
-            $persona->condominium_id = $request->apt_id;
-            $persona->save();
-        }
-    
-        $user->email = $request->email;
-        if (isset($data["password"])) {
-            $user->password = $data["password"];
-        }
-        $user->role_id = $request->role_id;
-        $user->suspend = $request->suspend;
-        $user->save();
-    
-        return response()->json(["message"=> "Usuario actualizado con exito"], 200);      
+           
     }
     
 }

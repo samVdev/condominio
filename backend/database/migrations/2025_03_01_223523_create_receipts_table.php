@@ -21,9 +21,12 @@ class CreateReceiptsTable extends Migration
             $table->decimal('total_pagado', 10, 2); 
             $table->string('cedula'); 
             $table->string('referencia');
+            $table->decimal('porcent_alicuota', 5, 2);
             $table->boolean('accepted')->default(false);
             $table->boolean('withMora')->default(false); 
             $table->boolean('withDays')->default(false); 
+            $table->decimal('mount_prov', 10, 2)->default(0); // Monto de las provisiones
+            $table->decimal('mount_exp', 10, 2); // Monto de los gastos
             $table->timestamps();
 
             // Definir las claves foráneas

@@ -14,7 +14,8 @@ class indexService
 {
     static public function index(Request $request): JsonResponse
     {
-
+        try {
+            
         $offset = (int)$request->input("offset", 0);
         $limit = (int)$request->input("limit", 10);
 
@@ -22,12 +23,24 @@ class indexService
         $sort = $request->input("sort");
         $offset = $request->input("offset");
         $user = $request->input("user");
+        $search = $request->input("search");
+        $year = $request->input("year");
 
         $facturesDB = Factures::select(
         'factures.id', 'factures.created_at',
         'factures.total_dollars', 'factures.dollar_bcv', 
         'factures.number_month', 'factures.code', 'factures.porcent_first_five_days'
     );
+
+    if (!empty($year)) {
+        $facturesDB->whereYear('factures.created_at', $year);
+    }
+
+    if (!empty($search)) {
+        $facturesDB->where(function ($query) use ($search) {
+            $query->where('factures.code', 'ilike', "%{$search}%");
+        });
+    }
 
     if (!empty($user)) {
         $facturesDB->whereNotExists(function ($subquery) use ($user) {
@@ -76,6 +89,10 @@ class indexService
             "sort" => $request->query("sort"),
             "direction" => $request->query("direction"),
             "search" => $request->query("search"),
+            "year" => $request->query("year"),
         ], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'Ocurrió un error al procesar la solicitud'], 500);
+        }
     }
 }

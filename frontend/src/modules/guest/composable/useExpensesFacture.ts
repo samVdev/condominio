@@ -28,6 +28,8 @@ export default () => {
     } catch (error) {
       let message = error.response ? error.response.data.message : 'Ha ocurrido un error inesperado'
       router.push('/home').then(() => alertWithToast(message, 'error'))
+    } finally {
+      loaded.value = true
     }
   }
 

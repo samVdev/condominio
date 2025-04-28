@@ -17,7 +17,7 @@ const props = defineProps<{
 
         <div @scroll="loadScroll" class="my-4 flex flex-wrap justify-center gap-5 pb-10 px-10 mx-auto h-[80vh] overflow-auto md:px-10" v-if="factures.rows.length > 0">
             <CardFactureUser v-for="facture in factures.rows"
-                @expenses="() => $router.push({ path: '/home/expenses/facture', query: { facture: facture.id } })"
+                @expenses="() => $router.push({ path: '/home/movements/expenses', query: { facture: facture.id } })"
                 :facture="facture"
             />
         </div>

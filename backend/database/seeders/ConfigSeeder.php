@@ -15,7 +15,7 @@ class ConfigSeeder extends Seeder
             'dni' => '12345678',
             'account' => '01234567890123456789',
             'bank' => 'venezuela',
-            'phone' => '0000'
+            'phone' => '0000',
         ]);
     }
 }

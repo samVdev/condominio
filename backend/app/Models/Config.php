@@ -17,6 +17,6 @@ class Config extends Model
         'dni',
         'account',
         'bank',
-        'phone'
+        'phone',
     ];
 }

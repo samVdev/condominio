@@ -92,7 +92,7 @@ onMounted(() => getExpenses(`?offset=${expenses.offset}&${new URLSearchParams(ro
                   alt="factura" @click="() => viewImage = `${url}/${row.image}`" v-if="row.image">
               </p>
               <p v-if="!toUserExpenses">
-                <ActionsTable :recibesBtn="false" :editBtn="activeCreate" :deleteBtn="activeCreate"
+                <ActionsTable v-if="!row.facture" :recibesBtn="false" :editBtn="true" :deleteBtn="true" 
                   @remove="deleteExpense(row.id)" @edit="$emit('form', { id: row.id })" />
               </p>
             </div>

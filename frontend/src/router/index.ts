@@ -10,9 +10,14 @@ import AuthorizationRoutes from "@/modules/Authorization/routes"
 import UserRoutes from "@/modules/User/routes"
 import ServicesRoutes from "@/modules/Services/routes"
 import ExpensesRoutes from "@/modules/Expenses/routes"
+import EarningsRoutes from "@/modules/Earnings/routes"
 import ReceiptsRoutes from "@/modules/Receipts/routes"
+import ProvisionsRoutes from "@/modules/Provisions/routes"
 import facturesRoutes from "@/modules/Factures/routes"
 import guestRoutes from "@/modules/guest/routes"
+import TypeEarningRoutes from "@/modules/TypeEarning/routes"
+import ApartamentsRoutes from "@/modules/Apartaments/routes"
+import NewsRoutes from "@/modules/News/routes"
 
 const storeAuth = computed(() => useAuthStore())
 
@@ -22,9 +27,15 @@ const routes: Array<RouteRecordRaw> = [
   ...UserRoutes.map(route => route),
   ...ServicesRoutes.map(route => route),
   ...ExpensesRoutes.map(route => route),
+  ...EarningsRoutes.map(route => route),
   ...ReceiptsRoutes.map(route => route),
   ...facturesRoutes.map(route => route),
   ...guestRoutes.map(route => route),
+  ...TypeEarningRoutes.map(route => route),
+  ...ProvisionsRoutes.map(route => route),
+  ...NewsRoutes.map(route => route),
+
+  ...ApartamentsRoutes.map(route => route),
 ]
 
 const router = createRouter({

@@ -9,6 +9,7 @@ export default {
   getAccount() {
     return Http.get(`/api/guest/account`);
   },
+
   getFacturesPending(query: any) {
     return Http.get(`/api/guest/factures/user/pending/?${query}`);
   },
@@ -19,6 +20,14 @@ export default {
 
   getExpensesFacture(query: any) {
     return Http.get(`/api/guest/expenses/facture/?${query}`);
+  },
+
+  getProvisionsFacture(query: any) {
+    return Http.get(`/api/guest/provisions/facture/?${query}`);
+  },
+
+  getEarningsFacture(query: any) {
+    return Http.get(`/api/guest/earnings/facture/?${query}`);
   },
 
   saveReceipt(id: string, payload: any) {

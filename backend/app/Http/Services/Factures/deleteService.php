@@ -4,19 +4,27 @@ namespace App\Http\Services\Factures;
 
 use App\Models\Factures;
 use Illuminate\Http\JsonResponse;
-
+use Illuminate\Support\Facades\DB;
 
 class deleteService
 {
     static public function destroy(string $id): JsonResponse
     {
-        $facture = Factures::find($id);
+        DB::beginTransaction();
+        try {
+            $facture = Factures::find($id);
 
-        if (!$facture) return response()->json(['error' => 'Factura no encontrado'], 404);
+            if (!$facture) return response()->json(['message' => 'Factura no encontrada'], 404);
+            
+            $facture->delete();
 
-        $facture->delete();
-
-        return response()->json(['message' => 'La factura ha sido eliminada correctamente'], 200);
+            DB::commit();
+    
+            return response()->json(['message' => 'La factura ha sido eliminada correctamente'], 200);
+        } catch (\Exception $e) {
+            DB::rollBack(); 
+            return response()->json(['message' => 'Ocurrió un error al eliminar la factura'], 500);
+        }
     }
 }
 

@@ -11,13 +11,18 @@ class deleteService
 {
     static public function destroy(string $id): JsonResponse
     {
-        $service = Services::find($id);
+        try {
+            $service = Services::find($id);
 
-        if (!$service)return response()->json(['error' => 'Servicio no encontrado'], 404);
+            if (!$service) return response()->json(['message' => 'Servicio no encontrado'], 404);
 
-        $service->delete();
+            $service->delete();
 
-        return response()->json(['message' => 'Servicio eliminado correctamente'], 200);
+            return response()->json(['message' => 'Servicio eliminado correctamente'], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Ocurrió un error inesperado al eliminar el servicio'
+            ], 500);
+        }
     }
 }
-
