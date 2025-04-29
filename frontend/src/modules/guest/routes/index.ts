@@ -1,6 +1,4 @@
 import auth from "@/middleware/auth"
-import guest from "@/middleware/guest"
-import admin from "@/middleware/admin"
 
 export default [
     {
@@ -10,11 +8,35 @@ export default [
         component: () => import("@/modules/guest/views/home.vue").then(m => m.default),
         children: [
             {
-                path: "expenses/facture",
-                name: "expensesGuest",
+                path: "movements",
+                name: "movementsGuest",
                 meta: { middleware: [auth] },
-                props: true,
-                component: () => import("@/modules/guest/views/viewExpenses.vue").then(m => m.default),
+                component: () => import("@/modules/guest/views/movements.vue").then(m => m.default),
+                children: [
+                    {
+                        path: "expenses",
+                        name: "expensesGuest",
+                        meta: { middleware: [auth] },
+                        props: true,
+                        component: () => import("@/modules/guest/components/expenses.vue").then(m => m.default),
+                    },
+
+                    {
+                        path: "earnings",
+                        name: "earningsGuest",
+                        meta: { middleware: [auth] },
+                        props: true,
+                        component: () => import("@/modules/guest/components/earnings.vue").then(m => m.default),
+                    },
+
+                    {
+                        path: "provisions",
+                        name: "provisionsGuest",
+                        meta: { middleware: [auth] },
+                        props: true,
+                        component: () => import("@/modules/guest/components/provisions.vue").then(m => m.default),
+                    },
+                ]
             },
         ]
     }

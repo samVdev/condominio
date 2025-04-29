@@ -3,7 +3,6 @@
 namespace App\Http\Services\Services;
 
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use App\Models\Services;
 
 
@@ -11,17 +10,22 @@ class getMiniumService
 {
     static public function index(): JsonResponse
     {
-        $servicesDB = Services::select('id', 'service_type');
+        try {
+            $servicesDB = Services::select('id', 'service_type')->get();
         
-        $servicesDB = $servicesDB->get();
+            $services = $servicesDB->map(function ($service) {
+                return [
+                    'id' => $service->id,
+                    'name' => $service->service_type,
+                ];
+            });
         
-        $services = $servicesDB->map(function ($service) {
-            return [
-                'id' => $service->id,               
-                'name' => $service->service_type,               
-            ];
-        });
-
-        return response()->json($services, 200);
+            return response()->json($services, 200);
+        
+        } catch (\Exception $e) {    
+            return response()->json([
+                'message' => 'Ocurrió un error al obtener los servicios'
+            ], 500);
+        }
     }
 }

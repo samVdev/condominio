@@ -1,22 +1,23 @@
-import { ref } from "vue"
+import { reactive, ref } from "vue"
 import type { serviceType } from "../types/serviceType"
 import servicesServices from '../services'
 import { alertWithToast } from "@/utils/toast"
 import { questionSweet } from "@/utils/question"
 import useTableGrid from "@/composables/useTableGrid"
-import { onBeforeRouteUpdate } from "vue-router"
+import { onBeforeRouteUpdate, useRouter } from "vue-router"
 import type { Params } from "@/types/params"
 
 
 
 export default () => {
-  const services = ref({
+  const services = reactive({
     rows: [] as serviceType[],
     links: [] as string[],
     page: "1",
     search: "",
     sort: "",
-    direction: ""
+    direction: "",
+    offset: 0
   })
 
   const loaded = ref(false)
@@ -31,21 +32,30 @@ export default () => {
 
   const servicesMinium = ref<serviceType[]>([])
 
+  const router = useRouter()
+
+  const getInfo = () => servicesServices.getServices(`offset=${services.offset}&${new URLSearchParams(route.query as Params).toString()}`)
+
   const {
     route,
     setSearch,
-  } = useTableGrid(services.value)
+    loadScroll,
+  } = useTableGrid(services, getInfo)
 
   const getServices = async (query: string) => {
-      try {
-        loaded.value = false
-        const response = await servicesServices.getServices(query)
-        services.value.rows = response.data
-      } catch (error) {
-        
-      } finally{
-        loaded.value = true
-      }
+    try {
+      loaded.value = false
+      const response = await servicesServices.getServices(query)
+      services.rows = response.data.rows
+      services.search = response.data.search
+      services.sort = response.data.sort
+      services.direction = response.data.direction
+      services.offset = 10
+    } catch (error) {
+
+    } finally {
+      loaded.value = true
+    }
   }
 
   const getServicesToSelect = async () => {
@@ -54,8 +64,8 @@ export default () => {
       const response = await servicesServices.getServicesToSelect()
       servicesMinium.value = response.data
     } catch (error) {
-      
-    } finally{
+
+    } finally {
       loaded.value = true
     }
   }
@@ -94,7 +104,7 @@ export default () => {
   const deleteService = async (id?: string) => {
     if (id === undefined) return
 
-    const service = services.value.rows.find(e => e.id == id)
+    const service = services.rows.find(e => e.id == id)
 
     const confirm = await questionSweet('Info', `¿Estás seguro que desea eliminar el <strong>${service.name}`, 'question')
 
@@ -133,15 +143,15 @@ export default () => {
     }
   }
 
-   onBeforeRouteUpdate(async (to, from) => {
-      if (to.query !== from.query) {
-        await getServices(
-          new URLSearchParams(to.query as Params).toString()
-        )
-      }
-    })
-  
-    
+  onBeforeRouteUpdate(async (to, from) => {
+    if (to.query !== from.query) {
+      await getServices(
+        new URLSearchParams(to.query as Params).toString()
+      )
+    }
+  })
+
+
 
   return {
     services,
@@ -156,7 +166,8 @@ export default () => {
     deleteService,
     submit,
     setSearch,
-    getServicesToSelect
+    getServicesToSelect,
+    loadScroll
   }
 }
 

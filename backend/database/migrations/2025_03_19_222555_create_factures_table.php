@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('number_month', 2);
             $table->decimal('porcent_first_five_days', 10, 2);
             $table->decimal('total_dollars', 10, 2); 
+            $table->decimal('mount_prov', 10, 2)->default(0); // Monto de las provisiones
+            $table->decimal('mount_exp', 10, 2); // Monto de los gastos
             $table->decimal('dollar_bcv', 10, 2); 
             $table->timestamps();
         });

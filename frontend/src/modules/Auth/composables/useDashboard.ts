@@ -1,6 +1,6 @@
 import { alertWithToast } from "@/utils/toast";
 import { ref } from "vue"
-import { getCountedDataService } from "../services/panel";
+import adminService from "../services/panel";
 import { useRouter } from 'vue-router'
 
 export default () => {
@@ -23,11 +23,26 @@ export default () => {
 
     const getCountedData = async () => {
         try {
-            const response = await getCountedDataService()
-            totalValues.value = response.data
+            const response = await adminService.getCountedDataService()
+            const countTotal = await getFundData()
+            totalValues.value = {
+                ...response.data,
+                countTotal
+            }
         } catch (error) {
             const message = error.response.data.errors.msg || 'Error inesperado';
             alertWithToast(message, 'error')
+        }
+    }
+
+    const getFundData = async () => {
+        try {
+            const response = await adminService.getFundService()
+            return response.data.countTotal.toFixed(2)
+        } catch (error) {
+            const message = error.response.data.errors.msg || 'Error inesperado';
+            alertWithToast(message, 'error')
+            return 0
         }
     }
 

@@ -1,3 +1,4 @@
+import { meses } from '@/utils/constantes/months';
 import type { AxiosResponse } from 'axios';
 import { ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router'
@@ -9,7 +10,9 @@ interface Data {
   search: string;
   sort: string;
   direction: string;
-  offset: number
+  offset: number,
+  month?: number,
+  year?: string
 }
 
 interface TableGrid {
@@ -26,6 +29,20 @@ export default (data: Data, getItemsScroll: () => Promise<AxiosResponse<any, any
 
   const setSearch = (e: Event): void => {
     load({ search: (e.target as HTMLInputElement).value })
+  }
+
+  const setMonth = (e): void => {
+    const month = e.month as string
+    if(!e.month) return
+    const findedMonth = meses.find(e => e.name.toLowerCase() == month.toLowerCase())
+    if(!findedMonth) return
+    load({ month: findedMonth.number })
+  }
+
+  const setYear = (e): void => {
+    const year = e.year as string
+    if(!year) return
+    load({ year })
   }
 
   // sort
@@ -45,6 +62,7 @@ export default (data: Data, getItemsScroll: () => Promise<AxiosResponse<any, any
       sort: data.sort || "",
       direction: data.direction || "",
       //offset: data.offset || "0",
+      month: data.month || '',
       ...newParams,
     }
 
@@ -105,9 +123,11 @@ export default (data: Data, getItemsScroll: () => Promise<AxiosResponse<any, any
     route,
     router,
     setSearch,
+    setYear,
     setSort,
     loadScroll,
-    load
+    load,
+    setMonth
   }
 }
 

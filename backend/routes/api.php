@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthMenuController;
@@ -9,6 +8,7 @@ use App\Http\Controllers\TokenController;
 use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\CondominiumController;
 use App\Http\Controllers\ConfigController;
+use App\Http\Controllers\EarningsController;
 use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\RoleController;
@@ -16,12 +16,10 @@ use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\StaticsController;
 use App\Http\Controllers\FacturesController;
 use App\Http\Controllers\GuestController;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProvisionsController;
 use App\Http\Controllers\ReceiptsController;
-
-
-
-Route::get('/counted', [StaticsController::class, 'index']);
-
+use App\Http\Controllers\TypeEarningController;
 
 Route::post('/sanctum/token', TokenController::class);
 
@@ -35,6 +33,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     Route::middleware(['admin'])->group(function () {
+
+        Route::get('/counted', [StaticsController::class, 'index']);
 
         Route::prefix('users')->group(function () {
             Route::get('/{uuid}', [UserController::class, 'show']);
@@ -66,6 +66,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
         Route::prefix('statics')->group(function () {
             Route::get('/admin/counted', [StaticsController::class, 'index']);
+            Route::get('/admin/fundreserve', [StaticsController::class, 'fundReserve']);
         });
 
         Route::prefix('services')->group(function () {
@@ -78,12 +79,40 @@ Route::middleware(['auth:sanctum'])->group(function () {
         });
 
 
+        Route::prefix('types')->group(function () {
+            Route::get('/', [TypeEarningController::class, 'index']);
+            Route::get('/minium', [TypeEarningController::class, 'getMinium']);
+            Route::get('/show/{id}', [TypeEarningController::class, 'show']);
+            Route::post('/', [TypeEarningController::class, 'store']);
+            Route::put('/{id}', [TypeEarningController::class, 'edit']);
+            Route::delete('/{id}', [TypeEarningController::class, 'destroy']);
+        });
+
+        Route::prefix('earnings')->group(function () {
+            Route::get('/', [EarningsController::class, 'index']);
+            Route::get('/show/{id}', [EarningsController::class, 'show']);
+            Route::post('/', [EarningsController::class, 'store']);
+            Route::put('/{id}', [EarningsController::class, 'edit']);
+            Route::delete('/{id}', [EarningsController::class, 'destroy']);
+        });
+
         Route::prefix('expenses')->group(function () {
             Route::get('/', [ExpensesController::class, 'index']);
             Route::get('/show/{id}', [ExpensesController::class, 'show']);
             Route::post('/', [ExpensesController::class, 'store']);
-            Route::post('/{id}', [ExpensesController::class, 'edit']);
+            Route::put('/{id}', [ExpensesController::class, 'edit']);
             Route::delete('/{id}', [ExpensesController::class, 'destroy']);
+        });
+
+        Route::prefix('provisions')->group(function () {
+            Route::get('/', [ProvisionsController::class, 'index']);
+            Route::get('/details', [ProvisionsController::class, 'showProvisionsDetails']);
+            Route::get('/allprov', [ProvisionsController::class, 'showFund']);
+            Route::get('/show/{id}', [ProvisionsController::class, 'show']);
+            Route::get('/check/{service_id}/{expense_id}', [ProvisionsController::class, 'check']);
+            Route::post('/', [ProvisionsController::class, 'store']);
+            Route::put('/{id}', [ProvisionsController::class, 'edit']);
+            Route::delete('/{id}', [ProvisionsController::class, 'destroy']);
         });
 
         Route::prefix('factures')->group(function () {
@@ -100,6 +129,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
         Route::prefix('apt')->group(function () {
             Route::get('/', [CondominiumController::class, 'index']);
+            Route::get('/resume', [CondominiumController::class, 'resume']);
             Route::get('/towers', [CondominiumController::class, 'towers']);
             Route::get('/show/{id}', [CondominiumController::class, 'show']);
             Route::post('/', [CondominiumController::class, 'store']);
@@ -113,13 +143,24 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get('/dolar', [ConfigController::class, 'getDolar']);
             Route::post('/update-dollar', [ConfigController::class, 'updateDollar']);
         });
+
+        Route::prefix('posts')->group(function () {
+            Route::get('/', [PostController::class, 'index']);
+            Route::get('/{id}', [PostController::class, 'show']);
+            Route::post('/', [PostController::class, 'store']);
+            Route::post('/email/{id}', [PostController::class, 'email']);
+            Route::put('/{id}', [PostController::class, 'edit']);
+            Route::delete('/{id}', [PostController::class, 'destroy']);
+        });
     });
 
     Route::prefix('guest')->group(function () {
-        Route::get('account', [GuestController::class, 'Account']); 
+        Route::get('account', [GuestController::class, 'Account']);
         Route::get('factures/user/pending', [GuestController::class, 'FactureUserPending']);
         Route::get('factures/user/completed', [GuestController::class, 'FactureUserCompleted']);
         Route::get('expenses/facture', [GuestController::class, 'ExpensesFacture']);
+        Route::get('earnings/facture', [GuestController::class, 'EarningsFacture']);
+        Route::get('provisions/facture', [GuestController::class, 'ProvisionsFacture']);
         Route::get('count', [GuestController::class, 'DashboardCount']);
         Route::post('pay/facture/{id}', [ReceiptsController::class, 'storeReceipt']);
     });

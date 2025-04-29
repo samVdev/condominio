@@ -16,7 +16,8 @@ export default () => {
     search: "",
     sort: "",
     direction: "",
-    offset: 0
+    offset: 0,
+    year: ''
   })
 
   const loaded = ref(false)
@@ -28,6 +29,7 @@ export default () => {
     setSearch,
     setSort,
     loadScroll,
+    setYear
   } = useTableGrid(factures, getInfo)
 
 
@@ -39,6 +41,7 @@ export default () => {
       factures.search = response.data.search
       factures.sort = response.data.sort
       factures.direction = response.data.direction
+      factures.year = response.data.year
       factures.offset = 10
     } catch (error) {
 
@@ -86,6 +89,7 @@ export default () => {
     loadScroll,
     getFactures,
     deleteFacture,
+    setYear
   }
 }
 

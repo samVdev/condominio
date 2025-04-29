@@ -25,11 +25,19 @@ class editExpensesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'mount_dollars' => 'required|numeric|min:100',
+            'mount_dollars' => 'required|numeric|min:1',
             'porcent' => 'numeric|min:0',
             'id' => 'nullable|string',
             'service' => 'required|integer|exists:services,id',
-            'tower' => 'required|integer|exists:condominium,id',
+            'tower' => [
+                'required',
+                'integer',
+                function ($attribute, $value, $fail) {
+                    if ($value != 0 && !\DB::table('condominium')->where('id', $value)->exists()) {
+                        $fail('El valor de la torre debe ser un ID válido o 0.');
+                    }
+                },
+            ],
             'file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
     }

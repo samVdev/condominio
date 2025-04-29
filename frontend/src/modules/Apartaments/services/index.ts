@@ -4,12 +4,13 @@ export default {
   getApts(query: any) {  
     return Http.get(`/api/apt/?${query}`);
   },  
-
   getTowers() {  
     return Http.get(`/api/apt/towers/`);
   },  
-
-  showApt(id: any) {  
+  getResume() {  
+    return Http.get(`/api/apt/resume`);
+  },  
+  showApt(id: string) {  
     return Http.get(`/api/apt/show/${id}`);
   },  
   insertApt(form: any) {

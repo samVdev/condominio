@@ -21,7 +21,9 @@ const {
   getFactures,
   deleteFacture,
   setSort,
-  loadScroll
+  loadScroll,
+  setYear,
+  setSearch
 } = useIndex()
 
 
@@ -32,8 +34,8 @@ onMounted(() => getFactures(`?offset=${factures.offset}&${new URLSearchParams(ro
 <template>
   <main>
 
-    <tablesHeader  title="Facturas" icon="receipt" :searchActive="false" 
-      :btnCreate="activeCreate" @create="$emit('form')" />
+    <tablesHeader  title="Facturas" icon="receipt" :searchActive="true" @setSearch="({ e }) => setSearch(e)"
+      :btnCreate="activeCreate" @create="$emit('form')" @changedYear="setYear" :filterMonth="true" :year="true"/>
 
     <section className="relative mx-auto my-4 overflow-auto animate-fade-in">
 
@@ -74,15 +76,16 @@ onMounted(() => getFactures(`?offset=${factures.offset}&${new URLSearchParams(ro
           <div v-for="row in factures.rows" :key="row.id" class="fakeTable-body" :class="toUserExpenses ? 'grid-cols-7' : 'grid-cols-8'">
             <p>{{ row.created }}</p>
             <p>{{ row.code }}</p>
-            <p>{{ meses[row.month - 1] }}</p>
+            <p>{{ meses.find(e => e.number == row.month).name || 'No especificado'}}</p>
             <p>{{ parsePrices(row.mount_dollars).dol }}</p>
             <p>{{ parsePrices(row.mount_bs).bs }}</p>
             <p>{{ row.dollar_bcv }} bs.</p>
             <p>{{ row.porcent }} %</p>
             <p v-if="!toUserExpenses">
-              <ActionsTable :editBtn="false" :recibesBtn="true" :expensesBtn="true" :deleteBtn="activeCreate"
+              <ActionsTable :editBtn="false" :recibesBtn="true" :expensesBtn="true" :earningsBtn="true" :deleteBtn="activeCreate"
                @recives="() => $router.push({path: '/receipts', query: {facture: row.id, back: '/factures'}})"
                @expenses="() => $router.push({path: '/expenses', query: {facture: row.code}})"
+               @earnings="() => $router.push({path: '/earnings', query: {facture: row.code}})"
                 @remove="deleteFacture(row.id)"/>
             </p>
           </div>

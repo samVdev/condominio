@@ -68,7 +68,7 @@ const store = useAuthStore()
                 <button @click="$emit('expenses')"
                     class="inline-flex bg-[#b3b3b3] items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input h-12 rounded-xl px-8 transition-all-200 hover:bg-[#a3a3a3] text-white">
                     <font-awesome-icon icon="list-check" />
-                    Gastos
+                    Movimientos
                 </button>
                 <button @click="$emit('pay')" v-if="!facture.payment"
                     class="inline-flex bg-[#e2384f] items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border border-input h-12 rounded-xl px-8 transition-all-200 hover:bg-red-500 text-white">

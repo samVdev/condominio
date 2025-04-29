@@ -43,7 +43,7 @@ onMounted(() => {
 
         <router-view v-slot="{ Component }">
             <Transition name="expandModal" :style="{ '--modal-top': `50%`, '--modal-left': `50%` }">
-                <div v-if="$route.path.includes('/expenses/facture')"
+                <div v-if="$route.path.includes('/movements/')"
                     class="overlay w-full grid place-items-center bg-[#0808083a] z-[1000] !p-0 md:p-20 cursor-pointer"
                     @click="$router.push('/home')">
                     <component :is="Component" :key="$route.path" class="cursor-default" :facture="'sakjdaksdasj'" @click.stop/>
@@ -64,7 +64,7 @@ onMounted(() => {
             </div>
             <div class="my-4 flex flex-wrap justify-center gap-5 pb-10 mx-auto relative md:px-10" v-if="facturesPending.length > 0">
                 <CardFactureUser v-for="facture in facturesPending"
-                    @expenses="() => $router.push({ path: '/home/expenses/facture', query: { facture: facture.id } })"
+                    @expenses="() => $router.push({ path: '/home/movements/expenses', query: { facture: facture.id } })"
                     @pay="() => factureToPay = facture"
 
                     :facture="facture" />
@@ -85,7 +85,7 @@ onMounted(() => {
 
             <div class="my-4 flex flex-wrap justify-center gap-5 px-10 pb-10 mx-auto overflow-auto md:px-10 h-[50vh] md:h-auto" v-if="factures.rows.length > 0">
                 <CardFactureUser v-for="facture in factures.rows.slice(0, 3)"
-                    @expenses="() => $router.push({ path: '/home/expenses/facture', query: { facture: facture.id } })"
+                    @expenses="() => $router.push({ path: '/home/movements/expenses', query: { facture: facture.id } })"
                     @pay="() => factureToPay = facture"
                     :facture="facture" />
             </div>

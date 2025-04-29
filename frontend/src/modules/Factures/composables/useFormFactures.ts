@@ -28,12 +28,11 @@ export default () => {
   })
 
   const router = useRouter()
-  const route = useRoute()
 
   const insertFacture = async () => {
     try {
       const response = await facturesServices.insertFacture(data.value)
-      return response.data.message
+      return response.data
     } catch (error) {
       throw error
     }
@@ -43,7 +42,10 @@ export default () => {
     try {
       sending.value = true
       const response = await insertFacture()
-      router.push('/factures').then(() => alertWithToast(response, 'success'))
+      router.push('/factures').then(() => {
+        alertWithToast(response.message, 'success')
+        if(response.messEar) alertWithToast(response.messEar, 'warning')
+      })
     } catch (error) {
       let message = error.response ? error.response.data.message : 'Ha ocurrido un error inesperado'
       message = message.split('. (')[0]

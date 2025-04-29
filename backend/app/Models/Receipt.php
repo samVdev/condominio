@@ -19,7 +19,10 @@ class Receipt extends Model
         'withMora',
         'withDays',
         'user_id',
-        'dollarBCV'
+        'dollarBCV',
+        'porcent_alicuota',
+        'mount_prov',
+        'mount_exp',
     ];
 
     // Relación con la persona

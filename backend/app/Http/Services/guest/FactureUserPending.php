@@ -14,79 +14,85 @@ class FactureUserPending
 {
     public static function index(Request $request): JsonResponse
     {
-        $dolar = getDolar::getDollarRate();
-        $user = auth()->user();
-        $condominium_id = $user->persona->condominium_id;
+        try {
+            $dolar = getDolar::getDollarRate();
+            $user = auth()->user();
+            $condominium_id = $user->persona->condominium_id;
 
-        $apt = Condominium::select('porcent_alicuota')->where('id', $condominium_id)->first();
+            $apt = Condominium::select('porcent_alicuota')->where('id', $condominium_id)->first();
 
-        $facturesDB = Factures::select([
+            $facturesDB = Factures::select([
                 'factures.code',
                 'factures.created_at',
                 'factures.total_dollars',
                 'factures.dollar_bcv',
                 'factures.porcent_first_five_days',
             ])
-            ->whereNotExists(function ($subquery) use ($user) {
-                $subquery->select(DB::raw(1))
-                    ->from('receipts')
-                    ->join('personas', 'receipts.persona_id', '=', 'personas.id')
-                    ->join('condominium', 'condominium.id', '=', 'personas.condominium_id')
-                    ->join('users', 'users.persona_id', '=', 'personas.id')
-                    ->whereColumn('receipts.facture_id', 'factures.id')
-                    ->where('users.uuid', $user->uuid);
-            })
-            ->get();
+                ->whereNotExists(function ($subquery) use ($user) {
+                    $subquery->select(DB::raw(1))
+                        ->from('receipts')
+                        ->join('personas', 'receipts.persona_id', '=', 'personas.id')
+                        ->join('condominium', 'condominium.id', '=', 'personas.condominium_id')
+                        ->join('users', 'users.persona_id', '=', 'personas.id')
+                        ->whereColumn('receipts.facture_id', 'factures.id')
+                        ->where('users.uuid', $user->uuid);
+                })
+                ->get();
 
-        $factures = $facturesDB->map(function ($expense) use ($dolar, $apt) {
+            $factures = $facturesDB->map(function ($expense) use ($dolar, $apt) {
 
-            $currentDate = Carbon::now();
-            $createdAt = Carbon::parse($expense->created_at);
-            
-            $isWithinFirstFiveDays = $currentDate->diffInDays($createdAt) < 5;
+                $currentDate = Carbon::now();
+                $createdAt = Carbon::parse($expense->created_at);
 
-            // esto es sin no se paga en los primeros 31 dias
-            $isForMora = $currentDate->diffInDays($createdAt) > 31;
-            
-            $alicuota = floatval($apt->porcent_alicuota ?? 0);
-            $mountDollars = (float) $expense->total_dollars * ($alicuota / 100);
-            
-            if ($isWithinFirstFiveDays) {
-                $discountPercentage = floatval($expense->porcent_first_five_days); 
-                $discountAmount = $mountDollars * ($discountPercentage / 100);
-                $mountDollars -= $discountAmount;
-            }
+                $isWithinFirstFiveDays = $currentDate->diffInDays($createdAt) < 5;
 
-                
-            if ($isForMora) {
                 // esto es sin no se paga en los primeros 31 dias
-                $aumentAmount = $mountDollars * (5 / 100);
-                $mountDollars += $aumentAmount;
-            }
+                $isForMora = $currentDate->diffInDays($createdAt) > 31;
 
-            $mountDollars = round($mountDollars, 2);
+                $alicuota = floatval($apt->porcent_alicuota ?? 0);
+                $mountDollars = (float) $expense->total_dollars * ($alicuota / 100);
 
-            $info = [
-                'id' => $expense->code,
-                'tower' => $expense->Nombre,
-                'mount_dollars' => round((float) $expense->total_dollars, 2),
-                'dollar_bcv' => round((float) $mountDollars * $dolar, 2),
-                'created' => $expense->created_at->format('d/m/Y'),
-                'alicuot' => floatval($apt->porcent_alicuota),
-                'total' => $mountDollars,
-            ];
+                if ($isWithinFirstFiveDays) {
+                    $discountPercentage = floatval($expense->porcent_first_five_days);
+                    $discountAmount = $mountDollars * ($discountPercentage / 100);
+                    $mountDollars -= $discountAmount;
+                }
 
-            if ($isWithinFirstFiveDays) {
-                $info['porcent'] = floatval($expense->porcent_first_five_days);
-            }
 
-            if ($isForMora) {
-                $info['isForMora'] = true;
-            }
+                if ($isForMora) {
+                    // esto es sin no se paga en los primeros 31 dias
+                    $aumentAmount = $mountDollars * (5 / 100);
+                    $mountDollars += $aumentAmount;
+                }
 
-            return $info;
-        })->toArray();
+                $mountDollars = round($mountDollars, 2);
 
-        return response()->json($factures, 200);
+                $info = [
+                    'id' => $expense->code,
+                    'tower' => $expense->Nombre,
+                    'mount_dollars' => round((float) $expense->total_dollars, 2),
+                    'dollar_bcv' => round((float) $mountDollars * $dolar, 2),
+                    'created' => $expense->created_at->format('d/m/Y'),
+                    'alicuot' => floatval($apt->porcent_alicuota),
+                    'total' => $mountDollars,
+                ];
+
+                if ($isWithinFirstFiveDays) {
+                    $info['porcent'] = floatval($expense->porcent_first_five_days);
+                }
+
+                if ($isForMora) {
+                    $info['isForMora'] = true;
+                }
+
+                return $info;
+            })->toArray();
+
+            return response()->json($factures, 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "message" => "Ocurrió un error al obtener las facturas del usuario"
+            ], 500);
+        }
     }
 }

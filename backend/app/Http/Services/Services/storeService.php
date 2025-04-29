@@ -11,13 +11,20 @@ class storeService
 {
     static public function index(ServiceStoreRequest $request): JsonResponse
     {
-        $service = new Services;
-
-        $service->service_type = $request->name;
-        $service->is_for_elevators = $request->is_elevator;
-
-        $service->save();
-
-        return response()->json(["message" => 'Se ha creado correctamente'], 200);
+        try {
+            $service = new Services;
+        
+            $service->service_type = $request->name;
+            $service->is_for_elevators = $request->is_elevator;
+        
+            $service->save();
+        
+            return response()->json(["message" => 'Se ha creado correctamente'], 200);
+        
+        } catch (\Exception $e) {
+            return response()->json([
+                "message" => "Ocurrió un error inesperado al crear el servicio"
+            ], 500);
+        }
     }
 }

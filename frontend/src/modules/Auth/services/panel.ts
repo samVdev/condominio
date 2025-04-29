@@ -1,5 +1,11 @@
 import Http from "@/utils/Http";
 
-export const getCountedDataService = async () => {
-  return Http.get(`/api/statics/admin/counted`);
+export default {
+  getCountedDataService () {
+    return Http.get(`/api/statics/admin/counted`);
+  },
+
+  getFundService () {
+    return Http.get(`/api/statics/admin/fundreserve`);
+  }
 }

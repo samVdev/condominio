@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Expenses\FormExpensesRequest;
+use App\Http\Requests\Expenses\editExpensesRequest;
 use App\Http\Services\Condominium\getTowersService;
 use App\Http\Services\Expenses\deleteService;
 use App\Http\Services\Expenses\editService;
@@ -17,6 +18,11 @@ class CondominiumController extends Controller
     public function index(Request $request): JsonResponse
     {
         return indexService::index($request);
+    }
+
+    public function resume(): JsonResponse
+    {
+        return getTowersService::get();
     }
 
     public function towers(): JsonResponse
@@ -34,7 +40,7 @@ class CondominiumController extends Controller
          return storeService::index($request);
      } 
 
-    public function edit(FormExpensesRequest $request, string $id): JsonResponse
+    public function edit(editExpensesRequest $request, string $id): JsonResponse
    {
         return editService::index($request, $id);
     } 

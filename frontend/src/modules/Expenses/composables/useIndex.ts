@@ -53,6 +53,7 @@ export default () => {
 
     }
   }
+  
 
   const deleteExpense = async (id?: string) => {
     if (id === undefined) return

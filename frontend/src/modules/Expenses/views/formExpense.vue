@@ -11,9 +11,11 @@ const {
     dolar,
     data,
     sending,
+    provision,
     submit,
     showExpense,
-    getDollarBcv
+    getDollarBcv,
+    checkProvision
 } = useFormExpense()
 
 const {
@@ -68,28 +70,46 @@ onMounted(() => {
 
 <template>
     <section class="relative h-full w-full grid place-items-center">
-        <form @submit.prevent="submit" class="relative bg-white p-20 rounded-xl w-full md:w-[40%]">
+
+        <form @submit.prevent="checkProvision" class="relative bg-white p-20 rounded-xl w-full md:w-[30%]"
+            v-if="!provision.checked">
+            <label class="absolute top-3 right-5 cursor-pointer text-3xl" @click="$router.push('/expenses')">x</label>
+            <h3 class="text-2xl font-bold text-gray-600">{{ data.id ? 'Modificar' : 'Registrar' }} un Gasto</h3>
+            <div class="my-10">
+                <label for="service" class="block text-sm font-medium text-gray-700">Servicio:</label>
+                <Loader v-if="!loadedService" />
+                <select id="service" required name="service" v-model="data.service"
+                    v-else-if="servicesMinium.length > 0" class="mt-2 p-3 w-full">
+                    <option value="" disabled selected>Selecciona un servicio</option>
+                    <option :value="service.id" v-for="service in servicesMinium">{{ service.name }}</option>
+                </select>
+                <p v-else class="mt-2 py-3 text-gray-700 text-sm">No se encontraron servicios registrados.</p>
+            </div>
+            <button
+                class="bg-[#EA5165] hover:bg-[#D54A5C] transition-all text-white font-bold w-full text-center mt-4 h-[40px] mx-auto grid place-items-center rounded-3xl md:w-[50%]">
+                Guardar
+            </button>
+        </form>
+
+        <form @submit.prevent="submit" class="relative bg-white p-20 rounded-xl w-full md:w-[40%]" v-else>
             <label class="absolute top-3 right-5 cursor-pointer text-3xl" @click="$router.push('/expenses')">x</label>
 
-            <h3 class="text-2xl font-bold text-gray-600">{{ data.id ? 'Modificar' : 'Registrar' }} un Gasto</h3>
+            <h3 class="text-2xl font-bold text-gray-600">{{ data.id ? 'Modificar' : 'Registrar' }} un Gasto ({{ data.service && servicesMinium.length > 0 ? servicesMinium.find(e => e.id == data.service).name : 'Desconocido' }})</h3>
             <p class="my-5 mx-auto text-center font-bold">Dolar BCV: {{ dolar }}</p>
             <div class="grid lg:grid-cols-2 gap-4">
-                <div class="mb-4">
-                    <label for="service" class="block text-sm font-medium text-gray-700">Servicio:</label>
-                    <Loader v-if="!loadedService" />
-                    <select id="service" required name="service" v-model="data.service"
-                        v-else-if="servicesMinium.length > 0" class="mt-2 p-3 w-full">
-                        <option value="" disabled selected>Selecciona un servicio</option>
-                        <option :value="service.id" v-for="service in servicesMinium">{{ service.name }}</option>
-                    </select>
-                    <p v-else class="mt-2 py-3 text-gray-700 text-sm">No se encontraron servicios registrados.</p>
+
+                <div class="mb-4" v-if="provision.total > 0">
+                    <label for="total" class="block text-sm font-medium text-gray-700">Total de la provisión:</label>
+                    <input type="text" id="total" name="total" disabled :value="provision.total + '$'"
+                        class="mt-2 p-3 w-full">
                 </div>
+
                 <div class="mb-4">
                     <label for="apartamento" class="block text-sm font-medium text-gray-700">Torre:</label>
                     <select id="apartamento" required name="apartamento" v-model="data.tower" v-if="towers.length > 0"
                         class="mt-2 p-3 w-full">
                         <option value="" disabled selected>Selecciona una torre</option>
-                        <option :value="tower.id" v-for="tower in towers">{{ tower.Nombre }}</option>
+                        <option :value="tower.id" v-for="tower in towers">{{ tower.name }}</option>
                         <option value="0">Todas las torres</option>
                     </select>
                 </div>
@@ -102,9 +122,18 @@ onMounted(() => {
 
 
                 <div class="mb-4">
-                    <label for="mount_bs" class="block text-sm font-medium text-gray-700">Precio en divisas:</label>
+                    <label for="mount_dollars" class="block text-sm font-medium text-gray-700">Precio en
+                        divisas:</label>
                     <input type="text" id="mount_dollars" name="mount_dollars" v-model="data.mount_dollars"
                         @input="calcValue" class="mt-2 p-3 w-full">
+                </div>
+
+                <div class="col-span-2 text-center" v-if="provision.total > 0">
+                    <p class="font-bold text-lg">
+                        {{ (provision.total - data.mount_dollars) < 0 ? 'Faltante' : 'Sobrante' }}: </p>
+                            <p class="text-xl" :class="(provision.total - data.mount_dollars) < 0 ? 'text-red-600' : 'text-green-600'">
+                                {{ provision.total - data.mount_dollars }}
+                            </p>
                 </div>
 
                 <div class="mb-4 col-span-2">

@@ -25,20 +25,11 @@ const viewImage = ref('')
 
 
 <template>
-    <article
-        class="bg-white relative mx-auto overflow-hidden animate-fade-in rounded-2xl w-full h-[100vh] md:px-10 md:my-4 md:w-[90%] md:h-[80vh] 2xl:w-[50%] 2xl:h-[60vh]">
-        <label class="absolute top-3 right-5 cursor-pointer text-black text-3xl z-[100]"
-            @click="$router.push('/home')">x</label>
+    <article class="bg-white relative mx-auto overflow-hidden animate-fade-in w-full h-[100vh] md:px-10">
 
         <div v-if="viewImage" class="overlay w-full grid place-items-center bg-[#000000ab] cursor-pointer"
             @click="viewImage = ''">
             <img class="w-[100%] md:h-[50%] md:w-auto cursor-default" :src="`${viewImage}`" alt="imagen" @click.stop>
-        </div>
-
-        <div class="px-20 text-center mt-10">
-            <h2 class="mb-4 text-3xl font-extrabold leading-none tracking-tight text-gray-900 md:text-3xl">Factura
-                #{{ $route.query.facture }}</h2>
-            <hr class="w-48 h-1 mx-auto my-4 bg-[#00000042] border-0 rounded-sm md:my-10 dark:bg-gray-700" />
         </div>
 
         <div class="overflow-auto w-full h-[80%] md:h-[60%]">

@@ -3,7 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Expenses;
+use Illuminate\Support\Facades\DB;
+use Faker\Factory as Faker;
 
 class ExpensesTableSeeder extends Seeder
 {
@@ -15,47 +16,27 @@ class ExpensesTableSeeder extends Seeder
     public function run()
     {
 
-        // Crear algunos gastos de ejemplo
-        $expenses = [
-            [
-                'service_id' => 1, // Asegúrate de que este ID exista en la tabla services
-                'condominium_id' => 1, // Selecciona un condominio aleatorio
-                'amount_dollars' => 150.00,
-                'dollar_value' => 4.50,
-                'facture_id' => 1
-            ],
-            [
-                'service_id' => 2,
-                'condominium_id' => 12,
-                'amount_dollars' => 200.00,
-                'dollar_value' => 4.50,
-                'facture_id' => 1
-            ],
-            [
-                'service_id' => 3,
-                'condominium_id' => 1,
-                'amount_dollars' => 100.00,
-                'dollar_value' => 4.50,
-                'facture_id' => 1
-            ],
-            [
-                'service_id' => 4,
-                'condominium_id' => 34,
-                'amount_dollars' => 250.00,
-                'dollar_value' => 4.50,
-                'facture_id' => 1
-            ],
-            [
-                'service_id' => 5,
-                'condominium_id' => 1,
-                'amount_dollars' => 80.00,
-                'dollar_value' => 4.50,
-                'facture_id' => 1
-            ],
-        ];
+        $faker = Faker::create();
 
-        /*foreach ($expenses as $expense) {
-            Expenses::create($expense);
-        }*/
+        $batchSize = 500; // tamaño de lote
+        $totalRecords = 1000000; // cantidad total de registros
+
+        for ($i = 0; $i < $totalRecords; $i += $batchSize) {
+            $data = [];
+
+            for ($j = 0; $j < $batchSize; $j++) {
+                $data[] = [
+                    'service_id' => 2, // Asigna un ID de servicio aleatorio
+                    'condominium_id' => null, // o asigna un ID si aplica
+                    'amount_dollars' => $faker->randomFloat(2, 5, 500), // Gasto aleatorio entre $5 y $500
+                    'dollar_value' => $faker->randomFloat(2, 30, 40), // Valor del dólar aleatorio
+                    'image' => null, // O asigna una imagen si aplica
+                    'created_at' => $faker->dateTimeBetween('-1 year', 'now'),
+                    'updated_at' => now(),
+                ];
+            }
+
+            DB::table('expenses')->insert($data);
+        }
     }
 }

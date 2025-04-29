@@ -15,18 +15,18 @@ class Condominium extends Model
     protected $fillable = [ 'Nombre', 'condominium_id', 'size', 'porcent_alicuota'];    
 
 
-    public function personas()
+    public function subCondominiums()
     {
-        return $this->hasMany(\App\Models\Personas::class);
+        return $this->hasMany(Condominium::class, 'condominium_id');
+    }
+
+    public function parentCondominium()
+    {
+        return $this->belongsTo(Condominium::class, 'condominium_id');
     }
     
-    public function condominio()
+    public function persona()
     {
-        return $this->hasMany(Condominium::class);
+        return $this->hasMany(Personas::class, 'condominio_id');
     }
-    
-    public function Apartaments()
-    {
-        return $this->hasMany(Condominium::class)->with('Apartaments');
-    }    
 }

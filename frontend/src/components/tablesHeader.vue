@@ -3,12 +3,15 @@ import { Params } from '@/types/params';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router'
 import { onBeforeRouteUpdate } from "vue-router"
+import Datepicker from 'vuejs3-datepicker';
 
 const props = defineProps<{
   title: string,
   icon: string,
   searchActive: boolean,
-  btnCreate: boolean
+  btnCreate: boolean,
+  filterMonth?: boolean,
+  year?: boolean
 }>()
 
 const getSearch = (parameters: string) => {
@@ -46,9 +49,19 @@ onBeforeRouteUpdate(async (to, from) => {
       </h1>
     </div>
 
-  <div class="flex items-center justify-start w-full md:w-[90%]" v-if="searchActive">
+  <div class="grid place-items-center gap-5 md:flex md:items-center md:justify-start w-full md:w-[90%]" v-if="searchActive">
     <div class="bg-white shadow rounded-3xl justify-self-start w-full md:w-[30%]">
       <input class="w-full block outline-none" :value="search" type="text" @keyup.enter="(e: any) => $emit('setSearch', { e: e })" placeholder="Buscar" />
+    </div>
+    <div class="flex items-center md:w-[50%]" v-if="filterMonth">
+      <Datepicker
+      :placeholder="year ? 'Seleccionar año' : 'Seleccionar mes'"
+      :minimum-view="year ? 'year' : 'month'"
+      :maximum-view="year ? 'year' : 'month'"
+      language="es"
+      @changedMonth="(e) => $emit('setMonth', e)"
+      @changedYear="(e) => $emit('changedYear', e)"
+    />
     </div>
     <button title="Limpiar busqueda" v-if="search" class="ml-1 bg-[#e2384f83] text-white px-2 py-1 rounded-full scale-[.8] cursor-pointer" @click="() =>$emit('setSearch', { e: fakeEvent })">
       <font-awesome-icon icon="xmark" />

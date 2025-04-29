@@ -10,25 +10,28 @@ class UpdateProfileService
 {
     static public function index(UpdateProfileRequest $request): JsonResponse
     {
-        $authUser = Auth::user();
-        if (!$authUser) {
-            return response()->json(['message' => 'No permitido'], 403);
+        try {
+            $authUser = Auth::user();
+            if (!$authUser) {
+                return response()->json(['message' => 'No permitido'], 403);
+            }
+
+            $persona = $authUser->persona;
+
+            $authUser->update([
+                'email' => $request->email,
+            ]);
+
+            $persona->update([
+                'fullName' => $request->name,
+                'phone'    => $request->tel,
+            ]);
+
+            return response()->json([
+                'message' => 'Perfil actualizado con éxito',
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json(['message' => 'No se pudo actualizar la usuario'], 500);
         }
-    
-        $persona = $authUser->persona;
-        
-        $authUser->update([
-            'email' => $request->email,
-        ]);
-    
-        $persona->update([
-            'fullName' => $request->name,
-            'phone'    => $request->tel,
-        ]);
-    
-        return response()->json([
-            'message' => 'Perfil actualizado con éxito',
-        ], 200);
     }
-    
 }

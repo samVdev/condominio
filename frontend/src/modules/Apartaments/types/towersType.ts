@@ -1,4 +1,8 @@
 export interface towersType {
     id: string,
-    Nombre: string
+    tower: any,
+    name: string,
+    porcent: string,
+    sizes: string,
+    persona: string,
 }
