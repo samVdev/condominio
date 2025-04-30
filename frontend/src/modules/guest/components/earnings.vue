@@ -36,7 +36,7 @@ const viewImage = ref('')
             <div class="fakeTable h-full" @scroll="loadScroll">
                 <article class="fakeTable-head grid-cols-5">
                     <p>Fecha</p>
-                    <p>Gasto</p>
+                    <p>Tipo</p>
                     <p>Monto ($)</p>
                     <p>Monto (Bs.)</p>
                     <p>Factura</p>

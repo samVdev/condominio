@@ -48,15 +48,6 @@ onMounted(() => {
           <hr class="h-[1vh] ">
         </ul>
 
-        <ul class="text-gray-700 capitalize absolute w-[85%] bottom-5">
-          <hr class="h-[1vh] ">
-          <li class="flex gap-2 justify-between items-center my-5 px-2 ">
-            <p>Total </p>
-            <p class="font-bold">{{funds.total}}$</p>
-          </li>
-          <hr class="h-[1vh] ">
-        </ul>
-
       </article>
     </div>
 

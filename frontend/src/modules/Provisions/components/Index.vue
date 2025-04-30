@@ -22,7 +22,6 @@ const {
   provisions,
   route,
   loaded,
-  viewImage,
   getProvisions,
   deleteProvision,
   setSearch,
@@ -41,11 +40,6 @@ onMounted(() => getProvisions(`?offset=${provisions.offset}&${new URLSearchParam
 
     <tablesHeader title="Provisiones" icon="sack-dollar" :searchActive="true" @setSearch="({ e }) => setSearch(e)"
       :btnCreate="activeCreate" @create="$emit('form')" @setMonth="setMonth" :filterMonth="true"/>
-
-    <div v-if="viewImage" class="overlay w-full grid place-items-center bg-[#000000ab] cursor-pointer"
-      @click="viewImage = ''">
-      <img class="w-[100%] md:h-[50%] md:w-auto cursor-default" :src="`${viewImage}`" alt="imagen" @click.stop>
-    </div>
 
     <section className="relative mx-auto my-4 overflow-auto animate-fade-in">
 

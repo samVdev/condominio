@@ -34,7 +34,7 @@ onMounted(() => getServices(new URLSearchParams(route.query as Params).toString(
     <Loader v-if="!loaded" class="mx-auto mt-[20%] translate-y-[-50%]"/>
     
     <section @scroll="loadScroll"
-     className="max-w-[1200px] h-[100vh] content-start mx-auto mt-5 grid grid-cols-1 gap-4 p-4 animate-fade-in md:h-[80vh] md:grid-cols-2 lg:grid-cols-3" v-else-if="services.rows.length > 0">
+     className="max-w-[1200px] h-[80vh] content-start overflow-auto mx-auto mt-5 grid grid-cols-1 gap-4 p-4 animate-fade-in md:h-[70vh] md:grid-cols-2 lg:grid-cols-3" v-else-if="services.rows.length > 0">
       <CardServices :created="service.created" :is_elevator="service.is_elevator" :name="service.name" @edit="showService(service.id)" @delete="deleteService(service.id)" v-for="service in services.rows"/>
     </section>
 

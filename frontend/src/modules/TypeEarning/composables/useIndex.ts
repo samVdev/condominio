@@ -1,4 +1,4 @@
-import { ref } from "vue"
+import { reactive, ref } from "vue"
 import type { typeEarningType } from "../types/typeEarningType"
 import TypeEarningsService from '../services'
 import { alertWithToast } from "@/utils/toast"
@@ -8,7 +8,7 @@ import { onBeforeRouteUpdate } from "vue-router"
 import type { Params } from "@/types/params"
 
 export default () => {
-  const typeEarnings = ref({
+  const typeEarnings = reactive({
     rows: [] as typeEarningType[],
     links: [] as string[],
     page: "1",
@@ -29,21 +29,29 @@ export default () => {
 
   const typeEarningsMinium = ref<typeEarningType[]>([])
 
+  const getInfo = () => TypeEarningsService.getTypeEarnings(`offset=${typeEarnings.offset}&${new URLSearchParams(route.query as Params).toString()}`)
+
+
   const {
     route,
     setSearch,
-  } = useTableGrid(typeEarnings.value)
+    loadScroll
+  } = useTableGrid(typeEarnings, getInfo)
 
   const getTypeEarnings = async (query: string) => {
-      try {
-        loaded.value = false
-        const response = await TypeEarningsService.getTypeEarnings(query)
-        typeEarnings.value.rows = response.data
-      } catch (error) {
-        
-      } finally{
-        loaded.value = true
-      }
+    try {
+      loaded.value = false
+      const response = await TypeEarningsService.getTypeEarnings(query)
+      typeEarnings.rows = response.data.rows
+      typeEarnings.search = response.data.search
+      typeEarnings.sort = response.data.sort
+      typeEarnings.direction = response.data.direction
+      typeEarnings.offset = 10
+    } catch (error) {
+
+    } finally {
+      loaded.value = true
+    }
   }
 
   const getTypeEarningsToSelect = async () => {
@@ -52,8 +60,8 @@ export default () => {
       const response = await TypeEarningsService.getTypeEarningsToSelect()
       typeEarningsMinium.value = response.data
     } catch (error) {
-      
-    } finally{
+
+    } finally {
       loaded.value = true
     }
   }
@@ -92,7 +100,7 @@ export default () => {
   const deleteTypeEarning = async (id?: string) => {
     if (id === undefined) return
 
-    const typeEarning = typeEarnings.value.rows.find(e => e.id == id)
+    const typeEarning = typeEarnings.rows.find(e => e.id == id)
 
     const confirm = await questionSweet('Info', `¿Estás seguro que desea eliminar el <strong>${typeEarning.name}`, 'question')
 
@@ -130,15 +138,15 @@ export default () => {
     }
   }
 
-   onBeforeRouteUpdate(async (to, from) => {
-      if (to.query !== from.query) {
-        await getTypeEarnings(
-          new URLSearchParams(to.query as Params).toString()
-        )
-      }
-    })
-  
-    
+  onBeforeRouteUpdate(async (to, from) => {
+    if (to.query !== from.query) {
+      await getTypeEarnings(
+        new URLSearchParams(to.query as Params).toString()
+      )
+    }
+  })
+
+
 
   return {
     typeEarnings,
@@ -153,7 +161,8 @@ export default () => {
     deleteTypeEarning,
     submit,
     setSearch,
-    getTypeEarningsToSelect
+    getTypeEarningsToSelect,
+    loadScroll
   }
 }
 

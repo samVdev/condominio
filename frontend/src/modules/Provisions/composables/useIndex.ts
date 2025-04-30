@@ -24,7 +24,6 @@ export default (emit: any) => {
     },
   })
 
-  const viewImage = ref('')
   const loaded = ref(false)
 
   const getInfo = () => provisionsServices.getProvisions(`offset=${provisions.offset}&${new URLSearchParams(route.query as Params).toString()}`)
@@ -91,7 +90,6 @@ export default (emit: any) => {
     provisions,
     route,
     loaded,
-    viewImage,
     setSearch,
     setSort,
     loadScroll,
