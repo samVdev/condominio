@@ -18,7 +18,7 @@ class CreateCondominiumsTable extends Migration
             $table->string('Nombre');
             $table->unsignedBigInteger('condominium_id')->nullable();
             $table->string('size');
-            $table->decimal('porcent_alicuota', 5, 2);
+            $table->decimal('porcent_alicuota', 5, 5);
             $table->timestamps();
             $table->foreign('condominium_id')->references('id')->on('condominium')->onDelete('cascade');
         });

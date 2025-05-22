@@ -27,7 +27,7 @@ class countendDashService
                 ->count();
 
 
-            $condominiumIds = [1, 12, 23, 34];
+            $condominiumIds = [1, 2, 3, 4];
 
             $countTowers = User::query()
                 ->join('personas', 'users.persona_id', '=', 'personas.id')
@@ -50,9 +50,9 @@ class countendDashService
                 ->toArray();
 
             $countTowerA = $countTowers[1] ?? 0;
-            $countTowerB = $countTowers[12] ?? 0;
-            $countTowerC = $countTowers[23] ?? 0;
-            $countTowerD = $countTowers[34] ?? 0;
+            $countTowerB = $countTowers[2] ?? 0;
+            $countTowerC = $countTowers[3] ?? 0;
+            $countTowerD = $countTowers[4] ?? 0;
 
             return response()->json([
                 "gastosDia" => $gastosDia,

@@ -6,7 +6,9 @@ const props = defineProps<{
     recibesBtn?: boolean,
     expensesBtn?: boolean,
     earningsBtn?: boolean,
-    emailBtn?: boolean
+    emailBtn?: boolean,
+    historyBtn?: boolean,
+    reportElevatorBtn?: boolean,
 }>()
 
 </script>
@@ -18,6 +20,12 @@ const props = defineProps<{
         </button>
         <button @click="$emit('earnings')" class="bg-green-600" title="Ver Ingresos" v-if="earningsBtn">
             <font-awesome-icon icon="money-bill-trend-up" />
+        </button>
+        <button @click="$emit('report')" class="bg-orange-500" title="Hacer reporte" v-if="reportElevatorBtn">
+            <font-awesome-icon icon="flag" />
+        </button>
+        <button @click="$emit('history')" class="bg-green-600" title="Ver historial" v-if="historyBtn">
+            <font-awesome-icon icon="timeline" />
         </button>
         <button @click="$emit('expenses')" class="bg-blue-600" title="Ver Gastos" v-if="expensesBtn">
             <font-awesome-icon icon="money-bill-transfer" />

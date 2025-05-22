@@ -26,7 +26,6 @@ export default (data: Data, getItemsScroll: () => Promise<AxiosResponse<any, any
   const router = useRouter()
   const route = useRoute()
 
-
   const setSearch = (e: Event): void => {
     load({ search: (e.target as HTMLInputElement).value })
   }
@@ -70,7 +69,7 @@ export default (data: Data, getItemsScroll: () => Promise<AxiosResponse<any, any
       path: route.path,
       query: {
         ...route.query,
-        ...params
+        ...params,
       }
     })
   }

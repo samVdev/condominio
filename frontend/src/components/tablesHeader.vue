@@ -14,16 +14,10 @@ const props = defineProps<{
   year?: boolean
 }>()
 
-const getSearch = (parameters: string) => {
-  if(parameters.includes("search=")) {
-    const searh = parameters.split('search=')[1].split('&')[0]
-    return searh || ''
-  }
-  return ''
-}
-
 const route = useRoute();
-const search = ref(getSearch(new URLSearchParams(route.query as Params).toString()))
+const params = new URLSearchParams(route.query as any)
+
+const search = ref(decodeURIComponent(params.get('search') || ''))
 
 let fakeEvent : any = {
   target: {
@@ -31,13 +25,14 @@ let fakeEvent : any = {
   }
 }
 
-
 onBeforeRouteUpdate(async (to, from) => {
     if (to.query !== from.query) {
-      search.value = getSearch(new URLSearchParams(to.query as Params).toString())
+      const params = new URLSearchParams(to.query as any)
+      search.value = decodeURIComponent(params.get('search') || '')
     }
   })
 
+  
 </script>
 
 <template>
@@ -51,8 +46,11 @@ onBeforeRouteUpdate(async (to, from) => {
 
   <div class="grid place-items-center gap-5 md:flex md:items-center md:justify-start w-full md:w-[90%]" v-if="searchActive">
     <div class="bg-white shadow rounded-3xl justify-self-start w-full md:w-[30%]">
-      <input class="w-full block outline-none" :value="search" type="text" @keyup.enter="(e: any) => $emit('setSearch', { e: e })" placeholder="Buscar" />
+      <input class="w-full block outline-none" :value="decodeURIComponent(search)" type="text" @keyup.enter="(e: any) => $emit('setSearch', { e: e })" placeholder="Buscar" />
     </div>
+    <button title="Limpiar busqueda" v-if="search" class="ml-1 bg-[#e2384f83] text-white px-2 py-1 rounded-full scale-[.8] cursor-pointer" @click="() =>$emit('setSearch', { e: fakeEvent })">
+      <font-awesome-icon icon="xmark" />
+    </button>
     <div class="flex items-center md:w-[50%]" v-if="filterMonth">
       <Datepicker
       :placeholder="year ? 'Seleccionar año' : 'Seleccionar mes'"
@@ -63,9 +61,6 @@ onBeforeRouteUpdate(async (to, from) => {
       @changedYear="(e) => $emit('changedYear', e)"
     />
     </div>
-    <button title="Limpiar busqueda" v-if="search" class="ml-1 bg-[#e2384f83] text-white px-2 py-1 rounded-full scale-[.8] cursor-pointer" @click="() =>$emit('setSearch', { e: fakeEvent })">
-      <font-awesome-icon icon="xmark" />
-    </button>
   </div>
 
     <button v-if="btnCreate" @click="$emit('create')"

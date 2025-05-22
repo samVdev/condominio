@@ -7,6 +7,9 @@ export default {
   getTowers() {  
     return Http.get(`/api/apt/towers/`);
   },  
+  getAptsMin(uuid: string) {  
+    return Http.get(`/api/apt/apts/${uuid}`);
+  },  
   getResume() {  
     return Http.get(`/api/apt/resume`);
   },  

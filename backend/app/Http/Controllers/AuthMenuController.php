@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Repositories\Menu\RecursiveMenuRepository;
 use \App\Models\Role;
 
-use function PHPUnit\Framework\isEmpty;
 
 class AuthMenuController extends Controller
 {
@@ -15,7 +14,7 @@ class AuthMenuController extends Controller
     {
         if (!Auth::user()) return  response()->json(["message" => "Forbidden"], 403);   
         
-        if(!Auth::user()->isAdmin()) return response()->json([]);  
+        //if(!Auth::user()->isAdmin()) return response()->json([]);  
 
         $user = Auth::user();
         $role = Role::select('menu_ids')->find($user->role_id);   

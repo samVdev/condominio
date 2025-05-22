@@ -34,7 +34,6 @@ const routes: Array<RouteRecordRaw> = [
   ...TypeEarningRoutes.map(route => route),
   ...ProvisionsRoutes.map(route => route),
   ...NewsRoutes.map(route => route),
-
   ...ApartamentsRoutes.map(route => route),
 ]
 

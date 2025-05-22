@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import Loader from '@/components/Loader.vue';
 import useFormEarning from '../composables/useFormEarnings';
-import useIndex from "@/modules/Apartaments/composables/useIndex"
+import useIndex from "@/modules/Apartaments/composables/apt/useIndex"
 import indexTypes from "@/modules/TypeEarning/composables/useIndex"
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';

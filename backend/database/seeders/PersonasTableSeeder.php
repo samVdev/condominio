@@ -45,14 +45,14 @@ class PersonasTableSeeder extends Seeder
         Personas::create([
             'fullName' => 'Valeria Gómez',
             'phone' => '987654321',
-            'condominium_id' => 4,
+            'condominium_id' => 15,
         ]);
 
 
         Personas::create([
             'fullName' => 'Jenifer Gómez',
             'phone' => '987654321',
-            'condominium_id' => 5,
+            'condominium_id' => 20,
         ]);
 
 

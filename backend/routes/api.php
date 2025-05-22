@@ -9,6 +9,7 @@ use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\CondominiumController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\EarningsController;
+use App\Http\Controllers\ElevatorsController;
 use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\RoleController;
@@ -32,6 +33,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/auth-menu', AuthMenuController::class);
     });
 
+    // only Admin or superAdmin
     Route::middleware(['admin'])->group(function () {
 
         Route::get('/counted', [StaticsController::class, 'index']);
@@ -131,11 +133,23 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get('/', [CondominiumController::class, 'index']);
             Route::get('/resume', [CondominiumController::class, 'resume']);
             Route::get('/towers', [CondominiumController::class, 'towers']);
+            Route::get('/apts/{id?}', [CondominiumController::class, 'apts']);
             Route::get('/show/{id}', [CondominiumController::class, 'show']);
             Route::post('/', [CondominiumController::class, 'store']);
             Route::put('/{id}', [CondominiumController::class, 'edit']);
             Route::delete('/{id}', [CondominiumController::class, 'destroy']);
         });
+
+        Route::prefix('elevators')->group(function () {
+            Route::get('/min', [ElevatorsController::class, 'getMin']);
+            Route::get('/resume', [ElevatorsController::class, 'resume']);
+            Route::get('/show/{id}', [ElevatorsController::class, 'show']);
+            Route::post('/', [ElevatorsController::class, 'store']);
+            Route::put('/{id}', [ElevatorsController::class, 'edit']);
+            Route::put('/report/{id}', [ElevatorsController::class, 'reportService']);
+            Route::delete('/{id}', [ElevatorsController::class, 'destroy']);
+        });
+
 
         Route::prefix('config')->group(function () {
             Route::get('/', [ConfigController::class, 'index']);
@@ -152,6 +166,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::put('/{id}', [PostController::class, 'edit']);
             Route::delete('/{id}', [PostController::class, 'destroy']);
         });
+    });
+
+    Route::prefix('elevators')->group(function () {
+        Route::get('/', [ElevatorsController::class, 'index']);
+        Route::get('/history', [ElevatorsController::class, 'historyService']);
     });
 
     Route::prefix('guest')->group(function () {

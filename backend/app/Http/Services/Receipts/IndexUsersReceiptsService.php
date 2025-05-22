@@ -62,9 +62,9 @@ class IndexUsersReceiptsService
             if ($tower) {
                 $columnMapTower = [
                     'A' => 1,
-                    'B' => 12,
-                    'C' => 23,
-                    'D' => 34,
+                    'B' => 2,
+                    'C' => 3,
+                    'D' => 4,
                 ];
                 if (isset($columnMapTower[$tower])) {
                     $query->where('tower.Nombre', "Torre $tower");

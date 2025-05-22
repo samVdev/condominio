@@ -6,6 +6,7 @@ export interface expenseType {
     mount_dollars: number,
     mount_bs: number,
     dollarBefore: number,
+    elevator?: any,
     created?: string,
     service: string,
     image: string

@@ -38,6 +38,21 @@ export default [
                     },
                 ]
             },
+        ],
+    },
+
+    {
+        path: "/guest/elevators",
+        name: "elevators-guest",
+        meta: { middleware: [auth], layout: "default" },
+        component: () => import("@/modules/guest/views/elevators.vue").then(m => m.default),
+        children: [
+            {
+                path: "history",
+                name: "elevatorHistoryGuest",
+                meta: { middleware: [auth], layout: "default" },
+                component: () => import("@/modules/Apartaments/views/elevators/history/index.vue").then(m => m.default),
+            }
         ]
     }
 

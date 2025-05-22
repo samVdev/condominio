@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import tablesHeader from "@/components/tablesHeader.vue"
 import Loader from "@/components/Loader.vue";
-import useIndex from "../composables/useIndex";
+import useIndex from "../../composables/apt/useIndex";
 import { onMounted } from "vue";
 import type { Params } from "@/types/params";
 import NotRecords from "@/components/notRecords.vue";
@@ -24,7 +24,7 @@ const {
 onMounted(() => getApt(new URLSearchParams(route.query as Params).toString()))
 
 onBeforeRouteUpdate(async (to, from) => {
-  if (to.query !== from.query) {
+  if (to.query !== from.query && (from.path == '/condominium/apt' && to.path == '/condominium/apt')) {
     await getApt(
       new URLSearchParams(to.query as Params).toString()
     )
@@ -36,17 +36,19 @@ onBeforeRouteUpdate(async (to, from) => {
 
 <template>
   <main>
-    <section class="grid grid-cols-1 gap-5 px-2 pb-10 mx-auto md:w-[90%] md:px-5 md:grid-cols-2">
-      <CardDash :redirect="false" icon="hand-holding-dollar" :value="`${resumeData.count}`" label="Total apartamentos" />
-      <CardDash :redirect="false" icon="sack-dollar" :value="`${resumeData.porcent}%`" label="Alicuota usada" />
+
+    <section class="grid grid-cols-1 gap-5 px-2 py-5 mx-auto md:w-[90%] md:px-5 md:grid-cols-2">
+      <CardDash :redirect="false" icon="building" :value="`${resumeData.count}`" label="Total apartamentos" />
+      <CardDash :redirect="false" icon="percent" :value="`${resumeData.porcent}%`" label="Alicuota usada" />
     </section>
-    <tablesHeader title="Apartamentos" icon="hand-holding-droplet" :searchActive="true"
-      @setSearch="({ e }) => setSearch(e)" :btnCreate="true" @create="() => $router.push('apartamentos/form')" />
+
+    <tablesHeader title="Apartamentos" icon="building" :searchActive="true" @setSearch="({ e }) => setSearch(e)"
+      :btnCreate="true" @create="() => $router.push('apt/form')" />
+
 
     <router-view v-slot="{ Component }">
       <Transition name="expandModal" :style="{ '--modal-top': `50%`, '--modal-left': `50%` }">
-        <div v-if="$route.path.includes('/apartamentos/form')"
-          class="overlay w-full grid place-items-center bg-[#000000ab]">
+        <div v-if="$route.path.includes('/apt/form')" class="overlay w-full grid place-items-center bg-[#000000ab]">
           <component :is="Component" :key="$route.path" />
         </div>
       </Transition>
@@ -88,7 +90,7 @@ onBeforeRouteUpdate(async (to, from) => {
             <p>{{ row.persona || 'Sin propietario' }}</p>
             <p>
               <ActionsTable :recibesBtn="false" :editBtn="true" :deleteBtn="true" @remove="deleteApt(row.id)"
-                @edit="() => $router.push({ name: 'apartamentosForm', params: { id: row.id } })" />
+                @edit="() => $router.push({ name: 'aptForm', params: { id: row.id } })" />
             </p>
           </div>
         </section>

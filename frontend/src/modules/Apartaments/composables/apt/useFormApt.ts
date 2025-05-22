@@ -1,6 +1,6 @@
 import { useRouter } from "vue-router"
-import ApartamentsServices from '../services'
-import type { towersType } from "../types/towersType"
+import ApartamentsServices from '../../services'
+import type { towersType } from "../../types/towersType"
 import { alertWithToast } from "@/utils/toast"
 import { ref } from "vue"
 
@@ -28,7 +28,7 @@ export default () => {
         } catch (error) {
             let message = error.response ? error.response.data.message : 'Ha ocurrido un error inesperado'
             message = message.split('. (')[0]
-            router.push('/apartamentos').then(() => alertWithToast(message, 'error'))
+            router.push('/condominium/apt').then(() => alertWithToast(message, 'error'))
         }
     }
 
@@ -55,7 +55,7 @@ export default () => {
         try {
             sending.value = true
             const response = !data.value.id ? await insertApt(data.value) : await updateApt(data.value)
-            router.push('/apartamentos').then(() => alertWithToast(response, 'success'))
+            router.push('/condominium/apt').then(() => alertWithToast(response, 'success'))
         } catch (error) {
             let message = error.response ? error.response.data.message : 'Ha ocurrido un error inesperado'
             message = message.split('. (')[0]

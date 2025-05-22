@@ -1,6 +1,6 @@
 import { reactive, ref } from "vue"
-import ApartamentsServices from '../services'
-import type { towersType } from "../types/towersType"
+import ApartamentsServices from '../../services'
+import type { towersType } from "../../types/towersType"
 import useTableGrid from "@/composables/useTableGrid"
 import type { Params } from "@/types/params"
 import { questionSweet } from "@/utils/question"
@@ -8,6 +8,7 @@ import { alertWithToast } from "@/utils/toast"
 
 export default () => {
   const towers = ref<towersType[]>([])
+  const apts = ref<any[]>([])
 
   const data = reactive({
     rows: [] as any[],
@@ -39,6 +40,12 @@ export default () => {
   const getTowers = async () => {
     const response = await ApartamentsServices.getTowers()
     towers.value = response.data
+  }
+
+  const getAptsMin = async (uuid: string) => {
+    const id = uuid ? uuid : ''
+    const response = await ApartamentsServices.getAptsMin(id)
+    apts.value = response.data
   }
 
   const getApt = async (query: string) => {
@@ -95,12 +102,14 @@ export default () => {
     route,
     loaded,
     resumeData,
+    apts,
     getApt,
     getTowers,
     setSearch,
     setSort,
     loadScroll,
-    deleteApt
+    deleteApt,
+    getAptsMin
   }
 
 }
