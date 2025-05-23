@@ -23,7 +23,7 @@ class ApartmentsTableSeeder extends Seeder
             ]);
         }
 
-        $path = storage_path('app/filesMasive/ALICUOTAS.csv');
+        $path = base_path('/filesMasive/ALICUOTAS.csv');
         $file = fopen($path, 'r');
 
         fgetcsv($file, 1000, ';');
