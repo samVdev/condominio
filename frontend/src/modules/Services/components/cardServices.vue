@@ -12,7 +12,7 @@ const props = defineProps<{
 <template>
     <article class="bg-white rounded-xl border bg-card text-card-foreground h-[190px] shadow-sm w-full overflow-hidden transition-all-300 hover:shadow-md animate-fade-in transition-all">
         <div class="flex justify-between items-center px-5 py-5">
-            <h5 class="text-lg font-medium line-clamp-1">{{ name }}</h5>
+            <h5 class="text-lg font-medium line-clamp-1" :title="name">{{ name }}</h5>
             <div 
             :class="is_elevator ? 'hover:bg-orange-400 bg-orange-500' : 'hover:bg-blue-300 bg-blue-600'"
             class="inline-flex items-center gap-2 rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent text-white transition-all-200 ">
