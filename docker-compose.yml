@@ -19,7 +19,7 @@ services:
 
   condominio-backend:
     build:
-      context: ./condominio_BackEnd
+      context: ./backend
     container_name: condominio-backend
     expose:
       - "9000"
@@ -32,7 +32,7 @@ services:
 
   condominio-frontend:
     build:
-      context: ./condominio_Frontend
+      context: ./frontend
     container_name: condominio-frontend
     expose:
       - "80"
