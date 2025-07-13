@@ -1,9 +1,6 @@
 <script lang="ts" setup>
-import { userType } from '@/modules/users/types/userType';
-
-
 const props = defineProps<{
-    users: userType[]
+    users: any[]
 }>()
 
 </script>
@@ -20,6 +17,6 @@ const props = defineProps<{
                     </div>  
                 </th>
             </tr>
-        </tbody>
+        </tbody> 
     </table>
 </template>

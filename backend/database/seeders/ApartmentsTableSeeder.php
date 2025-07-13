@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Condominium;
-use Illuminate\Support\Facades\Storage;
 
 class ApartmentsTableSeeder extends Seeder
 {

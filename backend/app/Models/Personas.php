@@ -28,7 +28,7 @@ class Personas extends Model
 
     public function user()
     {
-        return $this->hasOne(\App\Models\User::class);
+        return $this->hasOne(\App\Models\User::class, 'persona_id', 'id');
     }
 
     public function condominium()

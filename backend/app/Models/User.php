@@ -19,8 +19,8 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array<int, string>
      */
 
-     protected $keyType = 'int'; // Mantener ID como entero
-     public $incrementing = true; // Permitir auto-incremento 
+    protected $keyType = 'int'; // Mantener ID como entero
+    public $incrementing = true; // Permitir auto-incremento 
 
     protected $fillable = [
         'email',
@@ -58,27 +58,35 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-       // Generar automáticamente un UUID cuando se cree una persona
-       protected static function boot()
-       {
-           parent::boot();
-           static::creating(function ($model) {
-               $model->uuid = Str::uuid();
-           });
-       }
+    // Generar automáticamente un UUID cuando se cree una persona
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            $model->uuid = Str::uuid();
+        });
+    }
 
     public function isAdmin(): bool
     {
-      return $this->is_admin;
+        return $this->is_admin;
     }
+    
 
     public function persona()
     {
         return $this->belongsTo(\App\Models\Personas::class);
     }
-   
+
     public function role()
     {
         return $this->belongsTo(\App\Models\Role::class);
+    }
+
+    public function boards()
+    {
+        return $this->belongsToMany(Board::class, 'board_participants')
+            ->withPivot('asistio')
+            ->withTimestamps();
     }
 }

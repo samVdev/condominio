@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { Params } from '@/types/params';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router'
 import { onBeforeRouteUpdate } from "vue-router"

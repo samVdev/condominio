@@ -2,7 +2,7 @@
 import { ref, defineEmits, onMounted } from 'vue'
 import * as MenuService from "@/modules/Authorization/services/MenuService"
 import { alertWithToast } from '@/utils/toast';
-import { Menu } from '@/types/Menu';
+import type { Menu } from '@/types/Menu';
 
 const emit = defineEmits(['closeModal', 'saved']);
 

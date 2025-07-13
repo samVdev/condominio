@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import type { serviceType } from '../types/serviceType';
-
+import type { serviceType } from '@/modules/Services/types/serviceType';
 
 const props = defineProps<{
     data: serviceType
 }>()
+
 </script>
 
 <template>

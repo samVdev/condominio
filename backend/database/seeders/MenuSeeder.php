@@ -35,15 +35,17 @@ class MenuSeeder extends Seeder
 
         Menu::create(["title" => "Condominio", "menu_id" => null, "path" => "condominium/apt", "icon" => "building", "sort" => 10]);
 
-        Menu::create(["title" => "Menus", "menu_id" => null, "path" => "menus", "icon" => "list", "sort" => 11]);
+        Menu::create(["title" => "Juntas", "menu_id" => null, "path" => "boards", "icon" => "arrows-down-to-people", "sort" => 11]);
 
-        Menu::create(["title" => "Roles", "menu_id" => null, "path" => "roles", "icon" => "user-secret", "sort" => 12]);
+        Menu::create(["title" => "Menus", "menu_id" => null, "path" => "menus", "icon" => "list", "sort" => 12]);
+
+        Menu::create(["title" => "Roles", "menu_id" => null, "path" => "roles", "icon" => "user-secret", "sort" => 13]);
 
 
         // seed guest
-
         Menu::create(["title" => "Home", "menu_id" => null, "path" => "home", "icon" => "fas fa-home", "sort" => 1]);
         Menu::create(["title" => "Ascensores", "menu_id" => null, "path" => "guest/elevators?status=O", "icon" => "timeline", "sort" => 2]);
+        Menu::create(["title" => "Juntas", "menu_id" => null, "path" => "guest/boards", "icon" => "arrows-down-to-people", "sort" => 3]);
 
     }
 }

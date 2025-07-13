@@ -2,10 +2,7 @@
  // @ts-nocheck 
 import { ref, onMounted } from 'vue';
 import * as MenuService from "@/modules/Authorization/services/MenuService";
-import AppPaginationB from "@/components/AppPaginationB.vue";
 import tablesHeader from "@/components/tablesHeader.vue";
-import Create from './Create.vue';
-import Edit from './Edit.vue';
 import ActionsTable from '@/components/actionsTable.vue';
 import { questionSweet } from '@/utils/question';
 import Loader from '@/components/Loader.vue';

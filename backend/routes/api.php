@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthMenuController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TokenController;
 use App\Http\Controllers\AvatarController;
+use App\Http\Controllers\boardsController;
 use App\Http\Controllers\CondominiumController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\EarningsController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\GuestController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProvisionsController;
 use App\Http\Controllers\ReceiptsController;
+use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\TypeEarningController;
 
 Route::post('/sanctum/token', TokenController::class);
@@ -166,7 +168,28 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::put('/{id}', [PostController::class, 'edit']);
             Route::delete('/{id}', [PostController::class, 'destroy']);
         });
+
+        Route::prefix('boards')->group(function () {
+            Route::get('/', [boardsController::class, 'index']);
+            Route::get('/live/{uuid}', [boardsController::class, 'show']);
+            Route::get('/live-apts/{uuid}', [boardsController::class, 'showApt']);
+            Route::post('/', [boardsController::class, 'store']);
+            Route::post('/status/{uuid}', [boardsController::class, 'enableBoard']);
+            Route::put('/link/{uuid}', [boardsController::class, 'addLink']);
+            Route::put('/end/{uuid}', [boardsController::class, 'endBoard']);
+            Route::delete('/{uuid}', [boardsController::class, 'destroy']);
+
+            // Surveys
+            Route::get('/surveys/one/{uuid}', [SurveyController::class, 'byBoard']);
+            Route::post('/surveys/{uuid}', [SurveyController::class, 'store']);
+            Route::put('/survey/{id}', [SurveyController::class, 'status']);
+            Route::delete('/survey/{id}', [SurveyController::class, 'delete']);
+        });
     });
+
+    Route::get('/boards/surveys/{uuid}', [SurveyController::class, 'byBoardSurveys']);
+    Route::post('/boards/survey/new-response', [SurveyController::class, 'response']);
+
 
     Route::prefix('elevators')->group(function () {
         Route::get('/', [ElevatorsController::class, 'index']);
@@ -182,6 +205,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('provisions/facture', [GuestController::class, 'ProvisionsFacture']);
         Route::get('count', [GuestController::class, 'DashboardCount']);
         Route::post('pay/facture/{id}', [ReceiptsController::class, 'storeReceipt']);
+
+        // export 
+        Route::get('export/expenses', [FacturesController::class, 'exportExpenses']);
+
+        // boards Guest
+        Route::get('boards/act', [GuestController::class, 'boardsAct']);
+        Route::get('board/live/{uuid}', [GuestController::class, 'getBoard']);
+        Route::get('board/live-disconnect/{uuid}', [GuestController::class, 'disconnectBoard']);
     });
 });
 

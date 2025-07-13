@@ -14,23 +14,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - ./php/laravel.ini:/usr/local/etc/php/conf.d/laravel.ini
     networks:
-      - condominio-network
-  nginx_condominio:
-    depends_on:
-      - php_condominio
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    container_name: condominio_nginx
-    restart: unless-stopped
-    volumes:
-      - "./public:/var/www/html/public:ro"
-      - "./storage/app:/var/www/html/storage/app:ro"
-    tty: true
-    ports:
-      - "80:80"
-    networks:
-      - condominio-network      
+      - condominio_net    
 networks:
-  condominio-network:
+  condominio_net:
     driver: bridge

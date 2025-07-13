@@ -54,6 +54,20 @@ export default [
                 component: () => import("@/modules/Apartaments/views/elevators/history/index.vue").then(m => m.default),
             }
         ]
+    },
+
+    {
+        path: "/guest/boards",
+        name: "boards-guest",
+        meta: { middleware: [auth], layout: "default" },
+        component: () => import("@/modules/guest/views/boards.vue").then(m => m.default),
+    },
+
+    {
+        path: "/guest/board/live/:uuid",
+        name: "liveBoardGuest",
+        meta: { middleware: [auth], layout: "default" },
+        component: () => import("@/modules/guest/views/liveBoardGuest.vue").then(m => m.default),
     }
 
 ]

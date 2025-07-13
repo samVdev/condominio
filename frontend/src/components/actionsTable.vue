@@ -9,12 +9,16 @@ const props = defineProps<{
     emailBtn?: boolean,
     historyBtn?: boolean,
     reportElevatorBtn?: boolean,
+    entryBtn?: boolean,
 }>()
 
 </script>
 
 <template>
     <div class="flex items-center butons">
+        <button @click="$emit('entry')" class="bg-blue-600" title="Entrar" v-if="entryBtn">
+            <font-awesome-icon icon="right-to-bracket" />
+        </button>
         <button @click="$emit('edit')" class="bg-blue-600" title="Editar este registro" v-if="editBtn">
             <font-awesome-icon icon="pen" />
         </button>

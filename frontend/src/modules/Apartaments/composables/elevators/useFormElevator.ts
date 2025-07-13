@@ -9,6 +9,8 @@ export default () => {
         id: '',
         tower: '-1',
         number: '',
+        tower_id: '',
+        status: false
     })
 
     const sending = ref(false)

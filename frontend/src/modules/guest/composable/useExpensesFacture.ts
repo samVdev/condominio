@@ -33,6 +33,18 @@ export default () => {
     }
   }
 
+  const getFileExpenses = async () => {
+    try {
+      const response = await facturesUser.getFileExpenses(`${new URLSearchParams(route.query as Params).toString()}`)
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, '_blank');
+    } catch (error) {
+      let message = error.response ? error.response.data.message : 'Ha ocurrido un error inesperado'
+      alertWithToast(message, 'error')
+    }
+  }
+
 
   const loadScroll = async (e: Event) => {
 
@@ -79,6 +91,7 @@ export default () => {
     data,
     loaded,
     getExpenses,
-    loadScroll
+    loadScroll,
+    getFileExpenses
   }
 }

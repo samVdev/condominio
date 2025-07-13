@@ -41,6 +41,9 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Copy existing application directory contents to the working directory
 COPY . /var/www/html
 
+# Copiar configuración personalizada de php.ini
+COPY php.ini /usr/local/etc/php/conf.d/custom.ini
+
 # Assign permissions of the working directory to the www-data user
 RUN chown -R www-data:www-data \
     /var/www/html/storage \
@@ -48,5 +51,5 @@ RUN chown -R www-data:www-data \
 
 # Expose port 9000 and start php-fpm server (for FastCGI Process Manager)
 EXPOSE 9000
-CMD php artisan schedule:work & php artisan dolar:check & php artisan queue:work --daemon & php-fpm
+CMD php artisan schedule:work & php artisan dolar:check & php artisan queue:work & php-fpm
 
