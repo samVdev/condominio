@@ -18,12 +18,13 @@
                         <td style="padding: 30px; text-align: center;">
                             <h3 style="margin-top: 0; font-weight: normal; color: #333;">{{ $subtitle }}</h3>
 
-                            <p>
-                            {{ $image }}
+                            @if(!empty($image))
+                            <p style="margin: 20px 0;">
+                                <img src="data:image/jpeg;base64,{{ $image }}" 
+                                     alt="News Image" 
+                                     style="max-width: 100%; border-radius: 10px; border: 1px solid #ddd;" />
                             </p>
-                            <p>
-                                <img src="{{ $image }}" alt="News Image" style="max-width: 100%; border-radius: 10px;" />
-                            </p>
+                            @endif
                         </td>
                     </tr>
                 </table>

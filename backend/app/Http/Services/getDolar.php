@@ -9,7 +9,6 @@ class GetDolar
     private const CACHE_KEY = 'dolar';
     private const CACHE_TIME = 5;
     private const CONFIG_ID = 1;
-    private const API_URL = 'https://pydolarve.org/api/v1/dollar';
 
     public static function getDollarRate()
     {
@@ -33,8 +32,13 @@ class GetDolar
     public static function updateDollarRate()
     {
         try {
-            $response = Http::get(self::API_URL);
-
+            $apiUrl = env('API_NODE') . '/api/dolar';
+            $response = Http::withOptions([
+                'proxy' => env('HTTP_PROXY'),
+            ])->withHeaders([
+                'x-api-key' => env('API_KEY_NODE'),
+            ])->get($apiUrl);
+            
             if ($response->failed()) {
                 throw new \Exception("Error al obtener el valor del dólar desde la API.");
             }

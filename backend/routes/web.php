@@ -14,5 +14,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect(env('SPA_URL', '404'));
+    return redirect()->away(env('SPA_URL', 'https://vesam-dev.art'));
 });

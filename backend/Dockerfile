@@ -2,13 +2,6 @@ FROM php:8.2.4-fpm
 
 ENV TZ=America/Caracas
 
-# Copy composer.lock and composer.json into the working directory
-COPY composer.lock composer.json /var/www/html/
-
-# Set working directory
-WORKDIR /var/www/html/
-
-# Install dependencies for the operating system software
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpq-dev \
@@ -23,33 +16,83 @@ RUN apt-get update && apt-get install -y \
     vim \
     unzip \
     git \
-    curl
+    curl \
+    net-tools \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN docker-php-ext-install mbstring zip exif pcntl \
+    && docker-php-ext-install pdo pgsql pdo_pgsql \
+    && docker-php-ext-install gd
 
-# Install extensions for php
-RUN docker-php-ext-install mbstring zip exif pcntl
-RUN docker-php-ext-install pdo pgsql pdo_pgsql
-RUN docker-php-ext-install gd
-
-#RUN docker-php-ext-install pdo_mysql
-#RUN docker-php-ext-install gd
-
-# Install composer (php package manager)
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Copy existing application directory contents to the working directory
 COPY . /var/www/html
-
-# Copiar configuración personalizada de php.ini
 COPY php.ini /usr/local/etc/php/conf.d/custom.ini
 
-# Assign permissions of the working directory to the www-data user
+WORKDIR /var/www/html
+
 RUN chown -R www-data:www-data \
     /var/www/html/storage \
     /var/www/html/bootstrap/cache
 
-# Expose port 9000 and start php-fpm server (for FastCGI Process Manager)
+    RUN composer install -vvv \
+    #&& php artisan key:generate \
+    && composer dump-autoload \
+    && php artisan cache:clear \
+    && php artisan config:clear \
+    && php artisan route:clear \
+    && php artisan config:cache \
+    && chmod -R 775 /var/www/html/storage \
+    && php artisan optimize \
+    && php artisan storage:link
+
+USER www-data
+
 EXPOSE 9000
+
 CMD php artisan schedule:work & php artisan dolar:check & php artisan queue:work & php-fpm
 
+#FROM php:8.2.4-fpm
+#
+#ENV TZ=America/Caracas
+#
+#RUN apt-get update && apt-get install -y \
+#    build-essential libpq-dev libpng-dev libonig-dev libzip-dev \
+#    libjpeg62-turbo-dev libfreetype6-dev locales zip jpegoptim \
+#    optipng pngquant gifsicle vim unzip git curl net-tools \
+#    gnupg && \
+#    apt-get clean && rm -rf /var/lib/apt/lists/*
+#
+#RUN docker-php-ext-install mbstring zip exif pcntl \
+#    && docker-php-ext-install pdo pgsql pdo_pgsql \
+#    && docker-php-ext-install gd
+#
+#COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
+#
+#COPY . /var/www/html
+#COPY php.ini /usr/local/etc/php/conf.d/custom.ini
+#
+#WORKDIR /var/www/html
+#
+#RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache && \
+#    composer install --no-scripts --no-autoloader && \
+#    composer dump-autoload --optimize && \
+#    php artisan cache:clear && \
+#    php artisan config:clear && \
+#    php artisan route:clear && \
+#    php artisan config:cache && \
+#    chmod -R 775 /var/www/html/storage && \
+#    php artisan optimize && \
+#    php artisan storage:link
+#
+## 6. Script de arranque
+##COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+##RUN chmod +x /usr/local/bin/entrypoint.sh
+#
+#USER www-data
+#
+#EXPOSE 9000
+##ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+#CMD ["php-fpm"]
+#
