@@ -33,9 +33,10 @@ export default (data: Data, getItemsScroll: () => Promise<AxiosResponse<any, any
   const setMonth = (e): void => {
     const month = e.month as string
     if(!e.month) return
-    const findedMonth = meses.find(e => e.name.toLowerCase() == month.toLowerCase())
+    load({ month })
+   /*const findedMonth = meses.find(e => e.name.toLowerCase() == month.toLowerCase())
     if(!findedMonth) return
-    load({ month: findedMonth.number })
+    load({ month: findedMonth.number })*/
   }
 
   const setYear = (e): void => {
