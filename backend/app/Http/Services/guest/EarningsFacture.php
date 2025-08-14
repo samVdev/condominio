@@ -42,7 +42,7 @@ class EarningsFacture
                 $bcv = (float)$earning->dollar_value;
 
                 return [
-                    'name' => $earning->service_type,
+                    'name' => $earning->name,
                     'tower' => $earning->Nombre,
                     'mount_dollars' => $price,
                     'mount_bs' => $price * $bcv,

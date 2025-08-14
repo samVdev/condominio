@@ -2,42 +2,74 @@
 
 namespace App\Http\Services\Posts;
 
-use App\Mail\NewsMail;
 use App\Models\Posts;
 use App\Models\User;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\JsonResponse;
 
-class emailService
+class EmailService
 {
-    static public function index(string $id): JsonResponse
+    static public function index(string $id) : JsonResponse
     {
         try {
-            $post = Posts::select('title', 'subtitle', 'image')->where('id', $id)->first();
 
-            if (!$post) {
-                return response()->json(['message' => 'Noticia no encontrado'], 404);
-            }
+        $apiUrl = env('API_NODE') . '/api/send-email';
         
-            $imagePath = Storage::path($post->image);
+        $post = Posts::select('title', 'subtitle', 'image')->where('id', $id)->first();
 
-            $validDomains = ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com'];
-            $emails = User::where(function ($query) use ($validDomains) {
-                foreach ($validDomains as $domain) {
-                    $query->orWhere('email', 'like', '%@' . $domain);
-                }
-            })->pluck('email')->toArray();
-
-            $chunks = array_chunk($emails, 10);
-
-            foreach ($chunks as $chunk) {
-                Mail::to($chunk)->queue(new NewsMail($post->title, $post->subtitle, $post->image));
-            }
-
-            return response()->json(['message' => $imagePath], 200);
-        } catch (\Throwable $th) {
-            return response()->json(['message' => 'Error interno del servidor'], 500);
+        if (!$post) {
+            return response()->json(['message' => 'Noticia no encontrada'], 404);
         }
+
+        $imagePath = Storage::path($post->image);
+        $imageContent = base64_encode(file_get_contents($imagePath));
+
+        $validDomains = ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com'];
+        $emails = User::where(function ($query) use ($validDomains) {
+            foreach ($validDomains as $domain) {
+                $query->orWhere('email', 'like', '%@' . $domain);
+            }
+        })->pluck('email')->toArray();
+
+        $htmlContent = view('emails.news', [
+            'title' => $post->title,
+            'subtitle' => $post->subtitle,
+            'image' => $imageContent
+        ])->render();
+
+        $response = Http::withOptions([
+            'proxy' => env('HTTP_PROXY'),
+        ])->withHeaders([
+            'x-api-key' => env('API_KEY_NODE'),
+        ])->post($apiUrl, [
+            'user' => env('MAIL_USERNAME'),
+            'password' => env('MAIL_PASSWORD'),
+            'postId' => $id,
+            'html' => $htmlContent,
+            'asunto' => 'Nueva publicación: ' . $post->title,
+            'recipients' => $emails
+        ]);
+
+        if ($response->failed()) {
+            return response()->json([
+                'message' => 'Error al enviar correos',
+            ], 500);
+        }
+
+        return response()->json([
+            'message' => 'Correos enviados exitosamente',
+            'imagePath' => $imagePath,
+            'recipientsCount' => count($emails)
+        ], 200);
+
+
+    } catch (\Exception $e) {
+        return response()->json([
+            "message" => "Ocurrió un error inesperado al editar el servicio"
+        ], 500);
     }
+    }
+
+    
 }

@@ -10,7 +10,8 @@ const {
     data,
     loaded,
     getExpenses,
-    loadScroll
+    loadScroll,
+    getFileExpenses
 } = useExpensesFacture()
 
 
@@ -31,6 +32,10 @@ const viewImage = ref('')
             @click="viewImage = ''">
             <img class="w-[100%] md:h-[50%] md:w-auto cursor-default" :src="`${viewImage}`" alt="imagen" @click.stop>
         </div>
+
+        <button @click="getFileExpenses" class="h-[50px] mb-5 bg-[#EA5165] hover:bg-[#D54A5C] transition-all text-white font-bold w-full text-center place-items-center rounded-3xl md:w-[20%] md:grid">
+            Descargar
+        </button>
 
         <div class="overflow-auto w-full h-[80%] md:h-[60%]">
             <div class="fakeTable h-full" @scroll="loadScroll">

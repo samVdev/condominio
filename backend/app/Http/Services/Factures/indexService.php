@@ -2,12 +2,9 @@
 
 namespace App\Http\Services\Factures;
 
-use App\Http\Services\getDolar;
 use App\Models\Factures;
-use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class indexService

@@ -167,9 +167,7 @@ return [
     | the cookie from being sent to you when it can't be done securely.
     |
     */
-
-    'secure' => env('SESSION_SECURE_COOKIE'),
-
+    
     /*
     |--------------------------------------------------------------------------
     | HTTP Access Only
@@ -181,21 +179,7 @@ return [
     |
     */
 
+    'secure' => env('SESSION_SECURE_COOKIE', true),
     'http_only' => true,
-
-    /*
-    |--------------------------------------------------------------------------
-    | Same-Site Cookies
-    |--------------------------------------------------------------------------
-    |
-    | This option determines how your cookies behave when cross-site requests
-    | take place, and can be used to mitigate CSRF attacks. By default, we
-    | will set this value to "lax" since this is a secure default value.
-    |
-    | Supported: "lax", "strict", "none", null
-    |
-    */
-
-    'same_site' => 'lax',
-
+    'same_site' => env('SESSION_SAME_SITE', 'strict'),
 ];

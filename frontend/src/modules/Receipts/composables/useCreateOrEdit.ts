@@ -2,9 +2,10 @@ import { onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import useHttp from "@/composables/useHttp";
 import UserService from "@/modules/User/services";
-import type Role from "../types/Role"
-import type User from "../types/User"
 import { alertWithToast } from '@/utils/toast';
+
+import type Role from '@/modules/Authorization/types/Role';
+import type User from '@/modules/User/types/User';
 
 export default (userId?: string) => {
   const router = useRouter();

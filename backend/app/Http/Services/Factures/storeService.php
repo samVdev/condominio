@@ -14,6 +14,8 @@ use Illuminate\Http\JsonResponse;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class storeService
 {
@@ -115,27 +117,54 @@ class storeService
                 }
             })->pluck('email')->toArray();
 
-            $chunks = array_chunk($emails, 10);
+            if (empty($emails)) {
+                return response()->json(["message" => "Factura creada, pero no hay correos válidos"], 200);
+            }
 
-            $data = [
+            $htmlContent = view('emails.facture', [
                 'number_month' => Carbon::createFromDate(2025, $facture->number_month, 1)->locale('es')->monthName,
                 'fecha' => Carbon::parse($facture->fecha)->format('d/m/Y'),
                 'total_dollars' => $facture->total_dollars,
                 'code' => $facture->code,
                 'porcent_first_five_days' => $facture->porcent_first_five_days ?? '0',
-            ];
+            ])->render();
 
-            foreach ($chunks as $chunk) {
-                Mail::to($chunk)->queue(new NewFactureEmail($data));
+            try {
+                $response = Http::withOptions([
+                    'proxy' => env('HTTP_PROXY'),
+                ])->withHeaders([
+                    'x-api-key' => env('API_KEY_NODE'),
+                ])->timeout(10)->post(env('API_NODE') . '/api/send-email', [
+                    'user' => env('MAIL_USERNAME'),
+                    'password' => env('MAIL_PASSWORD'),
+                    'postId' => $facture->id,
+                    'html' => $htmlContent,
+                    'asunto' => 'Nueva factura del mes: ' . Carbon::createFromDate(2025, $facture->number_month, 1)->locale('es')->monthName,
+                    'recipients' => $emails,
+                ]);
+            
+                if ($response->failed()) {
+                    return response()->json([
+                        'message' => 'Factura creada correctamente, pero no se pudieron enviar los correos.',
+                    ], 200);
+                }
+            
+                return response()->json([
+                    'message' => 'Factura creada y correos enviados correctamente.',
+                ], 200);
+            
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => 'Factura creada, pero ocurrió un error al enviar los correos.',
+                ], 200);
             }
 
-            return response()->json([
-                "message" => 'Se ha creado correctamente',
-                "messEar" => $message
-            ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(["message" => "Ocurrió un error al crear la factura."], 500);
+        
+            return response()->json([
+                'message' => 'Ocurrió un error al crear la factura.',
+            ], 500);
         }
     }
 }

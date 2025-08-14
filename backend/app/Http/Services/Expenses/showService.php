@@ -3,6 +3,7 @@
 namespace App\Http\Services\Expenses;
 
 use App\Http\Services\getDolar;
+use App\Models\ElevatorDamageHistory;
 use App\Models\Expenses;
 use Illuminate\Http\JsonResponse;
 
@@ -25,6 +26,8 @@ class showService
                 return response()->json(['message' => 'Gasto no encontrado'], 404);
             }
 
+            $historyElevator = ElevatorDamageHistory::select('elevator_id')->where('expense_id',  $id)->first();
+
             $service = [
                 'id' => $expenseDB->service_id,
                 'tower' => $expenseDB->condominium_id ? $expenseDB->condominium_id : '0',
@@ -32,6 +35,7 @@ class showService
                 'mount_bs' => $expenseDB->amount_dollars * $dolar,
                 'mount_dollars' => $expenseDB->amount_dollars,
                 'image' => $expenseDB->image,
+                'elevator' => $historyElevator ? $historyElevator->elevator_id : ''
             ];
 
             return response()->json($service, 200);

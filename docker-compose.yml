@@ -1,0 +1,121 @@
+version: '3.9'
+
+services:
+  condominio-nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    container_name: condominio-nginx
+    volumes:
+      - uploads_data:/var/www/html/public/storage:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - ./nginx_cache:/var/cache/nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - condominio-frontend
+      - condominio-backend
+    networks:
+      - internal
+      - public
+    restart: unless-stopped
+
+  condominio-backend:
+    build:
+      context: ./backend
+    container_name: condominio-backend
+    expose:
+      - "9000"
+    volumes:
+      - uploads_data:/var/www/html/storage/app/public
+    depends_on:
+      - condominio-postgres
+    env_file:
+      - ./backend/.env  
+    networks:
+      proxy:
+        ipv4_address: 172.20.0.4
+      internal:
+      internal-db:
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  condominio-frontend:
+    build:
+      context: ./frontend
+    container_name: condominio-frontend
+    expose:
+      - "8080"
+    networks:
+      - internal   
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 256M
+
+  condominio-postgres:
+    image: postgres:16-alpine
+    container_name: condominio-postgres
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=scram-sha-256
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - internal-db
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+
+  condominio-node:
+    build:
+      context: ./node
+    container_name: condominio-node
+    env_file:
+      - ./node/.env  
+    networks:
+      - public-node
+    restart: unless-stopped
+
+  squid-proxy:
+    build: ./squid
+    container_name: proxy
+    networks:
+      - proxy
+      - public-node
+
+networks:
+  proxy:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+  internal:
+    driver: bridge
+    internal: true
+  internal-db:
+    driver: bridge
+    internal: true
+  public:
+    driver: bridge
+  public-node:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  uploads_data:
+  nginx_cache:

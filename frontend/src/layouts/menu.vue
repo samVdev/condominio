@@ -1,16 +1,10 @@
 <script lang="ts" setup>
 import { useSidebar } from '@/composables/useSidebar';
-import { Menu } from '@/types/Menu';
-import { computed } from 'vue';
 const { isClose } = useSidebar()
 
 const props = defineProps<{
   menus: any
 }>()
-
-const activeClass = computed(() => {
-  return isClose ? 'activeOpen' : 'activeClose';
-});
 
 </script>
 

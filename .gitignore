@@ -43,9 +43,11 @@ jspm_packages/
 
 backend/node_modules/
 frontend/node_modules/
+node/node_modules/
 
 
 backend/.git/
+node/.git/
 frontend/.git/
 
 # TypeScript v1 declaration files

@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Expenses\FormExpensesRequest;
-use App\Http\Requests\Expenses\editExpensesRequest;
+use App\Http\Requests\Condominium\FormCondominiumRequest;
+use App\Http\Requests\Condominium\editCondominiumRequest;
+use App\Http\Services\Condominium\countService;
 use App\Http\Services\Condominium\getTowersService;
-use App\Http\Services\Expenses\deleteService;
-use App\Http\Services\Expenses\editService;
-use App\Http\Services\Expenses\indexService;
-use App\Http\Services\Expenses\showService;
-use App\Http\Services\Expenses\storeService;
+use App\Http\Services\Condominium\deleteService;
+use App\Http\Services\Condominium\editService;
+use App\Http\Services\Condominium\getAptsService;
+use App\Http\Services\Condominium\indexService;
+use App\Http\Services\Condominium\showService;
+use App\Http\Services\Condominium\storeService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -22,7 +24,7 @@ class CondominiumController extends Controller
 
     public function resume(): JsonResponse
     {
-        return getTowersService::get();
+        return countService::index();
     }
 
     public function towers(): JsonResponse
@@ -30,23 +32,30 @@ class CondominiumController extends Controller
         return getTowersService::get();
     }
 
+    public function Apts(string $id = ''): JsonResponse
+    {
+        return getAptsService::get($id);
+    }
+
+
     public function show(string $id): JsonResponse
     {
         return showService::index($id);
     }
 
-    public function store(FormExpensesRequest $request): JsonResponse
+    public function store(FormCondominiumRequest $request): JsonResponse
     {
-         return storeService::index($request);
-     } 
+        return storeService::index($request);
+    }
 
-    public function edit(editExpensesRequest $request, string $id): JsonResponse
-   {
+    public function edit(editCondominiumRequest $request, string $id): JsonResponse
+    {
         return editService::index($request, $id);
-    } 
-    
+    }
+
+
     public function destroy(string $id): JsonResponse
     {
-         return deleteService::destroy($id);
-     } 
+        return deleteService::destroy($id);
+    }
 }

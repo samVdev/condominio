@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 import { alertWithToast } from '@/utils/toast';
 import { onMounted, ref } from 'vue';
-import { factureUserType } from '../types/factureUserType';
-import { parsePrices } from '@/utils/parsePrices';
+import type { factureUserType } from '../types/factureUserType';
 import facturesUser from '../services'
 
 const copied = ref('')

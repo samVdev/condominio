@@ -19,7 +19,8 @@ const {
   showTypeEarning,
   deleteTypeEarning,
   setSearch,
-  submit
+  submit,
+  loadScroll
 } = useIndex()
 
 onMounted(() => getTypeEarnings(new URLSearchParams(route.query as Params).toString()))
@@ -31,7 +32,8 @@ onMounted(() => getTypeEarnings(new URLSearchParams(route.query as Params).toStr
   <tablesHeader title="Tipos" icon="money-bill-trend-up" :searchActive="true" @setSearch="({e}) => setSearch(e)" :btnCreate="true" @create="isOpenCreate = true"/>
 
     <Loader v-if="!loaded" class="mx-auto mt-[20%] translate-y-[-50%]"/>
-    <section className="max-w-[1200px] mx-auto mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 animate-fade-in" v-else-if="typeEarnings.rows.length > 0">
+    
+    <section @scroll="loadScroll" className="max-w-[1200px] h-[80vh] content-start overflow-auto mx-auto mt-5 grid grid-cols-1 gap-4 p-4 animate-fade-in md:h-[70vh] md:grid-cols-2 lg:grid-cols-3" v-else-if="typeEarnings.rows.length > 0">
       <CardTypeEarnings :created="typeEarning.created" :name="typeEarning.name" @edit="showTypeEarning(typeEarning.id)" @delete="deleteTypeEarning(typeEarning.id)" v-for="typeEarning in typeEarnings.rows"/>
     </section>
 

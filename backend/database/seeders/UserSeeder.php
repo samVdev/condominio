@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
           ]
         );
 
-        \App\Models\User::factory(1)->create([
+        /*\App\Models\User::factory(1)->create([
             'email' => 'aaa@example.com',
             'suspend' => false,
             'persona_id' => 2,
@@ -74,6 +74,6 @@ class UserSeeder extends Seeder
             'is_admin' => false,
             'role_id' => 3       
           ]
-        );
+        );*/
     }
 }

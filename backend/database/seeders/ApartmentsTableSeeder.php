@@ -7,39 +7,45 @@ use App\Models\Condominium;
 
 class ApartmentsTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
-        // Crear 4 torres
-        $torres = [
-            'Torre A',
-            'Torre B',
-            'Torre C',
-            'Torre D',
-        ];
 
-        foreach ($torres as $torre) {
-            // Crear la torre
-            $torreRecord = Condominium::create([
-                'Nombre' => $torre,
+        $torresNombres = ['A', 'B', 'C', 'D'];
+        $torres = [];
+
+        foreach ($torresNombres as $nombre) {
+            $torres[$nombre] = Condominium::create([
+                'Nombre' => 'Torre ' . $nombre,
                 'condominium_id' => null,
-                'size' => '2xl',
+                'size' => '',
                 'porcent_alicuota' => '0'
             ]);
-
-            // Crear 10 departamentos para cada torre
-            for ($i = 1; $i <= 10; $i++) {
-                Condominium::create([
-                    'Nombre' => 'Apt ' . $i,
-                    'condominium_id' => $torreRecord->id, 
-                    'size' => '2xl',
-                    'porcent_alicuota' => '2'
-                ]);
-            }
         }
+
+        $path = base_path('/filesMasive/ALICUOTAS.csv');
+        $file = fopen($path, 'r');
+
+        fgetcsv($file, 1000, ';');
+
+        while (($data = fgetcsv($file, 1000, ';')) !== false) {
+            if (count($data) < 3) continue;
+
+            [$torre, $apt, $alicuotRaw] = array_map('trim', $data);
+            
+            $torre = str_replace('Torre ', '', $torre);
+            $alicuotRaw = str_replace(',', '.', $alicuotRaw);
+            $alicuot = is_numeric($alicuotRaw) ? (float) $alicuotRaw : 0;
+
+            if (!isset($torres[$torre])) continue;
+
+            Condominium::create([
+                'Nombre' => $apt,
+                'condominium_id' => $torres[$torre]->id,
+                'size' => '',
+                'porcent_alicuota' => $alicuot
+            ]);
+        }
+
+        fclose($file);
     }
 }

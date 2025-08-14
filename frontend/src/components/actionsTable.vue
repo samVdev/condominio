@@ -6,18 +6,30 @@ const props = defineProps<{
     recibesBtn?: boolean,
     expensesBtn?: boolean,
     earningsBtn?: boolean,
-    emailBtn?: boolean
+    emailBtn?: boolean,
+    historyBtn?: boolean,
+    reportElevatorBtn?: boolean,
+    entryBtn?: boolean,
 }>()
 
 </script>
 
 <template>
     <div class="flex items-center butons">
+        <button @click="$emit('entry')" class="bg-blue-600" title="Entrar" v-if="entryBtn">
+            <font-awesome-icon icon="right-to-bracket" />
+        </button>
         <button @click="$emit('edit')" class="bg-blue-600" title="Editar este registro" v-if="editBtn">
             <font-awesome-icon icon="pen" />
         </button>
         <button @click="$emit('earnings')" class="bg-green-600" title="Ver Ingresos" v-if="earningsBtn">
             <font-awesome-icon icon="money-bill-trend-up" />
+        </button>
+        <button @click="$emit('report')" class="bg-orange-500" title="Hacer reporte" v-if="reportElevatorBtn">
+            <font-awesome-icon icon="flag" />
+        </button>
+        <button @click="$emit('history')" class="bg-green-600" title="Ver historial" v-if="historyBtn">
+            <font-awesome-icon icon="timeline" />
         </button>
         <button @click="$emit('expenses')" class="bg-blue-600" title="Ver Gastos" v-if="expensesBtn">
             <font-awesome-icon icon="money-bill-transfer" />

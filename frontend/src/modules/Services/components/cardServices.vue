@@ -10,7 +10,7 @@ const props = defineProps<{
 
 
 <template>
-    <article class="bg-white rounded-xl border bg-card text-card-foreground max-h-[200px] shadow-sm w-full overflow-hidden transition-all-300 hover:shadow-md animate-fade-in transition-all">
+    <article class="bg-white rounded-xl border bg-card text-card-foreground h-[190px] shadow-sm w-full overflow-hidden transition-all-300 hover:shadow-md animate-fade-in transition-all">
         <div class="flex justify-between items-center px-5 py-5">
             <h5 class="text-lg font-medium line-clamp-1">{{ name }}</h5>
             <div 

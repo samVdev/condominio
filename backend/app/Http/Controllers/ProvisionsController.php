@@ -36,7 +36,10 @@ class ProvisionsController extends Controller
     {
         $checked = checkService::index($service_id, $expense_id);
 
-        return response()->json(['total' => $checked['total']], 200);
+        return response()->json([
+            'total' => $checked['total'],
+            'isForElevator' => $checked['isForElevator'],
+        ], 200);
     }
 
     public function store(FormProvisionsRequest $request): JsonResponse

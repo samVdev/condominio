@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import {createRouter, createWebHistory} from 'vue-router'
 import type {RouteRecordRaw} from 'vue-router'
 import { computed } from "vue"
@@ -18,6 +20,7 @@ import guestRoutes from "@/modules/guest/routes"
 import TypeEarningRoutes from "@/modules/TypeEarning/routes"
 import ApartamentsRoutes from "@/modules/Apartaments/routes"
 import NewsRoutes from "@/modules/News/routes"
+import BoardsRoutes from "@/modules/boards/routes"
 
 const storeAuth = computed(() => useAuthStore())
 
@@ -34,14 +37,13 @@ const routes: Array<RouteRecordRaw> = [
   ...TypeEarningRoutes.map(route => route),
   ...ProvisionsRoutes.map(route => route),
   ...NewsRoutes.map(route => route),
-
   ...ApartamentsRoutes.map(route => route),
+  ...BoardsRoutes.map(route => route) 
 ]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),  
   routes,
-  
 });
 
 router.beforeEach((to, from, next) => {

@@ -27,7 +27,6 @@ const {
   loadScroll
 } = useIndex()
 
-
 onMounted(() => getExpenses(`?offset=${expenses.offset}&${new URLSearchParams(route.query as Params).toString()}`))
 
 </script>

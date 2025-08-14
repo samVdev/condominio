@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import Loader from '@/components/Loader.vue';
 import useFormExpense from '../composables/useFormExpense';
-import useIndex from "@/modules/Apartaments/composables/useIndex"
+import useIndexApt from "@/modules/Apartaments/composables/apt/useIndex"
 import indexService from "@/modules/Services/composables/useIndex"
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
@@ -12,16 +12,18 @@ const {
     data,
     sending,
     provision,
+    elevators,
     submit,
     showExpense,
     getDollarBcv,
-    checkProvision
+    checkProvision,
 } = useFormExpense()
 
 const {
     getTowers,
     towers
-} = useIndex()
+} = useIndexApt()
+
 
 const {
     loaded: loadedService,
@@ -32,7 +34,6 @@ const {
 const route = useRoute()
 
 const id = route.params.id as string || ''
-
 
 const loadInfo = async () => {
     if (id) {
@@ -58,8 +59,16 @@ const calcValue = (e: InputEvent) => {
         if (!value) return data.value.mount_bs = 0
         data.value.mount_bs = parseFloat((value * dolar.value).toFixed(2))
     }
-
 };
+
+
+const filteredElevators = () => {
+    if(data.value.tower == '0') return elevators.value
+    return elevators.value.filter(e => {
+        console.log(e.tower_id)
+        if(e.tower_id == data.value.tower) return e
+    })
+}
 
 onMounted(() => {
     loadInfo()
@@ -126,6 +135,15 @@ onMounted(() => {
                         divisas:</label>
                     <input type="text" id="mount_dollars" name="mount_dollars" v-model="data.mount_dollars"
                         @input="calcValue" class="mt-2 p-3 w-full">
+                </div>
+
+                <div class="mb-4" v-if="elevators.length > 0 &&  filteredElevators().length > 0 && data.tower">
+                    <label for="Ascensor" class="block text-sm font-medium text-gray-700">Ascensor:</label>
+                    <select id="Ascensor" name="Ascensor" v-model="data.elevator" v-if="towers.length > 0"
+                        class="mt-2 p-3 w-full">
+                        <option value="" disabled selected>Selecciona un ascensor</option>
+                        <option :value="elevator.id" v-for="elevator in filteredElevators()">{{ elevator.number }} - {{ elevator.tower }}</option>
+                    </select>
                 </div>
 
                 <div class="col-span-2 text-center" v-if="provision.total > 0">

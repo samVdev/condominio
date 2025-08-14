@@ -6,9 +6,11 @@ use App\Http\Controllers\AuthMenuController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TokenController;
 use App\Http\Controllers\AvatarController;
+use App\Http\Controllers\boardsController;
 use App\Http\Controllers\CondominiumController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\EarningsController;
+use App\Http\Controllers\ElevatorsController;
 use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\RoleController;
@@ -19,6 +21,7 @@ use App\Http\Controllers\GuestController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProvisionsController;
 use App\Http\Controllers\ReceiptsController;
+use App\Http\Controllers\SurveyController;
 use App\Http\Controllers\TypeEarningController;
 
 Route::post('/sanctum/token', TokenController::class);
@@ -32,6 +35,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/auth-menu', AuthMenuController::class);
     });
 
+    // only Admin or superAdmin
     Route::middleware(['admin'])->group(function () {
 
         Route::get('/counted', [StaticsController::class, 'index']);
@@ -131,11 +135,23 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::get('/', [CondominiumController::class, 'index']);
             Route::get('/resume', [CondominiumController::class, 'resume']);
             Route::get('/towers', [CondominiumController::class, 'towers']);
+            Route::get('/apts/{id?}', [CondominiumController::class, 'apts']);
             Route::get('/show/{id}', [CondominiumController::class, 'show']);
             Route::post('/', [CondominiumController::class, 'store']);
             Route::put('/{id}', [CondominiumController::class, 'edit']);
             Route::delete('/{id}', [CondominiumController::class, 'destroy']);
         });
+
+        Route::prefix('elevators')->group(function () {
+            Route::get('/min', [ElevatorsController::class, 'getMin']);
+            Route::get('/resume', [ElevatorsController::class, 'resume']);
+            Route::get('/show/{id}', [ElevatorsController::class, 'show']);
+            Route::post('/', [ElevatorsController::class, 'store']);
+            Route::put('/{id}', [ElevatorsController::class, 'edit']);
+            Route::put('/report/{id}', [ElevatorsController::class, 'reportService']);
+            Route::delete('/{id}', [ElevatorsController::class, 'destroy']);
+        });
+
 
         Route::prefix('config')->group(function () {
             Route::get('/', [ConfigController::class, 'index']);
@@ -152,6 +168,32 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::put('/{id}', [PostController::class, 'edit']);
             Route::delete('/{id}', [PostController::class, 'destroy']);
         });
+
+        Route::prefix('boards')->group(function () {
+            Route::get('/', [boardsController::class, 'index']);
+            Route::get('/live/{uuid}', [boardsController::class, 'show']);
+            Route::get('/live-apts/{uuid}', [boardsController::class, 'showApt']);
+            Route::post('/', [boardsController::class, 'store']);
+            Route::post('/status/{uuid}', [boardsController::class, 'enableBoard']);
+            Route::put('/link/{uuid}', [boardsController::class, 'addLink']);
+            Route::put('/end/{uuid}', [boardsController::class, 'endBoard']);
+            Route::delete('/{uuid}', [boardsController::class, 'destroy']);
+
+            // Surveys
+            Route::get('/surveys/one/{uuid}', [SurveyController::class, 'byBoard']);
+            Route::post('/surveys/{uuid}', [SurveyController::class, 'store']);
+            Route::put('/survey/{id}', [SurveyController::class, 'status']);
+            Route::delete('/survey/{id}', [SurveyController::class, 'delete']);
+        });
+    });
+
+    Route::get('/boards/surveys/{uuid}', [SurveyController::class, 'byBoardSurveys']);
+    Route::post('/boards/survey/new-response', [SurveyController::class, 'response']);
+
+
+    Route::prefix('elevators')->group(function () {
+        Route::get('/', [ElevatorsController::class, 'index']);
+        Route::get('/history', [ElevatorsController::class, 'historyService']);
     });
 
     Route::prefix('guest')->group(function () {
@@ -163,6 +205,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('provisions/facture', [GuestController::class, 'ProvisionsFacture']);
         Route::get('count', [GuestController::class, 'DashboardCount']);
         Route::post('pay/facture/{id}', [ReceiptsController::class, 'storeReceipt']);
+
+        // export 
+        Route::get('export/expenses', [FacturesController::class, 'exportExpenses']);
+
+        // boards Guest
+        Route::get('boards/act', [GuestController::class, 'boardsAct']);
+        Route::get('board/live/{uuid}', [GuestController::class, 'getBoard']);
+        Route::get('board/live-disconnect/{uuid}', [GuestController::class, 'disconnectBoard']);
     });
 });
 

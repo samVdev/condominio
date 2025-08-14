@@ -4,6 +4,7 @@ import type User from "../types/User"
 import type Role from "../types/Role"
 import Loader from "@/components/Loader.vue";
 import InputPassword from "@/components/inputPassword.vue";
+import useIndex from "@/modules/Apartaments/composables/apt/useIndex";
 
 const props = defineProps<{
   uuid?: string
@@ -16,6 +17,12 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'submit', user: User, userId?: string): void
 }>()
+
+const {
+  getAptsMin,
+  apts
+} = useIndex()
+
 
 const form: User = reactive(props.user)
 
@@ -36,6 +43,7 @@ const submit = async () => {
 
 onMounted(() => {
   if (props.uuid) activeInputPassword.value = false
+  getAptsMin(props.uuid)
 })
 
 </script>
@@ -65,11 +73,10 @@ onMounted(() => {
 
       <div class="mb-4">
         <label for="apartamento" class="block text-sm font-medium text-gray-700">Apartamento:</label>
-        <select id="apartamento" required name="apartamento" v-model="form.apt_id"
-          class="mt-2 p-3 w-full border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-          <option value="" disabled selected>Selecciona un apartamento</option>
-          <option value="2">Apartamento 1</option>
-          <option value="13">Apartamento 2</option>
+        <select id="apartamento" required name="apartamento" v-model="form.apt_id" v-if="apts.length > 0"
+          class="mt-2 p-3 w-full">
+          <option value="" disabled selected>Selecciona una torre</option>
+          <option :value="apt.id" v-for="apt in apts">{{ apt.name }}</option>
         </select>
       </div>
 

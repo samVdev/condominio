@@ -9,6 +9,10 @@ use App\Http\Services\guest\ExpensesFacture;
 use App\Http\Services\guest\FactureUserCompletedService;
 use App\Http\Services\guest\FactureUserPending;
 use App\Http\Services\guest\ProvisionsFacture;
+
+use App\Http\Services\guest\boardsActService;
+use App\Http\Services\guest\disconnectBoardLiveService;
+use App\Http\Services\guest\getBoardLiveService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -47,5 +51,22 @@ class GuestController extends Controller
      public function Account(): JsonResponse
      {
           return AccountService::index();
+     }
+
+     // boards Guest
+
+     public function boardsAct(Request $request): JsonResponse
+     {
+          return boardsActService::index($request);
+     }
+
+     public function getBoard(string $uuid): JsonResponse
+     {
+          return getBoardLiveService::index($uuid);
+     }
+
+     public function disconnectBoard(Request $request, string $uuid): JsonResponse
+     {
+          return disconnectBoardLiveService::index($request, $uuid);
      }
 }

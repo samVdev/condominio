@@ -5,6 +5,8 @@ namespace App\Http\Services\Expenses;
 use App\Http\Requests\Expenses\FormExpensesRequest;
 use App\Http\Services\getDolar;
 use App\Http\Services\Provisions\checkService;
+use App\Models\Elevator;
+use App\Models\ElevatorDamageHistory;
 use App\Models\Expenses;
 use App\Models\ProvisionBalance;
 use App\Models\Provisions;
@@ -47,7 +49,6 @@ class storeService
                 $expense->image = "public/factures/expenses/" . $filename;
             }
 
-
             $expense->save();
 
             $provision = checkService::index($request->service, null);
@@ -85,7 +86,20 @@ class storeService
                 DB::commit();
                 return response()->json(["message" => 'Se ha creado correctamente junto a sus provisiones'], 200);
             }
-            
+
+
+            if ($provision['isForElevator'] == true && $request->elevator) {
+                $elevator = Elevator::where('id', $request->elevator)->first();
+                if($elevator->operative == false) {
+                    $history = new ElevatorDamageHistory();
+                    $history->elevator_id = $request->elevator;
+                    $history->description = 'Se ha asociado a una factura';
+                    $history->status = $elevator->operative;
+                    $history->expense_id = $expense->id;
+                    $history->save();
+                }
+            }
+
             DB::commit();
             return response()->json(["message" => 'Se ha creado correctamente'], 200);
         } catch (\Exception $e) {

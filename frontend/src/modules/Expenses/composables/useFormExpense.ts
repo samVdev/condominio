@@ -5,6 +5,7 @@ import provisionsServices from '@/modules/Provisions/services'
 import { alertWithToast } from "@/utils/toast"
 import { useRouter } from "vue-router"
 import { getDolar } from "@/modules/Auth/services/configService"
+import useIndexElevators from '@/modules/Apartaments/composables/elevators/useIndex';
 
 export default () => {
   const expenses = ref({
@@ -15,6 +16,11 @@ export default () => {
     sort: "",
     direction: ""
   })
+
+  const {
+    elevators,
+    getMin
+} = useIndexElevators()
 
   const dolar = ref(0)
 
@@ -29,6 +35,7 @@ export default () => {
     mount_bs: 0,
     dollarBefore: 0,
     facture: false,
+    elevator: '', 
     image: ''
   })
 
@@ -92,6 +99,9 @@ export default () => {
         checked: true,
         total: response.data.total ? response.data.total : 0
       }
+
+      if(response.data.isForElevator) await getMin()
+
       if(response.data.total)  alertWithToast(`Se a encontrado una provisión de ${response.data.total}$`, 'info')
     } catch (error) {
       console.log(error)
@@ -100,7 +110,7 @@ export default () => {
 
 
 
-  const submit = async (e) => {
+  const submit = async (e: any) => {
     try {
       const form = new FormData(e.target)
       const keys = Object.keys(data.value)
@@ -130,6 +140,7 @@ export default () => {
     data,
     sending,
     provision,
+    elevators,
     showExpense,
     submit,
     getDollarBcv,

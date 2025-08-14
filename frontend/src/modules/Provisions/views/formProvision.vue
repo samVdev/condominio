@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import Loader from '@/components/Loader.vue';
 import useFormProvision from '../composables/useFormProvision';
-import useIndex from "@/modules/Apartaments/composables/useIndex"
+import useIndex from "@/modules/Apartaments/composables/apt/useIndex"
 import indexService from "@/modules/Services/composables/useIndex"
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
@@ -66,6 +66,8 @@ onMounted(() => {
     loadInfo()
 })
 
+/* <option :value="mes.number" v-for="mes in meses.filter(e => e.number > month)">{{mes.name}}</option> */
+
 </script>
 
 
@@ -102,7 +104,7 @@ onMounted(() => {
                     <select id="month" required name="month" v-model="data.month"
                         class="mt-2 p-3 w-full capitalize">
                         <option value="" disabled selected>Selecciona un mes</option>
-                        <option :value="mes.number" v-for="mes in meses.filter(e => e.number > month)">{{mes.name}}</option>
+                        <option :value="mes.number" v-for="mes in meses">{{mes.name}}</option> 
                     </select>
                 </div>
 

@@ -16,15 +16,15 @@ class PersonasTableSeeder extends Seeder
     {
         // Crear datos de ejemplo
         Personas::create([
-            'fullName' => 'Juan Pérez',
-            'phone' => '123456789',
-            'condominium_id' => 2, 
+            'fullName' => 'SUPERADMIN',
+            'phone' => 'test',
+            'condominium_id' => null
         ]);
 
-        Personas::create([
+        /*Personas::create([
             'fullName' => 'María Gómez',
             'phone' => '987654321',
-            'condominium_id' => 2,
+            'condominium_id' => 6
         ]);
 
         Personas::create([
@@ -45,16 +45,16 @@ class PersonasTableSeeder extends Seeder
         Personas::create([
             'fullName' => 'Valeria Gómez',
             'phone' => '987654321',
-            'condominium_id' => 4,
+            'condominium_id' => 15,
         ]);
 
 
         Personas::create([
             'fullName' => 'Jenifer Gómez',
             'phone' => '987654321',
-            'condominium_id' => 5,
+            'condominium_id' => 20,
         ]);
-
+*/
 
     }
 }
